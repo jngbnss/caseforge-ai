@@ -1,15 +1,21 @@
 from __future__ import annotations
 
-from collections.abc import Callable
+import asyncio
+import logging
+from collections.abc import AsyncIterator, Callable
+from contextlib import asynccontextmanager
 from functools import lru_cache
 
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
 from app.api.routes import router
+from app.cases.registry import get_case
 from app.core.config import settings
 from app.core.db import make_engine, make_sessionmaker
 from app.core.embedding.mock import MockEmbedding
+from app.core.embedding.npc_index import registry
+from app.core.embedding.ollama import OllamaEmbedding
 from app.core.embedding.ports import EmbeddingPort
 from app.core.game import GameError
 from app.core.llm.mock import MockLLM
@@ -29,7 +35,18 @@ def default_llm_factory() -> Callable[[str], LLMPort]:
 def default_embedder() -> EmbeddingPort:
     if settings.embedding_backend == "mock":
         return MockEmbedding()
-    raise RuntimeError(f"EMBEDDING_BACKEND={settings.embedding_backend}는 4단계에서 지원한다.")
+    if settings.embedding_backend == "ollama":
+        return OllamaEmbedding(
+            settings.embedding_model, settings.ollama_base_url, cpu=settings.embedding_on_cpu
+        )
+    raise RuntimeError(
+        f"지원하지 않는 EMBEDDING_BACKEND: {settings.embedding_backend} (mock | ollama)"
+    )
+
+
+def _log_warm_failure(task: asyncio.Task) -> None:
+    if not task.cancelled() and task.exception():
+        logging.getLogger(__name__).warning("NPC 인덱스 미리 만들기 실패: %r", task.exception())
 
 
 def create_app(
@@ -38,7 +55,16 @@ def create_app(
     embedder: EmbeddingPort | None = None,
     debug_api: bool | None = None,
 ) -> FastAPI:
-    app = FastAPI(title="CaseForge AI", version="0.2.0")
+    @asynccontextmanager
+    async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+        loaded = get_case(settings.default_case_id)
+        task = asyncio.create_task(
+            asyncio.to_thread(registry.warm, app.state.embedder, loaded.bible, loaded.sha256)
+        )
+        task.add_done_callback(_log_warm_failure)
+        yield
+
+    app = FastAPI(title="CaseForge AI", version="0.3.0", lifespan=lifespan)
     app.state.sessionmaker = make_sessionmaker(make_engine(database_url or settings.database_url))
     app.state.llm_for_case = llm_for_case or default_llm_factory()
     app.state.embedder = embedder or default_embedder()

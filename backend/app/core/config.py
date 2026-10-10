@@ -15,6 +15,8 @@ class Settings(BaseSettings):
     llm_model: str = "qwen3:8b"
     ollama_base_url: str = "http://127.0.0.1:11434"
     embedding_backend: str = "mock"
+    embedding_model: str = "bge-m3"
+    embedding_on_cpu: bool = True
     debug_api: bool = False
     """True면 심문 응답에 근거·가드 결과를 넣는다. 비밀 키워드가 보이므로 개발 환경에서만 켠다."""
 

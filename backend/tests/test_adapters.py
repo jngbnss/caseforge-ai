@@ -6,8 +6,8 @@ import json
 import pytest
 from pydantic import BaseModel
 
-from app.core.embedding.index import VectorIndex
 from app.core.embedding.mock import MockEmbedding
+from app.core.embedding.npc_index import NpcIndex
 from app.core.llm.markers import QUESTION_CLOSE, QUESTION_OPEN
 from app.core.llm.mock import MockLLM, read_prompt
 from app.core.llm.ports import LLMRaw, Message
@@ -106,9 +106,29 @@ def test_mock_embedding_and_index() -> None:
     assert a == b
     assert sum(x * x for x in a) == pytest.approx(1.0)
 
-    index = VectorIndex(
-        emb,
-        {"f1": "경비 카드를 휴게실 사물함에 넣었다", "f2": "푸른 별은 1907년에 발견됐다"},
+    index = NpcIndex(
+        emb, ["f1", "f2"], ["경비 카드를 휴게실 사물함에 넣었다", "푸른 별은 1907년에 발견됐다"]
     )
     assert index.search("사물함에 카드 넣었어요?", k=1)[0].id == "f1"
     assert [h.id for h in index.search("사물함", k=5, allowed={"f2"})] == ["f2"]
+
+
+def test_npc_index_physically_excludes_other_npc_and_forbidden_facts() -> None:
+    from app.cases.registry import get_case
+    from app.core.embedding.npc_index import indexable_fact_ids, registry
+
+    loaded = get_case("museum-001")
+    bible = loaded.bible
+    forbidden = {f.fact_id for f in bible.facts if f.forbidden}
+    for npc in ("suspect-01", "suspect-02", "suspect-03"):
+        ids = set(indexable_fact_ids(bible, npc))
+        others_private = {
+            f.fact_id for f in bible.facts if f.known_by and npc not in f.known_by
+        } - {fid for e in bible.evidence for fid in e.proves_fact_ids}
+        assert not ids & forbidden
+        assert not ids & others_private
+        index = registry.get(MockEmbedding(), bible, loaded.sha256, npc)
+        # 다른 NPC 비밀을 그대로 질문해도 그 사실은 결과에 나올 수 없다
+        for fid in others_private:
+            text = bible.fact(fid).content
+            assert fid not in {h.id for h in index.search(text, k=50)}

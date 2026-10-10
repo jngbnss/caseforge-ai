@@ -16,7 +16,7 @@ from app.agents.leak_guard import GuardResult, check_reply
 from app.agents.prompts import build_messages, sanitize_question
 from app.agents.schemas import NpcReply
 from app.core.db import DialogueRow
-from app.core.embedding.index import VectorIndex
+from app.core.embedding.npc_index import registry
 from app.core.embedding.ports import EmbeddingPort
 from app.core.llm.ports import LLMPort
 from app.core.llm.structured import generate_structured
@@ -81,11 +81,12 @@ class Interrogator:
         turn.history = pairs[-HISTORY_TURNS:]
 
     def retrieve_node(self, turn: Turn) -> None:
-        """이 NPC의 범위 안에서만 검색한다. 범위 밖 사실은 인덱스에 들어가지 않는다."""
+        """이 NPC 전용 인덱스에서 찾고, 이번 턴의 지식 범위로 다시 거른다."""
         assert turn.scope is not None
+        session = turn.session
         facts = {f.fact_id: f for f in turn.scope.facts}
-        index = VectorIndex(self.embedder, {fid: f.content for fid, f in facts.items()})
-        hits = index.search(turn.question, k=TOP_K)
+        index = registry.get(self.embedder, session.bible, session.case_sha256, turn.npc_id)
+        hits = index.search(turn.question, k=TOP_K, allowed=set(facts))
         turn.grounding = [facts[h.id] for h in hits]
 
     async def _generate(self, turn: Turn, *, retry: bool) -> NpcReply:
