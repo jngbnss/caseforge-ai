@@ -105,7 +105,7 @@ export function SceneScreen() {
   const finished = Boolean(session.deduction)
 
   return (
-    <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_300px]">
+    <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_300px]">
       <Panel className="flex min-w-0 flex-col gap-3">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
           <Eyebrow>현장 조사</Eyebrow>

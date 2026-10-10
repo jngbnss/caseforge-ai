@@ -100,7 +100,7 @@ export const useGame = create<GameStore>((set, get) => {
     const entry = {
       at: new Date().toLocaleTimeString('ko-KR'),
       action,
-      detail: JSON.stringify(detail),
+      detail: JSON.stringify(detail).slice(0, 600),
     }
     set((s) => ({ devLog: [entry, ...s.devLog].slice(0, 50) }))
   }

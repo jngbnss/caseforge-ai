@@ -84,7 +84,7 @@ export function PuzzleScreen() {
   const solved = session.puzzles.filter((p) => p.solved).length
   const records = session.evidence.filter((e) => e.evidence_id.startsWith('rec-'))
   return (
-    <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_300px]">
+    <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_300px]">
       <div className="flex min-w-0 flex-col gap-4">
         <div className="flex items-baseline justify-between">
           <Eyebrow>퍼즐</Eyebrow>
