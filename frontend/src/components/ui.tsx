@@ -51,7 +51,7 @@ export function Button({ variant = 'primary', className = '', ...props }: Button
 }
 
 export function EvidenceTag({ id }: { id: string }) {
-  return <span className="font-mono text-xs text-tag">{id}</span>
+  return <span className="shrink-0 font-mono text-xs whitespace-nowrap text-tag">{id}</span>
 }
 
 export function Empty({ children }: { children: ReactNode }) {

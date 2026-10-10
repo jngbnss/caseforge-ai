@@ -23,6 +23,7 @@ def evidence_view(bible: CaseBible, e: Evidence) -> v.EvidenceView:
         spot=e.spot or e.name,
         location_name=_location_name(bible, e.location_id),
         facts=facts,
+        time=e.attests.time.start if e.attests else None,
     )
 
 

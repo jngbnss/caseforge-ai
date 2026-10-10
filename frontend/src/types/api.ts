@@ -359,6 +359,11 @@ export interface components {
             location_name: string;
             /** Facts */
             facts: string[];
+            /**
+             * Time
+             * @description 증거가 기록한 시각 (HH:MM)
+             */
+            time?: string | null;
         };
         /** HTTPValidationError */
         HTTPValidationError: {

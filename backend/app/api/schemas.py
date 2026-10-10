@@ -38,6 +38,7 @@ class EvidenceView(BaseModel):
     spot: str
     location_name: str
     facts: list[str]
+    time: str | None = Field(default=None, description="증거가 기록한 시각 (HH:MM)")
 
 
 class PuzzleOptionView(BaseModel):

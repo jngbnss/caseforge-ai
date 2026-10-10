@@ -103,7 +103,9 @@ export default function App() {
       <Banner />
 
       <div className={dev ? 'grid gap-5 lg:grid-cols-[minmax(0,1fr)_320px]' : ''}>
-        <main className="min-w-0">{session ? screens[screen] : null}</main>
+        <main key={session?.session_id} className="min-w-0">
+          {session ? screens[screen] : null}
+        </main>
         {dev && <DevPanel />}
       </div>
     </div>

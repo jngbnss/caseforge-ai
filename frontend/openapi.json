@@ -977,6 +977,18 @@
             },
             "type": "array",
             "title": "Facts"
+          },
+          "time": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Time",
+            "description": "증거가 기록한 시각 (HH:MM)"
           }
         },
         "type": "object",
