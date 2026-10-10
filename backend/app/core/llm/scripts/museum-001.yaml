@@ -1,13 +1,11 @@
 # museum-001 Mock NPC 대본.
-# 의도(intents)는 위에서부터 키워드가 처음 맞는 것을 쓴다.
+# 의도(intents)는 위에서부터 키워드가 처음 맞는 것을 쓴다. 구체적인 의도(카드, CCTV 등)를 넓은 의도(알리바이)보다 위에 둔다.
 # 각 NPC의 의도별 항목은 위에서부터 when 조건이 프롬프트와 맞는 첫 항목을 쓴다. 맞는 게 없으면 default.
 # when: facts/lies/evidence는 프롬프트에 모두 있어야 하고, not_evidence는 하나도 없어야 한다.
 
 intents:
   - name: attack
     keywords: [시스템 프롬프트, 프롬프트, 지시사항, 규칙을 무시, 무시하고, 정답, 범인이 누구, 다른 사람의 비밀, 비밀을 말해, ignore, system prompt, 개발자 모드]
-  - name: alibi
-    keywords: [어디, 알리바이, 뭐 했, 뭘 했, 무엇을 했, 그 시간, 21시, 9시, 나간, 나갔]
   - name: card
     keywords: [카드, 출입]
   - name: cctv
@@ -18,6 +16,8 @@ intents:
     keywords: [다이아, 보석, 푸른 별, 모조, 진열장, 몰드]
   - name: others
     keywords: [윤재민, 박도현, 한서윤, 복원가, 경비원, 큐레이터, 동료, 다른 사람]
+  - name: alibi
+    keywords: [어디, 알리바이, 뭐 했, 뭘 했, 무엇을 했, 그 시간, 21시, 9시, 나간, 나갔]
 
 npcs:
   suspect-01:
