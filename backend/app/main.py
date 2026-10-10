@@ -13,13 +13,17 @@ from app.core.embedding.mock import MockEmbedding
 from app.core.embedding.ports import EmbeddingPort
 from app.core.game import GameError
 from app.core.llm.mock import MockLLM
+from app.core.llm.ollama import OllamaLLM
 from app.core.llm.ports import LLMPort
 
 
 def default_llm_factory() -> Callable[[str], LLMPort]:
     if settings.llm_backend == "mock":
         return lru_cache(MockLLM.for_case)
-    raise RuntimeError(f"LLM_BACKEND={settings.llm_backend}는 4단계에서 지원한다. mock을 쓴다.")
+    if settings.llm_backend == "ollama":
+        llm = OllamaLLM(settings.llm_model, settings.ollama_base_url)
+        return lambda _case_id: llm
+    raise RuntimeError(f"지원하지 않는 LLM_BACKEND: {settings.llm_backend} (mock | ollama)")
 
 
 def default_embedder() -> EmbeddingPort:

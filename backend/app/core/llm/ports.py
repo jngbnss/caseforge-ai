@@ -41,4 +41,13 @@ class LLMPort(Protocol):
         max_tokens: int = 512,
     ) -> LLMRaw: ...
 
-    def stream(self, messages: list[Message]) -> AsyncIterator[str]: ...
+    def stream(
+        self,
+        messages: list[Message],
+        *,
+        json_schema: dict[str, Any] | None = None,
+        temperature: float = 0.3,
+        max_tokens: int = 512,
+    ) -> AsyncIterator[str]:
+        """원문 텍스트를 조각으로 낸다. json_schema를 주면 JSON 원문이 조각으로 나온다."""
+        ...

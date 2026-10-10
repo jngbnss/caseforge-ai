@@ -121,7 +121,14 @@ class MockLLM:
         prompt_chars = sum(len(m.content) for m in messages)
         return LLMRaw(text, self.model_id, 0.0, Usage(prompt_chars // 2, len(text) // 2))
 
-    async def stream(self, messages: list[Message]) -> AsyncIterator[str]:
-        answer = self.respond(read_prompt(messages))["answer"]
-        for i in range(0, len(answer), 8):
-            yield answer[i : i + 8]
+    async def stream(
+        self,
+        messages: list[Message],
+        *,
+        json_schema: dict[str, Any] | None = None,
+        temperature: float = 0.3,
+        max_tokens: int = 512,
+    ) -> AsyncIterator[str]:
+        text = (await self.complete(messages, json_schema=json_schema)).text
+        for i in range(0, len(text), 8):
+            yield text[i : i + 8]
