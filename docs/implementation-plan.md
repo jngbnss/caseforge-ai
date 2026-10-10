@@ -103,7 +103,7 @@
 | 2-2 | REST API | 세션, 증거, 퍼즐, 제시, 질문, 보드, 추리, 해설 | `/docs`에서 각 엔드포인트 호출 | 대기 | |
 | 2-3 | 모델 어댑터 포트 · Mock | `LLMPort`, `EmbeddingPort`, Mock 구현 | Mock으로 같은 입력 → 같은 출력 | 완료 | 별도 프로세스 2회 실행에서 Mock LLM 응답과 Mock 임베딩 해시 동일(e9c7d629…). 잘못된 JSON 1회 → 재요청 성공, 2회 실패 → 기본값. 대본은 앱 안(app/core/llm/scripts)에 둠: 프론트 개발 때도 Mock으로 플레이해야 해서 |
 | 2-4 | KnowledgeScope · LeakGuard | NPC별 스코프, 누설 가드 | 공격 질문 3종 차단 | 완료 | 누설 응답 3종(시스템 프롬프트 노출, 다른 NPC 비밀, 범인 전용 사실) 모두 차단. 모든 증거를 모두에게 제시한 최악 상태에서도 스코프에 금지·타 NPC 사실 없음. pytest 27개 통과 |
-| 2-5 | 심문 파이프라인 (Mock) | 5노드 함수 파이프라인, 대본 fixture | 박도현 + ev-02 제시 → 진술 변화 | 대기 | |
+| 2-5 | 심문 파이프라인 (Mock) | 5노드 함수 파이프라인, 대본 fixture | 박도현 + ev-02 제시 → 진술 변화 | 진행중 |  |
 | 2-6 | 모순(규칙) · 추리 채점(구조) | `contradiction.py`, `scoring.py` | 정답 제출 100점, red_herring 연결 감점 | 대기 | |
 | 2-7 | E2E · 누출 테스트 | API만으로 사건 클리어, 응답 정답 필드 검사 | `pytest` E2E 통과 | 대기 | |
 | 2-8 | OpenAPI → TS 타입 | `frontend/src/types/api.ts` 생성 스크립트 | 생성 후 `npm run typecheck` | 대기 | |
