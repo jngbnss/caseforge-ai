@@ -31,14 +31,17 @@ cp .env.example .env          # 필요하면 값 수정
 
 ## 실행
 
-```bash
-# 백엔드 (http://127.0.0.1:8000/docs)
-cd backend && uv run uvicorn app.main:app --reload
+백엔드와 프론트를 한 번에 띄운다 (LLM은 Mock 대본).
 
-# 프론트엔드 (http://localhost:5173, /api는 백엔드로 프록시)
-# 백엔드를 8000이 아닌 포트로 띄웠다면: API_TARGET=http://127.0.0.1:<포트> npm run dev
-cd frontend && npm run dev
+```bash
+cd frontend && npm run dev:all
+# → http://localhost:5173   (개발자 모드: http://localhost:5173/?dev=1)
 ```
+
+- 8000 포트를 다른 프로그램이 쓰고 있으면 `BACKEND_PORT=8100 npm run dev:all`
+- 따로 띄우려면: `cd backend && uv run uvicorn app.main:app --reload` 와 `cd frontend && npm run dev`
+  (백엔드가 8000이 아니면 `API_TARGET=http://127.0.0.1:<포트> npm run dev`)
+- 개발자 모드의 근거·가드 정보는 백엔드 `DEBUG_API=true`일 때만 응답에 포함된다 (dev:all은 기본으로 켬)
 
 ## API 타입 갱신
 
@@ -56,7 +59,8 @@ uv run ruff check . && uv run ruff format --check .
 cd packages/case-validator && uv run pytest
 cd backend && uv run pytest
 uv run case-validator check cases/museum-001
-cd frontend && npm run lint && npm run typecheck && npm run build
+cd frontend && npm run lint && npm run typecheck && npm test && npm run build
+cd frontend && npx playwright install chromium && npm run e2e   # 브라우저 완주 테스트
 ```
 
 ## 라이선스
