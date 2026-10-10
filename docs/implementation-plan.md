@@ -101,7 +101,7 @@
 |---|---|---|---|---|---|
 | 2-1 | 세션 · 저장소 | 세션 상태 모델, SQLAlchemy + SQLite | 세션 생성 후 재조회 시 상태 유지 | 완료 | SQLite 파일 DB에 세션 생성 후 별도 프로세스에서 재조회 시 수집 증거·해시 유지. 사건 해시가 바뀌면 재조회 거부(CaseChangedError). pytest 6개 통과 |
 | 2-2 | REST API | 세션, 증거, 퍼즐, 제시, 질문, 보드, 추리, 해설 | `/docs`에서 각 엔드포인트 호출 | 대기 | |
-| 2-3 | 모델 어댑터 포트 · Mock | `LLMPort`, `EmbeddingPort`, Mock 구현 | Mock으로 같은 입력 → 같은 출력 | 대기 | |
+| 2-3 | 모델 어댑터 포트 · Mock | `LLMPort`, `EmbeddingPort`, Mock 구현 | Mock으로 같은 입력 → 같은 출력 | 진행중 |  |
 | 2-4 | KnowledgeScope · LeakGuard | NPC별 스코프, 누설 가드 | 공격 질문 3종 차단 | 대기 | |
 | 2-5 | 심문 파이프라인 (Mock) | 5노드 함수 파이프라인, 대본 fixture | 박도현 + ev-02 제시 → 진술 변화 | 대기 | |
 | 2-6 | 모순(규칙) · 추리 채점(구조) | `contradiction.py`, `scoring.py` | 정답 제출 100점, red_herring 연결 감점 | 대기 | |
