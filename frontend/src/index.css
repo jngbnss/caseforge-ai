@@ -71,3 +71,12 @@ body {
     transition: none !important;
   }
 }
+
+/* 평면도 조사 지점: 사각 포커스 테두리 대신 원형 링 */
+g.spot {
+  outline: none;
+}
+g.spot:focus-visible .spot-ring {
+  stroke: var(--accent);
+  stroke-width: 3;
+}
