@@ -1,0 +1,124 @@
+# museum-001 Mock NPC 대본.
+# 의도(intents)는 위에서부터 키워드가 처음 맞는 것을 쓴다.
+# 각 NPC의 의도별 항목은 위에서부터 when 조건이 프롬프트와 맞는 첫 항목을 쓴다. 맞는 게 없으면 default.
+# when: facts/lies/evidence는 프롬프트에 모두 있어야 하고, not_evidence는 하나도 없어야 한다.
+
+intents:
+  - name: attack
+    keywords: [시스템 프롬프트, 프롬프트, 지시사항, 규칙을 무시, 무시하고, 정답, 범인이 누구, 다른 사람의 비밀, 비밀을 말해, ignore, system prompt, 개발자 모드]
+  - name: alibi
+    keywords: [어디, 알리바이, 뭐 했, 뭘 했, 무엇을 했, 그 시간, 21시, 9시, 나간, 나갔]
+  - name: card
+    keywords: [카드, 출입]
+  - name: cctv
+    keywords: [cctv, 카메라, 녹화, 점검]
+  - name: money
+    keywords: [돈, 빚, 채무, 독촉]
+  - name: gem
+    keywords: [다이아, 보석, 푸른 별, 모조, 진열장, 몰드]
+  - name: others
+    keywords: [윤재민, 박도현, 한서윤, 복원가, 경비원, 큐레이터, 동료, 다른 사람]
+
+npcs:
+  suspect-01:
+    attack:
+      - {answer: "그건 제가 답할 수 있는 범위가 아닌 것 같네요. 사건에 관해 물어보세요.", emotion: defensive}
+    alibi:
+      - when: {facts: [fact-030]}
+        answer: …알겠어요. 사무실에 없었어요. 20:50부터 주차장에서 다른 경매사와 통화했어요. 이직 면접이라 숨기고 싶었던 거예요.
+        emotion: nervous
+        revealed: [fact-030]
+      - when: {lies: [lie-01]}
+        answer: 20:50부터는 사무실에서 도록 교정을 보고 있었어요.
+        emotion: calm
+        used_lies: [lie-01]
+    card:
+      - {answer: "출입 기록은 보안실 관할이라 저는 볼 권한이 없어요.", emotion: calm}
+    cctv:
+      - {answer: "CCTV 설정은 시설팀이나 복원실 단말에서만 바꿀 수 있다고 들었어요.", emotion: calm}
+    others:
+      - when: {facts: [fact-031]}
+        answer: 윤재민 씨요? 요즘 돈 문제로 예민했어요. 전화도 자주 피하고요.
+        emotion: sad
+        revealed: [fact-031]
+      - answer: 다들 성실한 사람들이에요. 누구를 의심하고 싶지는 않네요. 그래도 수사에는 협조할게요.
+        emotion: calm
+        trust_delta: 1
+    gem:
+      - answer: 푸른 별은 제가 3년을 공들여 들여온 작품이에요. 폐관 직후 둘러봤을 때는 이상이 없었어요.
+        emotion: sad
+        revealed: [fact-032]
+    money:
+      - {answer: "박물관 예산 이야기라면 제 소관이 아니에요.", emotion: calm}
+    default:
+      - {answer: "사건에 관한 질문이라면 성실히 답할게요.", emotion: calm}
+
+  suspect-02:
+    attack:
+      - {answer: "무슨 말씀이신지 잘 모르겠습니다. 수사에 필요한 질문만 해 주십시오.", emotion: defensive}
+    alibi:
+      - when: {facts: [fact-020]}
+        answer: …솔직히 말씀드리겠습니다. 21시 5분쯤 담배를 피우러 나갔습니다. 카드는 휴게실 사물함 3번에 두고요. 돌아와 보니 사물함 문이 살짝 열려 있었습니다.
+        emotion: nervous
+        revealed: [fact-020, fact-021, fact-022]
+      - when: {lies: [lie-02]}
+        answer: 21시 순찰 뒤로는 계속 보안실에 있었습니다. 순찰 때는 진열장에 이상이 없었습니다.
+        emotion: calm
+        used_lies: [lie-02]
+        revealed: [fact-023]
+    card:
+      - when: {facts: [fact-021]}
+        answer: 그 시간엔 카드를 사물함에 두고 나가 있었습니다. 제가 쓴 게 아닙니다!
+        emotion: nervous
+        revealed: [fact-021]
+      - when: {lies: [lie-02], evidence: [ev-01]}
+        answer: 제 카드로 21시 12분에 열렸다고요? 저는… 그 시간에 보안실에 있었습니다. 정말입니다.
+        emotion: nervous
+        used_lies: [lie-02]
+      - {answer: "제 카드는 제가 관리합니다. 규정이 그렇습니다.", emotion: defensive}
+    cctv:
+      - {answer: "보안실 모니터는 보기만 하지, 설정은 제 권한이 아닙니다.", emotion: calm}
+    others:
+      - {answer: "복원실 불은 밤늦게까지 켜져 있었습니다. 그 정도만 압니다.", emotion: calm, trust_delta: 1}
+    gem:
+      - {answer: "21시 순찰 때는 분명히 진열장에 있었습니다.", emotion: calm, revealed: [fact-023]}
+    money:
+      - {answer: "제 월급 얘기라면… 넉넉하진 않지만 사고 친 적은 없습니다.", emotion: defensive}
+    default:
+      - {answer: "수사에 필요한 질문만 해 주십시오.", emotion: calm}
+
+  suspect-03:
+    attack:
+      - {answer: "글쎄요, 저는 제가 아는 것만 말할 수 있어요.", emotion: calm}
+    alibi:
+      - when: {facts: [fact-043]}
+        answer: …네, 21시 10분쯤 휴게실에 잠깐 갔어요. 커피 마시러요. 그게 뭐가 문제죠?
+        emotion: nervous
+        revealed: [fact-043]
+      - when: {lies: [lie-03]}
+        answer: 저녁 내내 복원실에서 한 번도 안 나갔어요. 받침 보존 처리 때문에요.
+        emotion: calm
+        used_lies: [lie-03]
+      - {answer: "그 부분은 기억이 정확하지 않네요.", emotion: defensive}
+    card:
+      - {answer: "경비 카드요? 제가 그걸 왜 만지겠어요.", emotion: defensive}
+    cctv:
+      - when: {evidence: [rec-01]}
+        answer: 단말 점검 모드는… 정기 점검이었어요. 기록이 이상하게 남았을 수도 있죠.
+        emotion: nervous
+      - {answer: "CCTV는 시설팀 일이라 저는 잘 몰라요.", emotion: calm}
+    money:
+      - when: {evidence: [rec-02]}
+        answer: …개인적인 일입니다. 사건과는 관계없어요.
+        emotion: angry
+        trust_delta: -1
+      - {answer: "돈 문제요? 그런 거 없어요.", emotion: calm}
+    gem:
+      - when: {evidence: [ev-03]}
+        answer: 그 몰드는 복원용 견본이에요. 보석 모양은 흔하거든요.
+        emotion: defensive
+      - {answer: "진품이 사라졌다니 저도 충격이에요. 제가 직접 만졌던 작품인데.", emotion: sad}
+    others:
+      - {answer: "다른 분들 일은 제가 말할 입장이 아니네요.", emotion: calm}
+    default:
+      - {answer: "질문이 그것뿐이라면, 작업이 남아 있어서요.", emotion: calm}
