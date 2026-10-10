@@ -1,0 +1,55 @@
+puzzles:
+  - puzzle_id: pz-01
+    title: CCTV 프레임 순서 맞추기
+    prompt: 보안실 모니터에 남은 정지 화면 네 장을 시간 순서대로 놓아라. 화면 구석의 시계 일부와 인물 위치가 단서다.
+    input_type: sequence
+    options:
+      - {id: f-patrol, label: "경비원이 전시실을 순찰한다 (시계 21:0_)"}
+      - {id: f-exit, label: 경비원이 휴게실 쪽 복도로 사라진다}
+      - {id: f-maint, label: 화면이 '점검 중'으로 바뀐다}
+      - {id: f-resume, label: "녹화 재개: 진열장이 그대로 보인다 (시계 21:1_)"}
+    order_clues:
+      - {before: f-patrol, after: f-exit}
+      - {before: f-exit, after: f-maint}
+      - {before: f-maint, after: f-resume}
+    answer: [f-patrol, f-exit, f-maint, f-resume]
+    hints:
+      - 순찰하던 경비원이 먼저 화면에서 사라져야 한다.
+      - "'점검 중' 화면은 녹화가 다시 시작되기 전에 나온다."
+    requires: {evidence_collected: ev-01}
+    unlocks_evidence: [rec-01]
+
+  - puzzle_id: pz-02
+    title: 복원실 금고 암호
+    prompt: >-
+      금고 옆 포스트잇: "별이 발견된 해 끝 두 자리, 그다음 우리 집이 문 연 해 끝 두 자리".
+      전시 카드: 푸른 별, 1907년 남아프리카 발견. 한빛시립박물관, 1984년 개관.
+    input_type: code
+    code_length: 4
+    code_clues:
+      - {start: 0, end: 2, one_of: ["07"]}
+      - {start: 2, end: 4, one_of: ["84"]}
+    answer: "0784"
+    hints:
+      - "'우리 집'은 박물관이다."
+      - 연도의 끝 두 자리만 쓴다.
+    requires: {evidence_collected: ev-03}
+    unlocks_evidence: [rec-02]
+
+  - puzzle_id: pz-03
+    title: 찢어진 메모 조합
+    prompt: 복원실 휴지통에서 나온 메모 조각 세 개를 문장이 되도록 순서대로 놓아라.
+    input_type: arrangement
+    options:
+      - {id: p-locker, label: 사물함 3번}
+      - {id: p-time, label: "21:10"}
+      - {id: p-room, label: 휴게실 —}
+    order_clues:
+      - {first: p-time}
+      - {before: p-room, after: p-locker}
+    answer: [p-time, p-room, p-locker]
+    hints:
+      - 메모는 시각으로 시작한다.
+      - 장소를 먼저 쓰고 그 안의 물건을 쓴다.
+    requires: {evidence_collected: ev-03}
+    unlocks_evidence: [rec-03]

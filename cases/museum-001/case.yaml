@@ -1,0 +1,246 @@
+case_id: museum-001
+title: 사라진 푸른 다이아몬드
+
+briefing:
+  summary: >-
+    한빛시립박물관. 오늘 09:00 정기 감정에서 전시 중이던 '푸른 별'이 정교한 모조품으로 판명됐다.
+    어젯밤 20:30 폐관 후 관내에 남아 있던 사람은 세 명이다.
+  damage: 푸른 별(32캐럿 블루 다이아몬드) 진품 도난. 진열장에는 모조품이 놓여 있다.
+  objective: 범인, 동기, 수법을 밝히고 핵심 증거로 뒷받침한다.
+  public_fact_ids: [fact-001, fact-002]
+
+locations:
+  - location_id: loc-hall
+    name: 전시실
+    adjacent:
+      - {to: loc-security, minutes: 1}
+      - {to: loc-breakroom, minutes: 1}
+      - {to: loc-office, minutes: 2}
+      - {to: loc-restoration, minutes: 2}
+  - location_id: loc-breakroom
+    name: 직원 휴게실
+    adjacent:
+      - {to: loc-restoration, minutes: 1}
+      - {to: loc-smoking, minutes: 2}
+  - location_id: loc-security
+    name: 보안실
+    adjacent:
+      - {to: loc-parking, minutes: 3}
+  - location_id: loc-office
+    name: 큐레이터 사무실
+    adjacent:
+      - {to: loc-parking, minutes: 4}
+  - location_id: loc-restoration
+    name: 복원실
+  - location_id: loc-smoking
+    name: 옥외 흡연 구역
+  - location_id: loc-parking
+    name: 직원 주차장
+
+deduction_options:
+  motives:
+    - {id: mot-debt, text: 도박 빚을 갚으려고}
+    - {id: mot-job, text: 이직하면서 작품을 빼돌리려고}
+    - {id: mot-revenge, text: 박물관에 대한 앙심}
+    - {id: mot-insurance, text: 보험금}
+  methods:
+    - {id: met-swap, text: CCTV 공백을 만들고 경비 카드를 몰래 써서 모조품과 바꿔치기}
+    - {id: met-guard-card, text: 경비원이 자기 카드로 들어가 훔침}
+    - {id: met-daytime, text: 낮 관람 시간에 바꿔치기}
+
+facts:
+  # 공개 사실
+  - fact_id: fact-001
+    content: 오늘 09:00 정기 감정에서 진열장의 푸른 별(32캐럿)이 유리에 코팅한 모조품으로 판명됐다.
+    kind: record
+    source: appraisal-report
+    location_id: loc-hall
+    known_by: [suspect-01, suspect-02, suspect-03]
+    available_to_player: true
+  - fact_id: fact-002
+    content: 어젯밤 20:30 폐관 후 관내에는 한서윤, 박도현, 윤재민 세 사람만 남아 있었다.
+    kind: record
+    source: security-log
+    known_by: [suspect-01, suspect-02, suspect-03]
+    available_to_player: true
+
+  # 증거 기록
+  - fact_id: fact-010
+    content: 21:12 전시실 출입문이 박도현의 경비 카드로 열렸다.
+    kind: record
+    source: security-log
+    time: {start: "21:12", end: "21:12"}
+    location_id: loc-hall
+    subjects: [suspect-02]
+    available_to_player: true
+    unlock_condition: {evidence_collected: ev-01}
+  - fact_id: fact-011
+    content: 20:46부터 21:29까지 큐레이터 사무실 문이 열린 기록이 없다.
+    kind: record
+    source: security-log
+    time: {start: "20:46", end: "21:29"}
+    location_id: loc-office
+    subjects: [suspect-01]
+    available_to_player: true
+    unlock_condition: {evidence_collected: ev-01}
+  - fact_id: fact-012
+    content: 흡연 구역 옆 자판기 영수증이 21:08에 발행됐고, 바닥에 경비 제복 단추가 떨어져 있다.
+    kind: record
+    source: scene
+    time: {start: "21:08", end: "21:08"}
+    location_id: loc-smoking
+    subjects: [suspect-02]
+    available_to_player: true
+    unlock_condition: {evidence_collected: ev-02}
+  - fact_id: fact-050
+    content: 복원실 쓰레기통에서 보석 모양으로 굳은 실리콘 몰드 조각이 나왔다. 푸른 안료가 묻어 있다.
+    kind: record
+    source: scene
+    location_id: loc-restoration
+    subjects: [suspect-03]
+    available_to_player: true
+    unlock_condition: {evidence_collected: ev-03}
+  - fact_id: fact-051
+    content: 진열장 받침에 미세 연마 가루와 파란 니트릴 장갑 섬유가 남아 있다. 복원실에서 쓰는 제품과 같다.
+    kind: record
+    source: scene
+    location_id: loc-hall
+    subjects: [suspect-03]
+    available_to_player: true
+    unlock_condition: {evidence_collected: ev-04}
+  - fact_id: fact-052
+    content: 모조품 바닥면에 실리콘 몰드 자국이 있다.
+    kind: record
+    source: appraisal-report
+    location_id: loc-hall
+    available_to_player: true
+    unlock_condition: {evidence_collected: ev-05}
+  - fact_id: fact-053
+    content: CCTV는 21:08부터 21:16까지 녹화되지 않았다. 직전에 복원실 단말에서 점검 모드 전환 로그가 남았다.
+    kind: record
+    source: cctv-system
+    time: {start: "21:08", end: "21:16"}
+    location_id: loc-restoration
+    subjects: [suspect-03]
+    available_to_player: true
+    unlock_condition: {puzzle_solved: pz-01}
+  - fact_id: fact-054
+    content: "윤재민 앞 채무 독촉장: 사설 대부업체, 상환 기한 이번 주 금요일."
+    kind: record
+    source: restoration-safe
+    subjects: [suspect-03]
+    available_to_player: true
+    unlock_condition: {puzzle_solved: pz-02}
+  - fact_id: fact-055
+    content: "윤재민 필체의 메모: '21:10 휴게실 — 사물함 3번'"
+    kind: record
+    source: torn-memo
+    subjects: [suspect-03]
+    available_to_player: true
+    unlock_condition: {puzzle_solved: pz-03}
+
+  # 한서윤
+  - fact_id: fact-030
+    content: 한서윤은 20:50부터 21:25까지 주차장에서 경쟁 경매사와 이직 면접 통화를 했다.
+    kind: truth
+    source: suspect-01
+    time: {start: "20:50", end: "21:25"}
+    location_id: loc-parking
+    subjects: [suspect-01]
+    known_by: [suspect-01]
+    canary_keywords: [경매사, 이직, 면접]
+  - fact_id: fact-031
+    content: 윤재민은 요즘 돈 문제로 예민했고 전화를 자주 피했다.
+    kind: testimony
+    source: suspect-01
+    subjects: [suspect-03]
+    known_by: [suspect-01]
+    unlock_condition: {trust_gte: {npc_id: suspect-01, value: 1}}
+  - fact_id: fact-032
+    content: 한서윤은 20:30 폐관 직후 전시실을 둘러보고 이상이 없음을 확인했다.
+    kind: testimony
+    source: suspect-01
+    time: {start: "20:30", end: "20:35"}
+    location_id: loc-hall
+    known_by: [suspect-01]
+
+  # 박도현
+  - fact_id: fact-020
+    content: 박도현은 21:07부터 21:20까지 옥외 흡연 구역에 있었다.
+    kind: truth
+    source: suspect-02
+    time: {start: "21:07", end: "21:20"}
+    location_id: loc-smoking
+    subjects: [suspect-02]
+    known_by: [suspect-02]
+    canary_keywords: [담배, 흡연]
+  - fact_id: fact-021
+    content: 박도현은 21:04쯤 경비 카드를 휴게실 사물함 3번에 넣어 두었다.
+    kind: truth
+    source: suspect-02
+    time: {start: "21:04", end: "21:05"}
+    location_id: loc-breakroom
+    subjects: [suspect-02]
+    known_by: [suspect-02]
+    canary_keywords: [사물함]
+  - fact_id: fact-022
+    content: 21:22 휴게실에 돌아왔을 때 사물함 3번 문이 살짝 열려 있었다.
+    kind: testimony
+    source: suspect-02
+    time: {start: "21:22", end: "21:24"}
+    location_id: loc-breakroom
+    known_by: [suspect-02]
+  - fact_id: fact-023
+    content: 21:00 마지막 순찰 때 진열장에는 이상이 없었다.
+    kind: testimony
+    source: suspect-02
+    time: {start: "21:00", end: "21:03"}
+    location_id: loc-hall
+    known_by: [suspect-02]
+
+  # 윤재민 (범인)
+  - fact_id: fact-040
+    content: 윤재민이 21:08 복원실 단말로 CCTV를 점검 모드로 바꿨다.
+    kind: truth
+    source: suspect-03
+    time: {start: "21:08", end: "21:09"}
+    location_id: loc-restoration
+    subjects: [suspect-03]
+    known_by: [suspect-03]
+    forbidden: true
+    canary_keywords: [점검 모드로 바꿨, 점검 모드를 켰]
+  - fact_id: fact-041
+    content: 윤재민이 21:10 휴게실 사물함 3번에서 박도현의 경비 카드를 꺼냈다.
+    kind: truth
+    source: suspect-03
+    time: {start: "21:10", end: "21:11"}
+    location_id: loc-breakroom
+    subjects: [suspect-03, suspect-02]
+    known_by: [suspect-03]
+    forbidden: true
+    canary_keywords: [카드를 꺼냈, 카드를 가져갔]
+  - fact_id: fact-042
+    content: 윤재민이 21:12부터 21:16까지 전시실에 들어가 푸른 별을 모조품과 바꿔치기했다.
+    kind: truth
+    source: suspect-03
+    time: {start: "21:12", end: "21:16"}
+    location_id: loc-hall
+    subjects: [suspect-03]
+    known_by: [suspect-03]
+    forbidden: true
+    canary_keywords: [바꿔치기했, 바꿔 놓았]
+  - fact_id: fact-043
+    content: 윤재민은 21:10쯤 커피를 마시러 휴게실에 잠깐 갔다고 인정한다.
+    kind: testimony
+    source: suspect-03
+    time: {start: "21:10", end: "21:11"}
+    location_id: loc-breakroom
+    known_by: [suspect-03]
+  - fact_id: fact-044
+    content: 윤재민은 사설 대부업체에 도박 빚이 있고, 개인 수집가에게서 푸른 별을 넘기라는 제안을 받았다.
+    kind: truth
+    source: suspect-03
+    subjects: [suspect-03]
+    known_by: [suspect-03]
+    forbidden: true
+    canary_keywords: [도박, 수집가]

@@ -1,0 +1,12 @@
+# 서버 전용. 이 파일의 내용은 추리 제출 전까지 어떤 API 응답에도 포함되지 않는다.
+solution:
+  culprit_id: suspect-03
+  motive_id: mot-debt
+  method_id: met-swap
+  method_steps: [fact-040, fact-041, fact-042]
+  key_evidence: [ev-03, ev-04, rec-01, rec-02, rec-03]
+  acceptable_evidence: [ev-05, ev-02]
+  crime:
+    location_id: loc-hall
+    time: {start: "21:12", end: "21:16"}
+  required_means: [replica_making, cctv_terminal_access]

@@ -1,0 +1,21 @@
+[tool.uv.workspace]
+members = ["backend", "packages/case-validator"]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3",
+    "ruff>=0.8",
+    "httpx>=0.28",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-exclude = ["docs", "frontend"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM"]
+ignore = ["E501"]  # 줄 길이는 ruff format이 맞춘다 (한글 문자열은 자르지 않음)
+
+[tool.ruff.lint.isort]
+known-first-party = ["app", "case_validator", "conftest"]

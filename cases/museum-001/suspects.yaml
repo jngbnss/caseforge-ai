@@ -1,0 +1,47 @@
+suspects:
+  - suspect_id: suspect-01
+    name: 한서윤
+    role: 수석 큐레이터
+    public_profile: 푸른 별 전시를 직접 기획한 12년 차 큐레이터. 폐관 후 사무실에 남아 있었다고 한다.
+    capabilities: [collection_access]
+  - suspect_id: suspect-02
+    name: 박도현
+    role: 야간 경비원
+    public_profile: 3년 차 야간 경비원. 출입 카드와 보안실 모니터를 관리한다.
+    capabilities: [security_card, cctv_monitoring]
+  - suspect_id: suspect-03
+    name: 윤재민
+    role: 보존 복원가
+    public_profile: 지난달 푸른 별의 받침 복원을 맡았던 복원가. 그날 밤 복원실에서 야근 중이었다고 한다.
+    capabilities: [replica_making, cctv_terminal_access, collection_access]
+
+lies:
+  - lie_id: lie-01
+    npc_id: suspect-01
+    contradicts_fact_id: fact-030
+    claim: 20:50부터 사무실에서 도록 교정을 보고 있었다.
+    breaks_on: [ev-01]
+  - lie_id: lie-02
+    npc_id: suspect-02
+    contradicts_fact_id: fact-020
+    claim: 21시 순찰 뒤로는 계속 보안실에 있었다.
+    breaks_on: [ev-02]
+  - lie_id: lie-03
+    npc_id: suspect-03
+    contradicts_fact_id: fact-041
+    claim: 저녁 내내 복원실에서 한 번도 나가지 않았다.
+    breaks_on: [rec-03, ev-04]
+
+secrets:
+  - secret_id: sec-01
+    npc_id: suspect-01
+    fact_ids: [fact-030]
+    reveal_when: {evidence_presented: {evidence_id: ev-01, npc_id: suspect-01}}
+  - secret_id: sec-02
+    npc_id: suspect-02
+    fact_ids: [fact-020, fact-021, fact-022]
+    reveal_when: {evidence_presented: {evidence_id: ev-02, npc_id: suspect-02}}
+  - secret_id: sec-03
+    npc_id: suspect-03
+    fact_ids: [fact-043]
+    reveal_when: {evidence_presented: {evidence_id: rec-03, npc_id: suspect-03}}

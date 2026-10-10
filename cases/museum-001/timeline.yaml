@@ -1,0 +1,23 @@
+# 진짜 시간선. 인물마다 이벤트가 겹치지 않고, 이동 시간이 장소 인접 정보와 맞아야 한다.
+timeline:
+  # 한서윤 (큐레이터)
+  - {event_id: e-s01-1, actor_id: suspect-01, location_id: loc-hall, time: {start: "20:30", end: "20:35"}, action: 폐관 후 전시실 점검, fact_ids: [fact-032]}
+  - {event_id: e-s01-2, actor_id: suspect-01, location_id: loc-office, time: {start: "20:37", end: "20:45"}, action: 사무실에서 짐 정리}
+  - {event_id: e-s01-3, actor_id: suspect-01, location_id: loc-parking, time: {start: "20:50", end: "21:25"}, action: 경쟁 경매사와 이직 면접 통화, fact_ids: [fact-030]}
+  - {event_id: e-s01-4, actor_id: suspect-01, location_id: loc-office, time: {start: "21:30", end: "22:00"}, action: 사무실 복귀}
+
+  # 박도현 (야간 경비원)
+  - {event_id: e-s02-1, actor_id: suspect-02, location_id: loc-security, time: {start: "20:30", end: "20:58"}, action: 보안실 근무}
+  - {event_id: e-s02-2, actor_id: suspect-02, location_id: loc-hall, time: {start: "21:00", end: "21:03"}, action: 마지막 순찰, fact_ids: [fact-023]}
+  - {event_id: e-s02-3, actor_id: suspect-02, location_id: loc-breakroom, time: {start: "21:04", end: "21:05"}, action: 경비 카드를 사물함 3번에 넣음, fact_ids: [fact-021]}
+  - {event_id: e-s02-4, actor_id: suspect-02, location_id: loc-smoking, time: {start: "21:07", end: "21:20"}, action: 흡연 구역에서 근무지 이탈, fact_ids: [fact-020, fact-012]}
+  - {event_id: e-s02-5, actor_id: suspect-02, location_id: loc-breakroom, time: {start: "21:22", end: "21:24"}, action: "카드 회수, 사물함 문이 열려 있음", fact_ids: [fact-022]}
+  - {event_id: e-s02-6, actor_id: suspect-02, location_id: loc-security, time: {start: "21:26", end: "22:00"}, action: 보안실 복귀}
+
+  # 윤재민 (보존 복원가, 범인)
+  - {event_id: e-s03-1, actor_id: suspect-03, location_id: loc-restoration, time: {start: "20:00", end: "21:07"}, action: 복원실 야근}
+  - {event_id: e-s03-2, actor_id: suspect-03, location_id: loc-restoration, time: {start: "21:08", end: "21:09"}, action: 복원실 단말로 CCTV 점검 모드 전환, fact_ids: [fact-040, fact-053], is_crime: true}
+  - {event_id: e-s03-3, actor_id: suspect-03, location_id: loc-breakroom, time: {start: "21:10", end: "21:11"}, action: 사물함 3번에서 경비 카드를 꺼냄, fact_ids: [fact-041], is_crime: true}
+  - {event_id: e-s03-4, actor_id: suspect-03, location_id: loc-hall, time: {start: "21:12", end: "21:16"}, action: 경비 카드로 전시실에 들어가 모조품과 바꿔치기, fact_ids: [fact-010, fact-042], is_crime: true}
+  - {event_id: e-s03-5, actor_id: suspect-03, location_id: loc-breakroom, time: {start: "21:17", end: "21:18"}, action: 경비 카드를 사물함에 되돌려 놓음, is_crime: true}
+  - {event_id: e-s03-6, actor_id: suspect-03, location_id: loc-restoration, time: {start: "21:19", end: "22:30"}, action: 복원실로 돌아가 야근을 계속함}
