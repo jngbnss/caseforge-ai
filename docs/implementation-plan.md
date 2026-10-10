@@ -87,11 +87,11 @@
 
 | ID | 작업 | 산출물 | 스모크 테스트 | 상태 | 기록 |
 |---|---|---|---|---|---|
-| 1-1 | 저장소 골격 | uv 워크스페이스, FastAPI `/health`, Vite+React+TS+Tailwind+Zustand, `.env.example`, LICENSE, README | `uvicorn` 실행 후 `/health` 200, `npm run build` | 진행중 | |
-| 1-2 | Case Bible 스키마 · 조건 DSL · 로더 | `schema.py`, `conditions.py`, `loader.py` | `load_case(museum-001)` 성공, 해시 64자 | 진행중 | |
-| 1-3 | museum-001 사건 데이터 | `cases/museum-001/*.yaml` | 검증기 오류 0, 경고 0 | 진행중 | |
-| 1-4 | 사건 검증기 | 규칙 V01–V07, T01–T03, U01–U02, CLI | 망가뜨린 사건 16종이 각각 기대 규칙에서 실패 | 진행중 | |
-| 1-5 | CI · 문서 | `ci.yml`, `case-schema.md`, `licenses.md` 등 문서 템플릿 | 로컬에서 CI와 같은 명령 전부 통과 | 진행중 | |
+| 1-1 | 저장소 골격 | uv 워크스페이스, FastAPI `/health`, Vite+React+TS+Tailwind+Zustand, `.env.example`, LICENSE, README | `uvicorn` 실행 후 `/health` 200, `npm run build` | 완료 | uvicorn `/health` 200, `/docs` 200. Vite 개발 서버 + `/api` 프록시로 백엔드 응답 확인, build 성공. 로컬 8000 포트를 다른 앱이 쓰고 있어 프록시 대상을 `API_TARGET`으로 바꿀 수 있게 함 |
+| 1-2 | Case Bible 스키마 · 조건 DSL · 로더 | `schema.py`, `conditions.py`, `loader.py` | `load_case(museum-001)` 성공, 해시 64자 | 완료 | `load_case(museum-001)` 성공, sha256 `0e0afff3d526…`. 스키마·조건 DSL 테스트 통과 |
+| 1-3 | museum-001 사건 데이터 | `cases/museum-001/*.yaml` | 검증기 오류 0, 경고 0 | 완료 | 검증기 오류 0 · 경고 0, 증거 8/8 도달, 퍼즐 3/3 해결 가능 |
+| 1-4 | 사건 검증기 | 규칙 V01–V07, T01–T03, U01–U02, CLI | 망가뜨린 사건 16종이 각각 기대 규칙에서 실패 | 완료 | pytest 33개 통과 (망가뜨린 사건 16종이 각각 기대 규칙에서 실패, CLI 종료 코드 확인) |
+| 1-5 | CI · 문서 | `ci.yml`, `case-schema.md`, `licenses.md` 등 문서 템플릿 | 로컬에서 CI와 같은 명령 전부 통과 | 완료 | 로컬에서 CI 명령 전부 통과 (Ruff, pytest, 사건 검증, lint, typecheck, build) |
 
 ### 2단계 — 게임 엔진 · API · Mock 심문 (P3)
 
