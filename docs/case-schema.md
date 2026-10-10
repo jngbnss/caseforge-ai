@@ -29,7 +29,7 @@
 | `Suspect` | `suspect_id`, `name`, `role`, `public_profile`, `capabilities` | `capabilities`는 U01의 수단 판정에 쓴다. |
 | `Lie` | `lie_id`, `npc_id`, `contradicts_fact_id`, `claim`, `breaks_on` | NPC가 할 수 있는 거짓말은 여기 정의된 것뿐이다. `breaks_on` 증거를 제시하면 무너진다. |
 | `Secret` | `secret_id`, `npc_id`, `fact_ids`, `reveal_when` | 조건이 충족되면 해당 NPC가 그 사실을 말할 수 있다. |
-| `Evidence` | `evidence_id`, `name`, `description`, `location_id`, `source`(scene/puzzle), `discoverable`, `proves_fact_ids`, `role`(key/supporting/red_herring), `attests`, `implicates` | `attests`는 증거가 기록한 순간(시간선 이벤트·시각·장소). `implicates`는 이 증거가 어느 용의자의 기회·수단·동기를 입증하는지. |
+| `Evidence` | `evidence_id`, `name`, `description`, `location_id`, `spot`, `source`(scene/puzzle), `discoverable`, `proves_fact_ids`, `role`(key/supporting/red_herring), `attests`, `implicates` | `attests`는 증거가 기록한 순간(시간선 이벤트·시각·장소). `implicates`는 이 증거가 어느 용의자의 기회·수단·동기를 입증하는지. |
 | `Puzzle` | `puzzle_id`, `title`, `prompt`, `input_type`(sequence/code/arrangement), `options`, `order_clues`, `code_length`, `code_clues`, `answer`, `hints`, `requires`, `unlocks_evidence` | 정답 판정과 유일해 검사는 단서(`order_clues`, `code_clues`)로 코드가 한다. |
 | `TimelineEvent` | `event_id`, `time`, `actor_id`, `location_id`, `action`, `fact_ids`, `is_crime` | 진짜 시간선. |
 | `Solution` | `culprit_id`, `motive_id`, `method_id`, `method_steps`, `key_evidence`, `acceptable_evidence`, `crime{location_id, time}`, `required_means` | 추리 채점의 기준. |

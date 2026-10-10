@@ -4,6 +4,7 @@ evidence:
     name: 출입 로그
     description: 보안실 단말의 출입 기록. 21:12 전시실 출입, 카드 소유자 박도현. 같은 시간대 큐레이터 사무실 문 개방 기록은 없다.
     location_id: loc-security
+    spot: 보안실 단말
     source: scene
     proves_fact_ids: [fact-010, fact-011]
     role: red_herring
@@ -14,6 +15,7 @@ evidence:
     name: 꽁초와 자판기 영수증
     description: 옥외 흡연 구역의 꽁초 몇 개, 21:08에 발행된 자판기 영수증, 경비 제복 단추.
     location_id: loc-smoking
+    spot: 흡연 구역 바닥
     source: scene
     proves_fact_ids: [fact-012]
     role: supporting
@@ -22,6 +24,7 @@ evidence:
     name: 실리콘 몰드 조각
     description: 복원실 쓰레기통에서 나온, 보석 모양으로 오목하게 굳은 실리콘. 푸른 안료가 묻어 있다.
     location_id: loc-restoration
+    spot: 복원실 쓰레기통
     source: scene
     proves_fact_ids: [fact-050]
     role: key
@@ -31,6 +34,7 @@ evidence:
     name: 연마 가루와 장갑 섬유
     description: 진열장 받침의 미세 연마 가루와 파란 니트릴 장갑 섬유. 복원실 비품과 같은 제품이다.
     location_id: loc-hall
+    spot: 진열장 받침
     source: scene
     proves_fact_ids: [fact-051]
     role: key
@@ -40,6 +44,7 @@ evidence:
     name: 모조 다이아몬드
     description: 진열장 속 모조품. 분광 감정 결과 유리에 코팅한 것이며 바닥면에 몰드 자국이 있다.
     location_id: loc-hall
+    spot: 전시 진열장
     source: scene
     proves_fact_ids: [fact-001, fact-052]
     role: supporting
@@ -49,6 +54,7 @@ evidence:
     name: CCTV 공백 기록
     description: 21:08–21:16 녹화 공백. 공백 직전 복원실 단말에서 점검 모드 전환 로그.
     location_id: loc-security
+    spot: CCTV 기록
     source: puzzle
     proves_fact_ids: [fact-053]
     role: key
@@ -59,6 +65,7 @@ evidence:
     name: 채무 독촉장
     description: 복원실 금고 속 윤재민 앞 독촉장. 사설 대부업체, 상환 기한 이번 주 금요일.
     location_id: loc-restoration
+    spot: 복원실 금고
     source: puzzle
     proves_fact_ids: [fact-054]
     role: key
@@ -68,6 +75,7 @@ evidence:
     name: 복원된 메모
     description: "찢어진 조각을 맞춘 윤재민 필체의 메모: '21:10 휴게실 — 사물함 3번'"
     location_id: loc-restoration
+    spot: 찢어진 메모
     source: puzzle
     proves_fact_ids: [fact-055]
     role: key

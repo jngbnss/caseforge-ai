@@ -2,11 +2,12 @@ from fastapi.testclient import TestClient
 
 from app.cases.registry import get_case
 from app.core.config import settings
-from app.main import app
+from app.main import create_app
 
 
-def test_health() -> None:
-    response = TestClient(app).get("/health")
+def test_health(tmp_path) -> None:
+    client = TestClient(create_app(f"sqlite:///{tmp_path / 'h.db'}"))
+    response = client.get("/health")
     assert response.status_code == 200
     assert response.json() == {"status": "ok"}
 

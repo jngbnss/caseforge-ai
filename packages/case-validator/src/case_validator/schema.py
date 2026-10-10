@@ -178,6 +178,8 @@ class Evidence(Frozen):
     name: str
     description: str
     location_id: str
+    spot: str | None = None
+    """현장에서 조사하는 지점 이름 (예: 진열장 받침). 화면의 조사 오브젝트 라벨로 쓴다."""
     source: Literal["scene", "puzzle"]
     discoverable: Condition | None = None
     """None이면 처음부터 발견 가능하다."""
