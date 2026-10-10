@@ -106,7 +106,7 @@
 | 2-5 | 심문 파이프라인 (Mock) | 5노드 함수 파이프라인, 대본 fixture | 박도현 + ev-02 제시 → 진술 변화 | 완료 | 박도현 심문: 제시 전 거짓말(lie-02) → 출입 로그 제시 시 동요 → 영수증 제시 후 흡연·사물함 자백. 스모크 중 '카드는 어디' 질문이 알리바이로 분류되는 문제 발견해 Mock 의도 순서 수정. 누설 1회 → 재생성, 지속 → 회피 대사. pytest 34개 통과 |
 | 2-6 | 모순(규칙) · 추리 채점(구조) | `contradiction.py`, `scoring.py` | 정답 제출 100점, red_herring 연결 감점 | 완료 | 정답 제출 100점, 함정 증거(ev-01) 추가 시 95점, 경비원 지목 20점. 거짓말 진술 후 반박 증거 확보 시 규칙 모순 1회만 기록(source=rule). pytest 40개 통과 |
 | 2-7 | E2E · 누출 테스트 | API만으로 사건 클리어, 응답 정답 필드 검사 | `pytest` E2E 통과 | 완료 | API만으로 브리핑 → 증거 5개 → 퍼즐 3개(오답·힌트 포함) → 3명 심문·증거 제시로 진술 변화 → 공격 질문 3건 → 수사 보드 모순 3건 → 정답 제출 100점 → 해설까지 완주. 제출 전 모든 응답에서 금지 사실·퍼즐 정답·증거 역할·정답 키 없음, 선택지가 정답 순서로 나오지 않음. pytest 43개 통과 |
-| 2-8 | OpenAPI → TS 타입 | `frontend/src/types/api.ts` 생성 스크립트 | 생성 후 `npm run typecheck` | 진행중 |  |
+| 2-8 | OpenAPI → TS 타입 | `frontend/src/types/api.ts` 생성 스크립트 | 생성 후 `npm run typecheck` | 완료 | OpenAPI 내보내기 → openapi-typescript로 src/types/api.ts 생성 → typecheck·lint 통과. 두 번 재생성해도 차이 없음(LF 고정). CI에 최신 여부 검사 단계 추가 |
 
 ### 3단계 — 프론트엔드 (P4)
 

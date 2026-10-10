@@ -40,6 +40,15 @@ cd backend && uv run uvicorn app.main:app --reload
 cd frontend && npm run dev
 ```
 
+## API 타입 갱신
+
+백엔드 응답 모델을 바꾸면 프론트 타입을 다시 만든다. CI가 최신 여부를 검사한다.
+
+```bash
+cd backend && uv run python -m scripts.export_openapi
+cd frontend && npm run gen:api
+```
+
 ## 검사
 
 ```bash

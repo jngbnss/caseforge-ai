@@ -32,6 +32,10 @@ jobs:
       - name: 백엔드 테스트
         working-directory: backend
         run: uv run pytest
+      - name: OpenAPI 스키마가 최신인지 확인
+        run: |
+          (cd backend && uv run python -m scripts.export_openapi)
+          git diff --exit-code frontend/openapi.json
       - name: 사건 스키마 · 시간선 · 퍼즐 유일해 검사
         run: |
           for case in cases/*/; do
@@ -52,6 +56,10 @@ jobs:
           cache: npm
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci
+      - name: API 타입이 OpenAPI와 일치하는지 확인
+        run: |
+          npm run gen:api
+          git diff --exit-code src/types/api.ts
       - run: npm run lint
       - run: npm run typecheck
       - run: npm run build

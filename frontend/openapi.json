@@ -1,0 +1,1513 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "CaseForge AI",
+    "version": "0.2.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "system"
+        ],
+        "summary": "Health",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object",
+                  "title": "Response Health Health Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sessions": {
+      "post": {
+        "tags": [
+          "game"
+        ],
+        "summary": "Create Session",
+        "operationId": "create_session_sessions_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSessionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionView"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sessions/{session_id}": {
+      "get": {
+        "tags": [
+          "game"
+        ],
+        "summary": "Get Session",
+        "operationId": "get_session_sessions__session_id__get",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionView"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sessions/{session_id}/evidence/{evidence_id}/collect": {
+      "post": {
+        "tags": [
+          "game"
+        ],
+        "summary": "Collect",
+        "operationId": "collect_sessions__session_id__evidence__evidence_id__collect_post",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          },
+          {
+            "name": "evidence_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Evidence Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CollectResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sessions/{session_id}/puzzles/{puzzle_id}/attempt": {
+      "post": {
+        "tags": [
+          "game"
+        ],
+        "summary": "Attempt Puzzle",
+        "operationId": "attempt_puzzle_sessions__session_id__puzzles__puzzle_id__attempt_post",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          },
+          {
+            "name": "puzzle_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Puzzle Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PuzzleAttemptRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PuzzleAttemptResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sessions/{session_id}/puzzles/{puzzle_id}/hint": {
+      "get": {
+        "tags": [
+          "game"
+        ],
+        "summary": "Hint",
+        "operationId": "hint_sessions__session_id__puzzles__puzzle_id__hint_get",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          },
+          {
+            "name": "puzzle_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Puzzle Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HintResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sessions/{session_id}/npcs/{npc_id}/present": {
+      "post": {
+        "tags": [
+          "game"
+        ],
+        "summary": "Present",
+        "operationId": "present_sessions__session_id__npcs__npc_id__present_post",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          },
+          {
+            "name": "npc_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Npc Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PresentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PresentResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sessions/{session_id}/npcs/{npc_id}/ask": {
+      "post": {
+        "tags": [
+          "game"
+        ],
+        "summary": "Ask",
+        "operationId": "ask_sessions__session_id__npcs__npc_id__ask_post",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          },
+          {
+            "name": "npc_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Npc Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AskRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AskResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sessions/{session_id}/board": {
+      "get": {
+        "tags": [
+          "game"
+        ],
+        "summary": "Board",
+        "operationId": "board_sessions__session_id__board_get",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BoardView"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sessions/{session_id}/deduction": {
+      "post": {
+        "tags": [
+          "game"
+        ],
+        "summary": "Deduce",
+        "operationId": "deduce_sessions__session_id__deduction_post",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeductionSubmission"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeductionResultView"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sessions/{session_id}/debrief": {
+      "get": {
+        "tags": [
+          "game"
+        ],
+        "summary": "Debrief",
+        "operationId": "debrief_sessions__session_id__debrief_get",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Session Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DebriefView"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AskRequest": {
+        "properties": {
+          "question": {
+            "type": "string",
+            "maxLength": 300,
+            "minLength": 1,
+            "title": "Question"
+          }
+        },
+        "type": "object",
+        "required": [
+          "question"
+        ],
+        "title": "AskRequest"
+      },
+      "AskResponse": {
+        "properties": {
+          "answer": {
+            "type": "string",
+            "title": "Answer"
+          },
+          "emotion": {
+            "type": "string",
+            "title": "Emotion"
+          },
+          "revealed_fact_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Revealed Fact Ids"
+          },
+          "contradiction_detected": {
+            "type": "boolean",
+            "title": "Contradiction Detected"
+          },
+          "trust_delta": {
+            "type": "integer",
+            "title": "Trust Delta"
+          },
+          "turn": {
+            "type": "integer",
+            "title": "Turn"
+          }
+        },
+        "type": "object",
+        "required": [
+          "answer",
+          "emotion",
+          "revealed_fact_ids",
+          "contradiction_detected",
+          "trust_delta",
+          "turn"
+        ],
+        "title": "AskResponse",
+        "description": "기획서의 Interrogation 출력 형식."
+      },
+      "BoardView": {
+        "properties": {
+          "evidence": {
+            "items": {
+              "$ref": "#/components/schemas/EvidenceView"
+            },
+            "type": "array",
+            "title": "Evidence"
+          },
+          "statements": {
+            "items": {
+              "$ref": "#/components/schemas/StatementView"
+            },
+            "type": "array",
+            "title": "Statements"
+          },
+          "contradictions": {
+            "items": {
+              "$ref": "#/components/schemas/ContradictionView"
+            },
+            "type": "array",
+            "title": "Contradictions"
+          }
+        },
+        "type": "object",
+        "required": [
+          "evidence",
+          "statements",
+          "contradictions"
+        ],
+        "title": "BoardView"
+      },
+      "BriefingView": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "summary": {
+            "type": "string",
+            "title": "Summary"
+          },
+          "damage": {
+            "type": "string",
+            "title": "Damage"
+          },
+          "objective": {
+            "type": "string",
+            "title": "Objective"
+          },
+          "public_facts": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Public Facts"
+          }
+        },
+        "type": "object",
+        "required": [
+          "title",
+          "summary",
+          "damage",
+          "objective",
+          "public_facts"
+        ],
+        "title": "BriefingView"
+      },
+      "CollectResponse": {
+        "properties": {
+          "evidence": {
+            "$ref": "#/components/schemas/EvidenceView"
+          },
+          "puzzles": {
+            "items": {
+              "$ref": "#/components/schemas/PuzzleView"
+            },
+            "type": "array",
+            "title": "Puzzles"
+          },
+          "contradictions_found": {
+            "type": "integer",
+            "title": "Contradictions Found"
+          }
+        },
+        "type": "object",
+        "required": [
+          "evidence",
+          "puzzles",
+          "contradictions_found"
+        ],
+        "title": "CollectResponse"
+      },
+      "ContradictionView": {
+        "properties": {
+          "npc_id": {
+            "type": "string",
+            "title": "Npc Id"
+          },
+          "statement_turn": {
+            "type": "integer",
+            "title": "Statement Turn"
+          },
+          "statement": {
+            "type": "string",
+            "title": "Statement"
+          },
+          "evidence_id": {
+            "type": "string",
+            "title": "Evidence Id"
+          },
+          "evidence_name": {
+            "type": "string",
+            "title": "Evidence Name"
+          },
+          "type": {
+            "type": "string",
+            "title": "Type"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          }
+        },
+        "type": "object",
+        "required": [
+          "npc_id",
+          "statement_turn",
+          "statement",
+          "evidence_id",
+          "evidence_name",
+          "type",
+          "source"
+        ],
+        "title": "ContradictionView"
+      },
+      "CreateSessionRequest": {
+        "properties": {
+          "case_id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+            "title": "Case Id",
+            "default": "museum-001"
+          }
+        },
+        "type": "object",
+        "title": "CreateSessionRequest"
+      },
+      "DebriefEvidenceView": {
+        "properties": {
+          "evidence_id": {
+            "type": "string",
+            "title": "Evidence Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "spot": {
+            "type": "string",
+            "title": "Spot"
+          },
+          "role": {
+            "type": "string",
+            "title": "Role"
+          },
+          "collected": {
+            "type": "boolean",
+            "title": "Collected"
+          }
+        },
+        "type": "object",
+        "required": [
+          "evidence_id",
+          "name",
+          "spot",
+          "role",
+          "collected"
+        ],
+        "title": "DebriefEvidenceView"
+      },
+      "DebriefView": {
+        "properties": {
+          "culprit": {
+            "$ref": "#/components/schemas/SuspectView"
+          },
+          "motive": {
+            "type": "string",
+            "title": "Motive"
+          },
+          "method": {
+            "type": "string",
+            "title": "Method"
+          },
+          "method_steps": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Method Steps"
+          },
+          "timeline": {
+            "items": {
+              "$ref": "#/components/schemas/TimelineRowView"
+            },
+            "type": "array",
+            "title": "Timeline"
+          },
+          "key_evidence": {
+            "items": {
+              "$ref": "#/components/schemas/DebriefEvidenceView"
+            },
+            "type": "array",
+            "title": "Key Evidence"
+          },
+          "missed_key": {
+            "items": {
+              "$ref": "#/components/schemas/DebriefEvidenceView"
+            },
+            "type": "array",
+            "title": "Missed Key"
+          },
+          "wrong_links": {
+            "items": {
+              "$ref": "#/components/schemas/DebriefEvidenceView"
+            },
+            "type": "array",
+            "title": "Wrong Links"
+          },
+          "result": {
+            "$ref": "#/components/schemas/DeductionResultView"
+          }
+        },
+        "type": "object",
+        "required": [
+          "culprit",
+          "motive",
+          "method",
+          "method_steps",
+          "timeline",
+          "key_evidence",
+          "missed_key",
+          "wrong_links",
+          "result"
+        ],
+        "title": "DebriefView"
+      },
+      "DeductionOptionsView": {
+        "properties": {
+          "motives": {
+            "items": {
+              "$ref": "#/components/schemas/OptionView"
+            },
+            "type": "array",
+            "title": "Motives"
+          },
+          "methods": {
+            "items": {
+              "$ref": "#/components/schemas/OptionView"
+            },
+            "type": "array",
+            "title": "Methods"
+          }
+        },
+        "type": "object",
+        "required": [
+          "motives",
+          "methods"
+        ],
+        "title": "DeductionOptionsView"
+      },
+      "DeductionResultView": {
+        "properties": {
+          "scores": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Scores"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "correct_culprit": {
+            "type": "boolean",
+            "title": "Correct Culprit"
+          },
+          "unsupported_guess": {
+            "type": "boolean",
+            "title": "Unsupported Guess"
+          },
+          "wrong_links": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Wrong Links"
+          },
+          "missing_key": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Missing Key"
+          }
+        },
+        "type": "object",
+        "required": [
+          "scores",
+          "total",
+          "correct_culprit",
+          "unsupported_guess",
+          "wrong_links",
+          "missing_key"
+        ],
+        "title": "DeductionResultView"
+      },
+      "DeductionSubmission": {
+        "properties": {
+          "culprit_id": {
+            "type": "string",
+            "title": "Culprit Id"
+          },
+          "motive_id": {
+            "type": "string",
+            "title": "Motive Id"
+          },
+          "method_id": {
+            "type": "string",
+            "title": "Method Id"
+          },
+          "evidence_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 12,
+            "title": "Evidence Ids"
+          },
+          "narrative": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Narrative",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "culprit_id",
+          "motive_id",
+          "method_id"
+        ],
+        "title": "DeductionSubmission"
+      },
+      "EvidenceView": {
+        "properties": {
+          "evidence_id": {
+            "type": "string",
+            "title": "Evidence Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "spot": {
+            "type": "string",
+            "title": "Spot"
+          },
+          "location_name": {
+            "type": "string",
+            "title": "Location Name"
+          },
+          "facts": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Facts"
+          }
+        },
+        "type": "object",
+        "required": [
+          "evidence_id",
+          "name",
+          "description",
+          "spot",
+          "location_name",
+          "facts"
+        ],
+        "title": "EvidenceView"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HintResponse": {
+        "properties": {
+          "hint": {
+            "type": "string",
+            "title": "Hint"
+          },
+          "hints_used": {
+            "type": "integer",
+            "title": "Hints Used"
+          },
+          "remaining": {
+            "type": "integer",
+            "title": "Remaining"
+          }
+        },
+        "type": "object",
+        "required": [
+          "hint",
+          "hints_used",
+          "remaining"
+        ],
+        "title": "HintResponse"
+      },
+      "NpcStateView": {
+        "properties": {
+          "npc_id": {
+            "type": "string",
+            "title": "Npc Id"
+          },
+          "emotion": {
+            "type": "string",
+            "title": "Emotion"
+          },
+          "trust": {
+            "type": "integer",
+            "title": "Trust"
+          },
+          "presented": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Presented"
+          }
+        },
+        "type": "object",
+        "required": [
+          "npc_id",
+          "emotion",
+          "trust",
+          "presented"
+        ],
+        "title": "NpcStateView"
+      },
+      "OptionView": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "text": {
+            "type": "string",
+            "title": "Text"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "text"
+        ],
+        "title": "OptionView"
+      },
+      "PresentRequest": {
+        "properties": {
+          "evidence_id": {
+            "type": "string",
+            "title": "Evidence Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "evidence_id"
+        ],
+        "title": "PresentRequest"
+      },
+      "PresentResponse": {
+        "properties": {
+          "npc": {
+            "$ref": "#/components/schemas/NpcStateView"
+          },
+          "reaction": {
+            "type": "string",
+            "title": "Reaction",
+            "description": "none | shaken (반응이 달라졌다)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "npc",
+          "reaction"
+        ],
+        "title": "PresentResponse"
+      },
+      "PuzzleAttemptRequest": {
+        "properties": {
+          "answer": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ],
+            "title": "Answer",
+            "description": "code 퍼즐은 문자열, 순서 퍼즐은 선택지 ID 목록"
+          }
+        },
+        "type": "object",
+        "required": [
+          "answer"
+        ],
+        "title": "PuzzleAttemptRequest"
+      },
+      "PuzzleAttemptResponse": {
+        "properties": {
+          "correct": {
+            "type": "boolean",
+            "title": "Correct"
+          },
+          "unlocked": {
+            "items": {
+              "$ref": "#/components/schemas/EvidenceView"
+            },
+            "type": "array",
+            "title": "Unlocked"
+          },
+          "puzzle": {
+            "$ref": "#/components/schemas/PuzzleView"
+          }
+        },
+        "type": "object",
+        "required": [
+          "correct",
+          "unlocked",
+          "puzzle"
+        ],
+        "title": "PuzzleAttemptResponse"
+      },
+      "PuzzleOptionView": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "label"
+        ],
+        "title": "PuzzleOptionView"
+      },
+      "PuzzleView": {
+        "properties": {
+          "puzzle_id": {
+            "type": "string",
+            "title": "Puzzle Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "available": {
+            "type": "boolean",
+            "title": "Available"
+          },
+          "solved": {
+            "type": "boolean",
+            "title": "Solved"
+          },
+          "prompt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prompt"
+          },
+          "input_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Input Type"
+          },
+          "options": {
+            "items": {
+              "$ref": "#/components/schemas/PuzzleOptionView"
+            },
+            "type": "array",
+            "title": "Options"
+          },
+          "code_length": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Code Length"
+          },
+          "attempts": {
+            "type": "integer",
+            "title": "Attempts",
+            "default": 0
+          },
+          "hints": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Hints"
+          },
+          "hints_remaining": {
+            "type": "integer",
+            "title": "Hints Remaining",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "required": [
+          "puzzle_id",
+          "title",
+          "available",
+          "solved"
+        ],
+        "title": "PuzzleView"
+      },
+      "SceneObjectView": {
+        "properties": {
+          "evidence_id": {
+            "type": "string",
+            "title": "Evidence Id"
+          },
+          "spot": {
+            "type": "string",
+            "title": "Spot"
+          },
+          "location_name": {
+            "type": "string",
+            "title": "Location Name"
+          },
+          "collected": {
+            "type": "boolean",
+            "title": "Collected"
+          }
+        },
+        "type": "object",
+        "required": [
+          "evidence_id",
+          "spot",
+          "location_name",
+          "collected"
+        ],
+        "title": "SceneObjectView"
+      },
+      "SessionView": {
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "title": "Session Id"
+          },
+          "case_id": {
+            "type": "string",
+            "title": "Case Id"
+          },
+          "briefing": {
+            "$ref": "#/components/schemas/BriefingView"
+          },
+          "suspects": {
+            "items": {
+              "$ref": "#/components/schemas/SuspectView"
+            },
+            "type": "array",
+            "title": "Suspects"
+          },
+          "scene": {
+            "items": {
+              "$ref": "#/components/schemas/SceneObjectView"
+            },
+            "type": "array",
+            "title": "Scene"
+          },
+          "evidence": {
+            "items": {
+              "$ref": "#/components/schemas/EvidenceView"
+            },
+            "type": "array",
+            "title": "Evidence"
+          },
+          "puzzles": {
+            "items": {
+              "$ref": "#/components/schemas/PuzzleView"
+            },
+            "type": "array",
+            "title": "Puzzles"
+          },
+          "npcs": {
+            "items": {
+              "$ref": "#/components/schemas/NpcStateView"
+            },
+            "type": "array",
+            "title": "Npcs"
+          },
+          "deduction_options": {
+            "$ref": "#/components/schemas/DeductionOptionsView"
+          },
+          "deduction": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DeductionResultView"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "session_id",
+          "case_id",
+          "briefing",
+          "suspects",
+          "scene",
+          "evidence",
+          "puzzles",
+          "npcs",
+          "deduction_options"
+        ],
+        "title": "SessionView"
+      },
+      "StatementView": {
+        "properties": {
+          "npc_id": {
+            "type": "string",
+            "title": "Npc Id"
+          },
+          "turn": {
+            "type": "integer",
+            "title": "Turn"
+          },
+          "question": {
+            "type": "string",
+            "title": "Question"
+          },
+          "answer": {
+            "type": "string",
+            "title": "Answer"
+          },
+          "emotion": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Emotion"
+          }
+        },
+        "type": "object",
+        "required": [
+          "npc_id",
+          "turn",
+          "question",
+          "answer",
+          "emotion"
+        ],
+        "title": "StatementView"
+      },
+      "SuspectView": {
+        "properties": {
+          "suspect_id": {
+            "type": "string",
+            "title": "Suspect Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "role": {
+            "type": "string",
+            "title": "Role"
+          },
+          "public_profile": {
+            "type": "string",
+            "title": "Public Profile"
+          }
+        },
+        "type": "object",
+        "required": [
+          "suspect_id",
+          "name",
+          "role",
+          "public_profile"
+        ],
+        "title": "SuspectView"
+      },
+      "TimelineRowView": {
+        "properties": {
+          "start": {
+            "type": "string",
+            "title": "Start"
+          },
+          "end": {
+            "type": "string",
+            "title": "End"
+          },
+          "actor": {
+            "type": "string",
+            "title": "Actor"
+          },
+          "location": {
+            "type": "string",
+            "title": "Location"
+          },
+          "action": {
+            "type": "string",
+            "title": "Action"
+          },
+          "is_crime": {
+            "type": "boolean",
+            "title": "Is Crime"
+          }
+        },
+        "type": "object",
+        "required": [
+          "start",
+          "end",
+          "actor",
+          "location",
+          "action",
+          "is_crime"
+        ],
+        "title": "TimelineRowView"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}
