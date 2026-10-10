@@ -1,13 +1,15 @@
-"""심문 파이프라인: scope → retrieve → generate → guard → update_state.
+"""심문 그래프 (LangGraph): scope → retrieve → generate → guard → update_state.
 
-노드마다 함수 하나로 나눠 두었다. 4단계에서 각 함수를 LangGraph 노드로 옮긴다.
-심문 1턴에 LLM 호출은 1회이며, 누설 가드가 막았을 때만 1회 더 호출한다.
+노드는 5개를 넘기지 않는다. 심문 1턴에 LLM 호출은 1회이며, 누설 가드가 막았을 때만 1회 더 호출한다.
+그래프는 상태 저장(checkpoint) 없이 한 턴을 처리하고, 세션 상태와 대화 기록은 DB가 맡는다.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from typing import TypedDict
 
+from langgraph.graph import END, START, StateGraph
 from sqlalchemy import select
 from sqlalchemy.orm import Session as DbSession
 
@@ -56,11 +58,7 @@ class Interrogator:
 
     async def ask(self, session: GameSession, npc_id: str, question: str) -> Turn:
         turn = Turn(session, npc_id, sanitize_question(question))
-        self.scope_node(turn)
-        self.retrieve_node(turn)
-        await self.generate_node(turn)
-        await self.guard_node(turn)
-        self.update_state_node(turn)
+        await GRAPH.ainvoke({"agent": self, "turn": turn})
         return turn
 
     # ---------- 노드 ----------
@@ -157,3 +155,48 @@ class Interrogator:
             ]
         )
         self.db.commit()
+
+
+# ---------- LangGraph ----------
+
+
+class TurnState(TypedDict):
+    agent: Interrogator
+    turn: Turn
+
+
+def _sync(method_name: str):
+    def node(state: TurnState) -> dict:
+        getattr(state["agent"], method_name)(state["turn"])
+        return {}
+
+    node.__name__ = method_name.removesuffix("_node")
+    return node
+
+
+def _async(method_name: str):
+    async def node(state: TurnState) -> dict:
+        await getattr(state["agent"], method_name)(state["turn"])
+        return {}
+
+    node.__name__ = method_name.removesuffix("_node")
+    return node
+
+
+def build_graph():
+    graph = StateGraph(TurnState)
+    graph.add_node("scope", _sync("scope_node"))
+    graph.add_node("retrieve", _sync("retrieve_node"))
+    graph.add_node("generate", _async("generate_node"))
+    graph.add_node("guard", _async("guard_node"))
+    graph.add_node("update_state", _sync("update_state_node"))
+    graph.add_edge(START, "scope")
+    graph.add_edge("scope", "retrieve")
+    graph.add_edge("retrieve", "generate")
+    graph.add_edge("generate", "guard")
+    graph.add_edge("guard", "update_state")
+    graph.add_edge("update_state", END)
+    return graph.compile()
+
+
+GRAPH = build_graph()

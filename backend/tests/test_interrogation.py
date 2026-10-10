@@ -129,3 +129,10 @@ def test_guard_falls_back_to_evasion_when_leak_persists(db) -> None:
     row = db.scalars(select(DialogueRow).where(DialogueRow.role == "npc")).one()
     assert row.guard["fallback"] is True
     assert row.text == turn.reply.answer
+
+
+def test_graph_has_five_nodes_in_order() -> None:
+    from app.agents.interrogation import GRAPH
+
+    nodes = [n for n in GRAPH.get_graph().nodes if not n.startswith("__")]
+    assert nodes == ["scope", "retrieve", "generate", "guard", "update_state"]
