@@ -24,7 +24,7 @@ class StructuredResult[T: BaseModel]:
     errors: list[str] = field(default_factory=list)
 
 
-def _strip(text: str) -> str:
+def strip_fence(text: str) -> str:
     return _FENCE.sub("", text.strip())
 
 
@@ -48,7 +48,7 @@ async def generate_structured[T: BaseModel](
             max_tokens=max_tokens,
         )
         try:
-            value = schema.model_validate_json(_strip(raw.text))
+            value = schema.model_validate_json(strip_fence(raw.text))
             return StructuredResult(value, raw, attempt, False, errors)
         except ValidationError as exc:
             errors.append(exc.errors(include_url=False, include_input=False).__repr__()[:500])

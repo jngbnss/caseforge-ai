@@ -6,6 +6,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Awaitable, Callable
 from dataclasses import dataclass, field
 from typing import TypedDict
 
@@ -17,11 +18,12 @@ from app.agents.knowledge_scope import Scope, build_scope
 from app.agents.leak_guard import GuardResult, check_reply
 from app.agents.prompts import build_messages, sanitize_question
 from app.agents.schemas import NpcReply
+from app.agents.streaming import GuardedStream
 from app.core.db import DialogueRow
 from app.core.embedding.npc_index import registry
 from app.core.embedding.ports import EmbeddingPort
 from app.core.llm.ports import LLMPort
-from app.core.llm.structured import generate_structured
+from app.core.llm.structured import generate_structured, strip_fence
 from app.core.session import GameSession
 from case_validator.schema import Fact
 
@@ -43,6 +45,9 @@ class Turn:
     regenerated: bool = False
     fallback_used: bool = False
     turn_no: int = 0
+    on_delta: Callable[[str], Awaitable[None]] | None = None
+    """설정하면 첫 생성을 스트리밍하고 답변 글자를 조각마다 넘긴다."""
+    streamed: bool = False
 
 
 def evasion(scope: Scope, turn_no: int) -> NpcReply:
@@ -56,8 +61,14 @@ class Interrogator:
         self.embedder = embedder
         self.db = db
 
-    async def ask(self, session: GameSession, npc_id: str, question: str) -> Turn:
-        turn = Turn(session, npc_id, sanitize_question(question))
+    async def ask(
+        self,
+        session: GameSession,
+        npc_id: str,
+        question: str,
+        on_delta: Callable[[str], Awaitable[None]] | None = None,
+    ) -> Turn:
+        turn = Turn(session, npc_id, sanitize_question(question), on_delta=on_delta)
         await GRAPH.ainvoke({"agent": self, "turn": turn})
         return turn
 
@@ -99,7 +110,27 @@ class Interrogator:
         turn.fallback_used = turn.fallback_used or result.fallback_used
         return result.value
 
+    async def _generate_streaming(self, turn: Turn) -> NpcReply | None:
+        """첫 시도를 스트리밍한다. 원문이 스키마에 맞지 않으면 None (일반 생성으로 다시 한다)."""
+        assert turn.scope is not None and turn.on_delta is not None
+        messages = build_messages(turn.scope, turn.grounding, turn.history, turn.question)
+        stream = GuardedStream(turn.scope, turn.session.bible, turn.question, turn.on_delta)
+        async for chunk in self.llm.stream(messages, json_schema=NpcReply.model_json_schema()):
+            await stream.feed(chunk)
+        await stream.finish()
+        turn.llm_calls += 1
+        turn.streamed = True
+        try:
+            return NpcReply.model_validate_json(strip_fence(stream.raw))
+        except ValueError:
+            return None
+
     async def generate_node(self, turn: Turn) -> None:
+        if turn.on_delta is not None:
+            reply = await self._generate_streaming(turn)
+            if reply is not None:
+                turn.reply = reply
+                return
         turn.reply = await self._generate(turn, retry=False)
 
     async def guard_node(self, turn: Turn) -> None:

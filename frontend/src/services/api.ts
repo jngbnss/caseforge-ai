@@ -55,6 +55,47 @@ async function request<T>(method: string, path: string, body?: unknown): Promise
 
 const s = (id: string) => `/sessions/${encodeURIComponent(id)}`
 
+/**
+ * 심문 답변을 WebSocket으로 받는다. 글자 조각마다 onDelta를 부르고, 최종 응답으로 끝난다.
+ * WebSocket을 쓸 수 없으면 null을 돌려준다 (호출한 쪽이 REST로 다시 묻는다).
+ */
+export function askStream(
+  id: string,
+  npcId: string,
+  question: string,
+  onDelta: (text: string) => void,
+): Promise<AskResponse | null> {
+  if (typeof WebSocket !== 'function') return Promise.resolve(null)
+  const scheme = window.location.protocol === 'https:' ? 'wss' : 'ws'
+  const url = `${scheme}://${window.location.host}${BASE}/ws/interrogation/${encodeURIComponent(id)}/${npcId}`
+  return new Promise((resolve, reject) => {
+    let opened = false
+    let settled = false
+    const ws = new WebSocket(url)
+    const finish = (fn: () => void) => {
+      if (settled) return
+      settled = true
+      fn()
+      ws.close()
+    }
+    ws.onopen = () => {
+      opened = true
+      ws.send(JSON.stringify({ question }))
+    }
+    ws.onmessage = (event) => {
+      const msg = JSON.parse(event.data as string)
+      if (msg.type === 'delta') onDelta(msg.text)
+      else if (msg.type === 'final') {
+        const { type: _type, ...rest } = msg
+        void _type
+        finish(() => resolve(rest as AskResponse))
+      } else if (msg.type === 'error') finish(() => reject(new ApiError(400, msg.detail)))
+    }
+    ws.onerror = () => finish(() => (opened ? reject(new ApiError(0, '연결이 끊겼다.')) : resolve(null)))
+    ws.onclose = () => finish(() => (opened ? reject(new ApiError(0, '연결이 끊겼다.')) : resolve(null)))
+  })
+}
+
 export const api = {
   createSession: (caseId = 'museum-001') =>
     request<SessionView>('POST', '/sessions', { case_id: caseId }),

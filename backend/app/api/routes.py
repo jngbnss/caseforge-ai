@@ -2,14 +2,16 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, Request, WebSocket, WebSocketDisconnect
+from pydantic import ValidationError
 
 from app.api import schemas as v
 from app.api import views
-from app.core.game import GameService
+from app.core.game import AskOutcome, GameError, GameService
 from app.deduction.scoring import DeductionSubmission
 
 router = APIRouter(prefix="/sessions", tags=["game"])
+ws_router = APIRouter(tags=["game"])
 
 
 def get_service(request: Request) -> Iterator[GameService]:
@@ -70,21 +72,12 @@ def present(
     return v.PresentResponse(npc=views.npc_state(session, npc_id), reaction=reaction)
 
 
-@router.post("/{session_id}/npcs/{npc_id}/ask", response_model=v.AskResponse)
-async def ask(
-    session_id: str,
-    npc_id: str,
-    body: v.AskRequest,
-    request: Request,
-    svc: GameService = Service,
-) -> v.AskResponse:
-    session = svc.load(session_id)
-    outcome = await svc.ask(session, npc_id, body.question)
+def ask_response(outcome: AskOutcome, debug_api: bool) -> v.AskResponse:
     turn = outcome.turn
     reply = turn.reply
     assert reply is not None and turn.guard is not None
     debug = None
-    if request.app.state.debug_api:
+    if debug_api:
         debug = v.AskDebug(
             grounding_fact_ids=[f.fact_id for f in turn.grounding],
             used_lie_ids=reply.used_lie_ids,
@@ -102,6 +95,50 @@ async def ask(
         turn=turn.turn_no,
         debug=debug,
     )
+
+
+@router.post("/{session_id}/npcs/{npc_id}/ask", response_model=v.AskResponse)
+async def ask(
+    session_id: str,
+    npc_id: str,
+    body: v.AskRequest,
+    request: Request,
+    svc: GameService = Service,
+) -> v.AskResponse:
+    outcome = await svc.ask(svc.load(session_id), npc_id, body.question)
+    return ask_response(outcome, request.app.state.debug_api)
+
+
+@ws_router.websocket("/ws/interrogation/{session_id}/{npc_id}")
+async def interrogation_ws(websocket: WebSocket, session_id: str, npc_id: str) -> None:
+    """질문을 받아 답변 글자를 조각(delta)으로 보내고, 끝나면 최종 응답(final)을 보낸다.
+
+    누설 가드가 답변을 바꾸면 final의 answer가 스트리밍된 글자와 다르다. 화면은 final로 교체한다.
+    """
+    await websocket.accept()
+    state = websocket.app.state
+    try:
+        while True:
+            try:
+                body = v.AskRequest.model_validate(await websocket.receive_json())
+            except (ValidationError, ValueError):
+                await websocket.send_json({"type": "error", "detail": "질문 형식이 올바르지 않다."})
+                continue
+            with state.sessionmaker() as db:
+                svc = GameService(db, state.llm_for_case, state.embedder)
+
+                async def send_delta(text: str) -> None:
+                    await websocket.send_json({"type": "delta", "text": text})
+
+                try:
+                    outcome = await svc.ask(svc.load(session_id), npc_id, body.question, send_delta)
+                except GameError as exc:
+                    await websocket.send_json({"type": "error", "detail": exc.message})
+                    continue
+                final = ask_response(outcome, state.debug_api)
+                await websocket.send_json({"type": "final", **final.model_dump()})
+    except WebSocketDisconnect:
+        return
 
 
 @router.get("/{session_id}/board", response_model=v.BoardView)

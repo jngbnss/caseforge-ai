@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
 
 from sqlalchemy import select
@@ -178,14 +178,20 @@ class GameService:
         self.store.save(session)
         return "shaken" if shaken else "none"
 
-    async def ask(self, session: GameSession, npc_id: str, question: str) -> AskOutcome:
+    async def ask(
+        self,
+        session: GameSession,
+        npc_id: str,
+        question: str,
+        on_delta: Callable[[str], Awaitable[None]] | None = None,
+    ) -> AskOutcome:
         self._require_open(session)
         self.require_npc(session, npc_id)
         interrogator = Interrogator(
             self.llm_for_case(session.bible.case_id), self.embedder, self.db
         )
         try:
-            turn = await interrogator.ask(session, npc_id, question)
+            turn = await interrogator.ask(session, npc_id, question, on_delta)
         except UnknownNpcError as exc:
             raise NotFound(f"용의자 {npc_id}가 없다") from exc
         self.store.save(session)

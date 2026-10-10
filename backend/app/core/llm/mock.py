@@ -93,20 +93,20 @@ class MockLLM:
                 and not set(when.get("not_evidence", [])) & view.evidence_ids
             ):
                 return {
-                    "answer": entry["answer"].strip(),
-                    "emotion": entry.get("emotion", "calm"),
                     "revealed_fact_ids": entry.get("revealed", []),
                     "used_lie_ids": entry.get("used_lies", []),
-                    "contradiction_detected": False,
+                    "emotion": entry.get("emotion", "calm"),
                     "trust_delta": entry.get("trust_delta", 0),
+                    "contradiction_detected": False,
+                    "answer": entry["answer"].strip(),
                 }
         return {
-            "answer": "…",
-            "emotion": "calm",
             "revealed_fact_ids": [],
             "used_lie_ids": [],
-            "contradiction_detected": False,
+            "emotion": "calm",
             "trust_delta": 0,
+            "contradiction_detected": False,
+            "answer": "…",
         }
 
     async def complete(

@@ -34,6 +34,7 @@ function mockFetch(routes: Record<string, unknown>) {
 
 describe('game store', () => {
   beforeEach(() => {
+    vi.stubGlobal('WebSocket', undefined) // 스토어 테스트는 REST 경로를 쓴다
     localStorage.clear()
     useGame.setState({ sessionId: null, session: null, chats: {}, error: null, notice: null, devLog: [] })
   })

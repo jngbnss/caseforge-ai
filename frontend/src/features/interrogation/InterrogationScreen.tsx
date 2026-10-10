@@ -108,7 +108,7 @@ export function InterrogationScreen() {
               <Empty>{suspect?.name}에게 자유롭게 질문하자. 증거를 내밀면 반응이 달라질 수 있다.</Empty>
             )}
             {messages.map((m, i) =>
-              m.role === 'system' ? (
+              m.streaming && !m.text ? null : m.role === 'system' ? (
                 <p key={i} className="self-center text-xs text-muted">
                   {m.text}
                 </p>
@@ -159,7 +159,9 @@ export function InterrogationScreen() {
                 </div>
               ),
             )}
-            {busy === '심문' && <p className="self-start text-sm text-muted">{suspect?.name}이(가) 생각하는 중…</p>}
+            {busy === '심문' && !messages[messages.length - 1]?.text && (
+              <p className="self-start text-sm text-muted">{suspect?.name}이(가) 생각하는 중…</p>
+            )}
           </div>
 
           <div className="flex flex-wrap gap-2">

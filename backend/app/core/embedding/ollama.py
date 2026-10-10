@@ -11,7 +11,7 @@ class OllamaEmbedding:
         model: str = "bge-m3",
         base_url: str = "http://127.0.0.1:11434",
         dim: int = 1024,
-        timeout: float = 60.0,
+        timeout: float = 180.0,  # 처음 모델을 메모리에 올릴 때 수십 초가 걸린다
         cpu: bool = True,
     ) -> None:
         self.model = model

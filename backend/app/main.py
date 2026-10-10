@@ -9,7 +9,7 @@ from functools import lru_cache
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
-from app.api.routes import router
+from app.api.routes import router, ws_router
 from app.cases.registry import get_case
 from app.core.config import settings
 from app.core.db import make_engine, make_sessionmaker
@@ -79,6 +79,7 @@ def create_app(
         return {"status": "ok"}
 
     app.include_router(router)
+    app.include_router(ws_router)
     return app
 
 

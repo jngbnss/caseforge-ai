@@ -3,6 +3,7 @@ import { create } from 'zustand'
 import {
   ApiError,
   api,
+  askStream,
   type AskResponse,
   type BoardView,
   type DebriefView,
@@ -22,6 +23,7 @@ export interface ChatMessage {
     'revealed_fact_ids' | 'contradiction_detected' | 'trust_delta' | 'turn' | 'debug'
   >
   pinned?: boolean
+  streaming?: boolean
 }
 
 export interface DevEntry {
@@ -208,9 +210,28 @@ export const useGame = create<GameStore>((set, get) => {
 
     ask: async (npcId, question) => {
       const player: ChatMessage = { role: 'player', text: question }
-      set((s) => ({ chats: { ...s.chats, [npcId]: [...(s.chats[npcId] ?? []), player] } }))
-      const reply = await run('심문', (id) => api.ask(id, npcId, question))
-      if (!reply) return
+      const placeholder: ChatMessage = { role: 'npc', text: '', streaming: true }
+      set((s) => ({
+        chats: { ...s.chats, [npcId]: [...(s.chats[npcId] ?? []), player, placeholder] },
+      }))
+      const updateLast = (fn: (m: ChatMessage) => ChatMessage | null) =>
+        set((s) => {
+          const list = [...(s.chats[npcId] ?? [])]
+          const last = list.pop()
+          const next = last ? fn(last) : null
+          return { chats: { ...s.chats, [npcId]: next ? [...list, next] : list } }
+        })
+      const reply = await run('심문', async (id) => {
+        const streamed = await askStream(id, npcId, question, (delta) =>
+          updateLast((m) => ({ ...m, text: m.text + delta })),
+        )
+        return streamed ?? api.ask(id, npcId, question)
+      })
+      if (!reply) {
+        updateLast(() => null)
+        return
+      }
+      updateLast(() => null)
       const npc: ChatMessage = {
         role: 'npc',
         text: reply.answer,
