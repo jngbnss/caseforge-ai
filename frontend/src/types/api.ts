@@ -195,6 +195,24 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /**
+         * AskDebug
+         * @description 개발자 모드 전용 (DEBUG_API=true일 때만 채운다).
+         */
+        AskDebug: {
+            /** Grounding Fact Ids */
+            grounding_fact_ids: string[];
+            /** Used Lie Ids */
+            used_lie_ids: string[];
+            /** Guard Violations */
+            guard_violations: string[];
+            /** Regenerated */
+            regenerated: boolean;
+            /** Fallback */
+            fallback: boolean;
+            /** Llm Calls */
+            llm_calls: number;
+        };
         /** AskRequest */
         AskRequest: {
             /** Question */
@@ -217,6 +235,7 @@ export interface components {
             trust_delta: number;
             /** Turn */
             turn: number;
+            debug?: components["schemas"]["AskDebug"] | null;
         };
         /** BoardView */
         BoardView: {

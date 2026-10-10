@@ -72,19 +72,35 @@ def present(
 
 @router.post("/{session_id}/npcs/{npc_id}/ask", response_model=v.AskResponse)
 async def ask(
-    session_id: str, npc_id: str, body: v.AskRequest, svc: GameService = Service
+    session_id: str,
+    npc_id: str,
+    body: v.AskRequest,
+    request: Request,
+    svc: GameService = Service,
 ) -> v.AskResponse:
     session = svc.load(session_id)
     outcome = await svc.ask(session, npc_id, body.question)
-    reply = outcome.turn.reply
-    assert reply is not None
+    turn = outcome.turn
+    reply = turn.reply
+    assert reply is not None and turn.guard is not None
+    debug = None
+    if request.app.state.debug_api:
+        debug = v.AskDebug(
+            grounding_fact_ids=[f.fact_id for f in turn.grounding],
+            used_lie_ids=reply.used_lie_ids,
+            guard_violations=turn.guard.violations,
+            regenerated=turn.regenerated,
+            fallback=turn.fallback_used,
+            llm_calls=turn.llm_calls,
+        )
     return v.AskResponse(
         answer=reply.answer,
         emotion=reply.emotion,
         revealed_fact_ids=reply.revealed_fact_ids,
         contradiction_detected=outcome.contradiction_detected,
         trust_delta=reply.trust_delta,
-        turn=outcome.turn.turn_no,
+        turn=turn.turn_no,
+        debug=debug,
     )
 
 

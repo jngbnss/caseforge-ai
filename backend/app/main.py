@@ -32,11 +32,13 @@ def create_app(
     database_url: str | None = None,
     llm_for_case: Callable[[str], LLMPort] | None = None,
     embedder: EmbeddingPort | None = None,
+    debug_api: bool | None = None,
 ) -> FastAPI:
     app = FastAPI(title="CaseForge AI", version="0.2.0")
     app.state.sessionmaker = make_sessionmaker(make_engine(database_url or settings.database_url))
     app.state.llm_for_case = llm_for_case or default_llm_factory()
     app.state.embedder = embedder or default_embedder()
+    app.state.debug_api = settings.debug_api if debug_api is None else debug_api
 
     @app.exception_handler(GameError)
     async def game_error(_: Request, exc: GameError) -> JSONResponse:

@@ -17,7 +17,10 @@ export interface ChatMessage {
   role: 'player' | 'npc' | 'system'
   text: string
   emotion?: string
-  meta?: Pick<AskResponse, 'revealed_fact_ids' | 'contradiction_detected' | 'trust_delta' | 'turn'>
+  meta?: Pick<
+    AskResponse,
+    'revealed_fact_ids' | 'contradiction_detected' | 'trust_delta' | 'turn' | 'debug'
+  >
   pinned?: boolean
 }
 
@@ -217,6 +220,7 @@ export const useGame = create<GameStore>((set, get) => {
           contradiction_detected: reply.contradiction_detected,
           trust_delta: reply.trust_delta,
           turn: reply.turn,
+          debug: reply.debug,
         },
       }
       set((s) => ({ chats: { ...s.chats, [npcId]: [...(s.chats[npcId] ?? []), npc] } }))

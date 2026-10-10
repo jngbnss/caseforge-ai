@@ -144,6 +144,17 @@ class PresentResponse(BaseModel):
     reaction: str = Field(description="none | shaken (반응이 달라졌다)")
 
 
+class AskDebug(BaseModel):
+    """개발자 모드 전용 (DEBUG_API=true일 때만 채운다)."""
+
+    grounding_fact_ids: list[str]
+    used_lie_ids: list[str]
+    guard_violations: list[str]
+    regenerated: bool
+    fallback: bool
+    llm_calls: int
+
+
 class AskResponse(BaseModel):
     """기획서의 Interrogation 출력 형식."""
 
@@ -153,6 +164,7 @@ class AskResponse(BaseModel):
     contradiction_detected: bool
     trust_delta: int
     turn: int
+    debug: AskDebug | None = None
 
 
 class StatementView(BaseModel):

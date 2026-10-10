@@ -14,6 +14,8 @@ class Settings(BaseSettings):
     llm_backend: str = "mock"
     llm_model: str = "qwen3:8b"
     embedding_backend: str = "mock"
+    debug_api: bool = False
+    """True면 심문 응답에 근거·가드 결과를 넣는다. 비밀 키워드가 보이므로 개발 환경에서만 켠다."""
 
 
 settings = Settings()

@@ -169,3 +169,19 @@ def test_puzzle_options_never_in_answer_order(client: TestClient) -> None:
         if p["options"]:
             answer = next(x.answer for x in BIBLE.puzzles if x.puzzle_id == p["puzzle_id"])
             assert [o["id"] for o in p["options"]] != list(answer)
+
+
+def test_debug_info_only_when_enabled(tmp_path) -> None:
+    for enabled in (False, True):
+        client = TestClient(
+            create_app(f"sqlite:///{tmp_path / f'd{enabled}.db'}", debug_api=enabled)
+        )
+        sid = client.post("/sessions", json={}).json()["session_id"]
+        body = client.post(
+            f"/sessions/{sid}/npcs/suspect-02/ask", json={"question": "21시에 어디 있었어요?"}
+        ).json()
+        if enabled:
+            assert body["debug"]["used_lie_ids"] == ["lie-02"]
+            assert "fact-023" in body["debug"]["grounding_fact_ids"]
+        else:
+            assert body["debug"] is None

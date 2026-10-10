@@ -537,6 +537,54 @@
   },
   "components": {
     "schemas": {
+      "AskDebug": {
+        "properties": {
+          "grounding_fact_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Grounding Fact Ids"
+          },
+          "used_lie_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Used Lie Ids"
+          },
+          "guard_violations": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Guard Violations"
+          },
+          "regenerated": {
+            "type": "boolean",
+            "title": "Regenerated"
+          },
+          "fallback": {
+            "type": "boolean",
+            "title": "Fallback"
+          },
+          "llm_calls": {
+            "type": "integer",
+            "title": "Llm Calls"
+          }
+        },
+        "type": "object",
+        "required": [
+          "grounding_fact_ids",
+          "used_lie_ids",
+          "guard_violations",
+          "regenerated",
+          "fallback",
+          "llm_calls"
+        ],
+        "title": "AskDebug",
+        "description": "개발자 모드 전용 (DEBUG_API=true일 때만 채운다)."
+      },
       "AskRequest": {
         "properties": {
           "question": {
@@ -580,6 +628,16 @@
           "turn": {
             "type": "integer",
             "title": "Turn"
+          },
+          "debug": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AskDebug"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "type": "object",

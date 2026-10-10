@@ -14,6 +14,8 @@ const procs = [
     cwd: resolve(root, 'backend'),
     stdio: 'inherit',
     shell,
+    // 개발자 모드(?dev=1)에서 근거·가드 결과를 보려면 켠다. 끄려면 DEBUG_API=false
+    env: { ...process.env, DEBUG_API: process.env.DEBUG_API ?? 'true' },
   }),
   spawn('npx', ['vite', '--port', frontendPort, '--strictPort'], {
     cwd: resolve(root, 'frontend'),

@@ -145,6 +145,15 @@ export function InterrogationScreen() {
                           {m.meta.trust_delta}
                         </span>
                       )}
+                      {dev && m.meta?.debug && (
+                        <span className="w-full font-mono">
+                          근거 [{m.meta.debug.grounding_fact_ids.join(', ')}] · 거짓말 [
+                          {m.meta.debug.used_lie_ids.join(', ')}] · LLM {m.meta.debug.llm_calls}회 · 가드{' '}
+                          {m.meta.debug.guard_violations.length
+                            ? `차단 ${m.meta.debug.guard_violations.join(', ')}${m.meta.debug.fallback ? ' → 회피 대사' : ' → 재생성'}`
+                            : '통과'}
+                        </span>
+                      )}
                     </div>
                   )}
                 </div>
