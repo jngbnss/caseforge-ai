@@ -29,6 +29,9 @@ export interface DevEntry {
 
 const SESSION_KEY = 'caseforge.session'
 
+/** 진행 중인 start 호출. StrictMode의 이중 실행 등으로 세션이 두 번 만들어지지 않게 한다. */
+let starting: Promise<void> | null = null
+
 function readStoredSession(): string | null {
   try {
     return localStorage.getItem(SESSION_KEY)
@@ -102,6 +105,37 @@ export const useGame = create<GameStore>((set, get) => {
     set((s) => ({ devLog: [entry, ...s.devLog].slice(0, 50) }))
   }
 
+  /** 저장된 세션을 이어 하거나 새 세션을 만든다. */
+  async function startSession(fresh: boolean) {
+    set({ busy: '세션 준비', error: null })
+    try {
+      const stored = fresh ? null : readStoredSession()
+      let session: SessionView | null = null
+      if (stored) {
+        session = await api.getSession(stored).catch(() => null)
+      }
+      if (!session) {
+        session = await api.createSession()
+      }
+      storeSession(session.session_id)
+      set({
+        sessionId: session.session_id,
+        session,
+        board: null,
+        debrief: null,
+        chats: fresh || session.session_id !== stored ? {} : get().chats,
+        screen: session.deduction ? 'deduction' : 'briefing',
+      })
+      if (session.deduction) {
+        set({ debrief: await api.debrief(session.session_id) })
+      }
+    } catch (err) {
+      set({ error: err instanceof ApiError ? err.message : String(err) })
+    } finally {
+      set({ busy: null })
+    }
+  }
+
   return {
     sessionId: null,
     session: null,
@@ -118,34 +152,12 @@ export const useGame = create<GameStore>((set, get) => {
     clearError: () => set({ error: null }),
     clearNotice: () => set({ notice: null }),
 
-    start: async (fresh = false) => {
-      set({ busy: '세션 준비', error: null })
-      try {
-        const stored = fresh ? null : readStoredSession()
-        let session: SessionView | null = null
-        if (stored) {
-          session = await api.getSession(stored).catch(() => null)
-        }
-        if (!session) {
-          session = await api.createSession()
-        }
-        storeSession(session.session_id)
-        set({
-          sessionId: session.session_id,
-          session,
-          board: null,
-          debrief: null,
-          chats: fresh || session.session_id !== stored ? {} : get().chats,
-          screen: session.deduction ? 'deduction' : 'briefing',
-        })
-        if (session.deduction) {
-          set({ debrief: await api.debrief(session.session_id) })
-        }
-      } catch (err) {
-        set({ error: err instanceof ApiError ? err.message : String(err) })
-      } finally {
-        set({ busy: null })
-      }
+    start: (fresh = false) => {
+      if (starting) return starting
+      starting = startSession(fresh).finally(() => {
+        starting = null
+      })
+      return starting
     },
 
     refresh: async () => {
