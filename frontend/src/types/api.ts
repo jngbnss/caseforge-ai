@@ -276,13 +276,19 @@ export interface components {
             /** Statement */
             statement: string;
             /** Evidence Id */
-            evidence_id: string;
+            evidence_id: string | null;
             /** Evidence Name */
-            evidence_name: string;
+            evidence_name: string | null;
             /** Type */
             type: string;
             /** Source */
             source: string;
+            /** Confidence */
+            confidence?: number | null;
+            /** Explanation */
+            explanation?: string | null;
+            /** Other Statements */
+            other_statements?: string[];
         };
         /** CreateSessionRequest */
         CreateSessionRequest: {

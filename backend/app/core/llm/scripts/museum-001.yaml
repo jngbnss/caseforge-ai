@@ -122,3 +122,34 @@ npcs:
       - {answer: "다른 분들 일은 제가 말할 입장이 아니네요.", emotion: calm}
     default:
       - {answer: "질문이 그것뿐이라면, 작업이 남아 있어서요.", emotion: calm}
+
+# 모순 판정(LLM) 대본. 새 진술에 new_contains가 있고, evidence가 모두 제시되었고,
+# previous_contains가 있으면 이전 진술 중 하나에 그 문구가 있을 때 판정한다.
+# quotes는 [new_contains, other_quote 또는 previous_contains]: 서버가 원문에 실제로 있는지 검사한다.
+judge:
+  suspect-01:
+    - new_contains: 사무실에서 도록 교정
+      evidence: [ev-01]
+      other_quote: 큐레이터 사무실 문 개방 기록은 없다
+      type: location
+      confidence: 0.82
+      explanation: 사무실에서 교정을 봤다는 진술과 달리 출입 로그에는 그 시간 큐레이터 사무실 문이 열린 기록이 없다.
+  suspect-02:
+    - new_contains: 계속 보안실에 있었
+      evidence: [ev-02]
+      other_quote: 21:08에 발행된 자판기 영수증
+      type: time
+      confidence: 0.86
+      explanation: 계속 보안실에 있었다는 진술과 흡연 구역의 꽁초·21:08 자판기 영수증이 맞지 않는다.
+    - new_contains: 그 시간에 보안실에 있었
+      evidence: [ev-01]
+      other_quote: 21:12 전시실 출입, 카드 소유자 박도현
+      type: possession
+      confidence: 0.74
+      explanation: 보안실에 있었다면서, 출입 로그에는 21:12에 그의 카드로 전시실에 출입한 기록이 있다.
+  suspect-03:
+    - new_contains: 휴게실에 잠깐 갔
+      previous_contains: 한 번도 안 나갔
+      type: statement
+      confidence: 0.9
+      explanation: 저녁 내내 복원실에서 나가지 않았다던 앞선 진술과 21:10에 휴게실에 갔다는 진술이 서로 맞지 않는다.

@@ -179,10 +179,16 @@ class ContradictionView(BaseModel):
     npc_id: str
     statement_turn: int
     statement: str
-    evidence_id: str
-    evidence_name: str
+    evidence_id: str | None
+    """증거와 충돌하면 그 증거. 진술끼리 충돌하는 LLM 판정은 None."""
+    evidence_name: str | None
     type: str
     source: str
+    """rule: Case Bible 거짓말 규칙 · llm: 모델 판정 (보조)"""
+    confidence: float | None = None
+    explanation: str | None = None
+    other_statements: list[str] = Field(default_factory=list)
+    """LLM 판정에서 함께 충돌한 이전 진술."""
 
 
 class BoardView(BaseModel):

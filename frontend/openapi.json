@@ -760,11 +760,25 @@
             "title": "Statement"
           },
           "evidence_id": {
-            "type": "string",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Evidence Id"
           },
           "evidence_name": {
-            "type": "string",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Evidence Name"
           },
           "type": {
@@ -774,6 +788,35 @@
           "source": {
             "type": "string",
             "title": "Source"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Confidence"
+          },
+          "explanation": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Explanation"
+          },
+          "other_statements": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Other Statements"
           }
         },
         "type": "object",

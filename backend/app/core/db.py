@@ -5,7 +5,7 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from typing import Any
 
-from sqlalchemy import JSON, DateTime, ForeignKey, Integer, String, Text, create_engine
+from sqlalchemy import JSON, DateTime, Float, ForeignKey, Integer, String, Text, create_engine
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, sessionmaker
 
@@ -61,6 +61,26 @@ class ContradictionRow(Base):
     evidence_id: Mapped[str] = mapped_column(String(32))
     type: Mapped[str] = mapped_column(String(16))
     source: Mapped[str] = mapped_column(String(8))  # rule | llm
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
+
+
+class LlmContradictionRow(Base):
+    """LLM 모순 판정 (source='llm'). 규칙 판정과 달리 여러 진술·증거를 묶을 수 있고 확신도가 있다."""
+
+    __tablename__ = "llm_contradictions"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    session_id: Mapped[str] = mapped_column(ForeignKey("sessions.id"), index=True)
+    npc_id: Mapped[str] = mapped_column(String(32))
+    statement_turn: Mapped[int] = mapped_column(Integer)
+    """판정을 일으킨 새 진술의 턴."""
+    statement_turns: Mapped[list[int]] = mapped_column(JSON, default=list)
+    evidence_ids: Mapped[list[str]] = mapped_column(JSON, default=list)
+    type: Mapped[str] = mapped_column(String(16))
+    confidence: Mapped[float] = mapped_column(Float)
+    explanation: Mapped[str] = mapped_column(Text)
+    model_id: Mapped[str] = mapped_column(String(64))
+    latency_ms: Mapped[float] = mapped_column(Float, default=0.0)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
 
 

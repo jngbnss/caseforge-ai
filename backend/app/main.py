@@ -54,6 +54,7 @@ def create_app(
     llm_for_case: Callable[[str], LLMPort] | None = None,
     embedder: EmbeddingPort | None = None,
     debug_api: bool | None = None,
+    llm_contradictions: bool | None = None,
 ) -> FastAPI:
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
@@ -69,6 +70,10 @@ def create_app(
     app.state.llm_for_case = llm_for_case or default_llm_factory()
     app.state.embedder = embedder or default_embedder()
     app.state.debug_api = settings.debug_api if debug_api is None else debug_api
+    app.state.llm_contradictions = (
+        settings.llm_contradictions if llm_contradictions is None else llm_contradictions
+    )
+    app.state.judge_tasks = set()
 
     @app.exception_handler(GameError)
     async def game_error(_: Request, exc: GameError) -> JSONResponse:

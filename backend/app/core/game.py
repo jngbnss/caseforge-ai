@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session as DbSession
 
 from app.agents.interrogation import Interrogator, Turn
 from app.agents.knowledge_scope import UnknownNpcError, build_scope
-from app.core.db import ContradictionRow, DialogueRow
+from app.core.db import ContradictionRow, DialogueRow, LlmContradictionRow
 from app.core.embedding.ports import EmbeddingPort
 from app.core.llm.ports import LLMPort
 from app.core.session import (
@@ -219,6 +219,15 @@ class GameService:
                 select(ContradictionRow)
                 .where(ContradictionRow.session_id == session.id)
                 .order_by(ContradictionRow.id)
+            )
+        )
+
+    def llm_contradictions(self, session: GameSession) -> list[LlmContradictionRow]:
+        return list(
+            self.db.scalars(
+                select(LlmContradictionRow)
+                .where(LlmContradictionRow.session_id == session.id)
+                .order_by(LlmContradictionRow.id)
             )
         )
 

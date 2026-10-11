@@ -2,13 +2,14 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 
-from fastapi import APIRouter, Depends, Request, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, BackgroundTasks, Depends, Request, WebSocket, WebSocketDisconnect
 from pydantic import ValidationError
 
 from app.api import schemas as v
 from app.api import views
 from app.core.game import AskOutcome, GameError, GameService
 from app.deduction.scoring import DeductionSubmission
+from app.evidence.judge_runner import run_judgement, schedule_judgement
 
 router = APIRouter(prefix="/sessions", tags=["game"])
 ws_router = APIRouter(tags=["game"])
@@ -72,6 +73,11 @@ def present(
     return v.PresentResponse(npc=views.npc_state(session, npc_id), reaction=reaction)
 
 
+def wants_judgement(app_state, outcome: AskOutcome) -> bool:
+    """회피 대사(가드 대체·기본값)는 실제 진술이 아니므로 판정하지 않는다."""
+    return bool(app_state.llm_contradictions) and not outcome.turn.fallback_used
+
+
 def ask_response(outcome: AskOutcome, debug_api: bool) -> v.AskResponse:
     turn = outcome.turn
     reply = turn.reply
@@ -103,9 +109,14 @@ async def ask(
     npc_id: str,
     body: v.AskRequest,
     request: Request,
+    background: BackgroundTasks,
     svc: GameService = Service,
 ) -> v.AskResponse:
     outcome = await svc.ask(svc.load(session_id), npc_id, body.question)
+    if wants_judgement(request.app.state, outcome):
+        background.add_task(
+            run_judgement, request.app.state, session_id, npc_id, outcome.turn.turn_no
+        )
     return ask_response(outcome, request.app.state.debug_api)
 
 
@@ -137,6 +148,8 @@ async def interrogation_ws(websocket: WebSocket, session_id: str, npc_id: str) -
                     continue
                 final = ask_response(outcome, state.debug_api)
                 await websocket.send_json({"type": "final", **final.model_dump()})
+                if wants_judgement(state, outcome):
+                    schedule_judgement(state, session_id, npc_id, outcome.turn.turn_no)
     except WebSocketDisconnect:
         return
 
@@ -159,19 +172,49 @@ def board(session_id: str, svc: GameService = Service) -> v.BoardView:
             )
             for q, a in pairs
         ],
-        contradictions=[
+        contradictions=contradiction_views(svc, session, answer_by_turn),
+    )
+
+
+def contradiction_views(svc: GameService, session, answer_by_turn) -> list[v.ContradictionView]:
+    """규칙 판정을 먼저, LLM 판정은 그 뒤에 둔다. 규칙이 이미 찾은 (진술, 증거) 쌍은 LLM 쪽에서 뺀다."""
+    rule = svc.contradictions(session)
+    views_: list[v.ContradictionView] = [
+        v.ContradictionView(
+            npc_id=c.npc_id,
+            statement_turn=c.statement_turn,
+            statement=answer_by_turn.get((c.npc_id, c.statement_turn), ""),
+            evidence_id=c.evidence_id,
+            evidence_name=svc.evidence(session, c.evidence_id).name,
+            type=c.type,
+            source=c.source,
+        )
+        for c in rule
+    ]
+    covered = {(c.npc_id, c.evidence_id) for c in rule}
+    for c in svc.llm_contradictions(session):
+        if c.evidence_ids and all((c.npc_id, e) in covered for e in c.evidence_ids):
+            continue
+        evidence_id = c.evidence_ids[0] if c.evidence_ids else None
+        views_.append(
             v.ContradictionView(
                 npc_id=c.npc_id,
                 statement_turn=c.statement_turn,
                 statement=answer_by_turn.get((c.npc_id, c.statement_turn), ""),
-                evidence_id=c.evidence_id,
-                evidence_name=svc.evidence(session, c.evidence_id).name,
+                evidence_id=evidence_id,
+                evidence_name=svc.evidence(session, evidence_id).name if evidence_id else None,
                 type=c.type,
-                source=c.source,
+                source="llm",
+                confidence=c.confidence,
+                explanation=c.explanation,
+                other_statements=[
+                    answer_by_turn.get((c.npc_id, t), "")
+                    for t in c.statement_turns
+                    if t != c.statement_turn
+                ],
             )
-            for c in svc.contradictions(session)
-        ],
-    )
+        )
+    return views_
 
 
 @router.post("/{session_id}/deduction", response_model=v.DeductionResultView)

@@ -270,18 +270,37 @@ export function BoardScreen() {
             <Empty>거짓 진술과 그것을 뒤집는 증거가 모두 확보되면 여기에 표시된다.</Empty>
           )}
           {board?.contradictions.map((c, i) => (
-            <div key={i} className="flex flex-col gap-1 border-l-2 border-bad pl-3 text-sm">
+            <div
+              key={i}
+              data-source={c.source}
+              className={`flex flex-col gap-1 border-l-2 pl-3 text-sm ${c.source === 'rule' ? 'border-bad' : 'border-dashed border-tag'}`}
+            >
               <p className="flex flex-wrap items-center gap-2 text-xs text-muted">
-                <span className="font-medium text-bad">{TYPE_LABEL[c.type] ?? c.type} 모순</span>
+                <span className={`font-medium ${c.source === 'rule' ? 'text-bad' : 'text-tag'}`}>
+                  {TYPE_LABEL[c.type] ?? c.type} 모순
+                </span>
                 {session.suspects.find((s) => s.suspect_id === c.npc_id)?.name}
-                <span className="rounded bg-soft px-1.5 font-mono">{c.source === 'rule' ? '규칙' : 'AI'}</span>
+                <span className="rounded bg-soft px-1.5 font-mono">
+                  {c.source === 'rule' ? '규칙 판정' : `AI 판정 ${Math.round((c.confidence ?? 0) * 100)}%`}
+                </span>
               </p>
               <p>“{c.statement}”</p>
-              <p className="text-muted">
-                ↔ <EvidenceTag id={c.evidence_id} /> {c.evidence_name}
-              </p>
+              {c.other_statements?.map((s) => (
+                <p key={s} className="text-muted">
+                  ↔ 앞선 진술 “{s}”
+                </p>
+              ))}
+              {c.evidence_id && (
+                <p className="text-muted">
+                  ↔ <EvidenceTag id={c.evidence_id} /> {c.evidence_name}
+                </p>
+              )}
+              {c.explanation && <p className="text-xs text-muted">{c.explanation}</p>}
             </div>
           ))}
+          {board?.contradictions.some((c) => c.source === 'llm') && (
+            <p className="text-xs text-muted">AI 판정은 보조 자료다. 확정된 모순은 규칙 판정이다.</p>
+          )}
         </Panel>
       </div>
     </div>

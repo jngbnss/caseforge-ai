@@ -16,6 +16,9 @@ from typing import Any
 import yaml
 
 from app.core.llm.markers import (
+    JUDGE_EVIDENCE,
+    JUDGE_NEW_STATEMENT,
+    JUDGE_PREVIOUS,
     NPC_ID_PREFIX,
     QUESTION_CLOSE,
     QUESTION_OPEN,
@@ -109,6 +112,50 @@ class MockLLM:
             "answer": "…",
         }
 
+    def judge(self, messages: list[Message]) -> dict[str, Any]:
+        """모순 판정 대본: 새 진술 문구 + (이전 진술 문구 | 제시 증거)가 프롬프트에 있으면 판정한다."""
+        user = next((m.content for m in reversed(messages) if m.role == "user"), "")
+        npc = re.search(re.escape(NPC_ID_PREFIX) + r"(\S+)", user)
+        turn_line = re.compile(r"- \[turn (\d+)\] (.*)")
+        new = turn_line.findall(_section(user, JUDGE_NEW_STATEMENT))
+        previous = [(int(t), text) for t, text in turn_line.findall(_section(user, JUDGE_PREVIOUS))]
+        evidence = set(re.findall(r"\[((?:ev|rec)-\d+)\]", _section(user, JUDGE_EVIDENCE)))
+        if not npc or not new:
+            return {"findings": []}
+        new_turn, new_text = int(new[0][0]), new[0][1]
+        findings = []
+        for rule in self.script.get("judge", {}).get(npc.group(1), []):
+            if (
+                rule["new_contains"] not in new_text
+                or not set(rule.get("evidence", [])) <= evidence
+            ):
+                continue
+            turns = [new_turn]
+            if "previous_contains" in rule:
+                hits = [t for t, text in previous if rule["previous_contains"] in text]
+                if not hits:
+                    continue
+                turns = [hits[0], new_turn]
+            findings.append(
+                {
+                    "type": rule["type"],
+                    "statement_turns": turns,
+                    "evidence_ids": rule.get("evidence", []),
+                    "quotes": [
+                        rule["new_contains"],
+                        rule.get("other_quote") or rule.get("previous_contains", ""),
+                    ],
+                    "confidence": rule.get("confidence", 0.8),
+                    "explanation": rule["explanation"],
+                }
+            )
+        return {"findings": findings}
+
+    def structured(self, title: str, messages: list[Message]) -> dict[str, Any]:
+        if title == "ContradictionJudgement":
+            return self.judge(messages)
+        return self.respond(read_prompt(messages))
+
     async def complete(
         self,
         messages: list[Message],
@@ -117,7 +164,8 @@ class MockLLM:
         temperature: float = 0.3,
         max_tokens: int = 512,
     ) -> LLMRaw:
-        text = json.dumps(self.respond(read_prompt(messages)), ensure_ascii=False)
+        title = (json_schema or {}).get("title", "")
+        text = json.dumps(self.structured(title, messages), ensure_ascii=False)
         prompt_chars = sum(len(m.content) for m in messages)
         return LLMRaw(text, self.model_id, 0.0, Usage(prompt_chars // 2, len(text) // 2))
 
