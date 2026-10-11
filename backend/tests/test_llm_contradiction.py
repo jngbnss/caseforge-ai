@@ -20,6 +20,7 @@ from app.evidence.llm_contradiction import (
     accept,
     build_judge_messages,
     judge_turn,
+    resolve_evidence,
 )
 from app.main import create_app
 
@@ -269,3 +270,18 @@ def test_evasion_lines_and_disabled_setting_are_not_judged(tmp_path) -> None:
     client.post(f"/sessions/{sid}/npcs/suspect-02/ask", json={"question": "카드는 어디 있었어요?"})
     board = client.get(f"/sessions/{sid}/board").json()
     assert all(c["source"] == "rule" for c in board["contradictions"])
+
+
+def test_quoted_evidence_is_resolved_to_its_id() -> None:
+    """EXP-001: 모델이 증거를 그대로 인용하고 evidence_ids를 비운 경우."""
+    f = finding(evidence_ids=[], quotes=["담배는 안 피웁니다", "21:08에 발행된 자판기 영수증"])
+    assert not accept(f, 2, TEXTS, SHOWN)
+    resolved = resolve_evidence(f, 2, TEXTS, SHOWN)
+    assert resolved.evidence_ids == ["ev-02"]
+    assert accept(resolved, 2, TEXTS, SHOWN)
+    # 진술 쪽 인용만 있으면 증거를 붙이지 않는다
+    same = finding(statement_turns=[1, 2], evidence_ids=[], quotes=STMT_QUOTES)
+    assert resolve_evidence(same, 2, TEXTS, SHOWN).evidence_ids == []
+    # 아무 원문에도 없는 인용은 증거로 바뀌지 않는다
+    made_up = finding(evidence_ids=[], quotes=["담배는 안 피웁니다", "CCTV에 찍혔다"])
+    assert resolve_evidence(made_up, 2, TEXTS, SHOWN).evidence_ids == []

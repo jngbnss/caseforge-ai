@@ -28,10 +28,23 @@
 | tailwindcss | 4.3.3 | MIT | 스타일 |
 | typescript | 5.8.3 | Apache-2.0 | 타입 검사 |
 
-## 모델 (4단계에서 도입 예정, 도입 시 확인 후 기록)
+## AI 런타임 · 라이브러리 (4단계)
 
-| 모델 | 버전 | 라이선스 | 비고 |
+설치된 패키지 메타데이터의 `License-Expression`으로 확인했다 (2026-10-11). Ollama는 저장소의 LICENSE 파일로 확인했다.
+
+| 패키지 / 도구 | 버전 | 라이선스 | 용도 |
 |---|---|---|---|
-| Qwen3-8B (4bit) | 미정 | 도입 시 공식 모델 카드에서 확인 | |
-| BAAI/bge-m3 | 미정 | 도입 시 공식 모델 카드에서 확인 | |
-| LangGraph, FAISS, Ollama | 미정 | 도입 시 확인 | |
+| langgraph | 1.2.14 | MIT | 심문 그래프 (5노드) |
+| langchain-core | 1.6.9 | MIT | langgraph 의존성 |
+| faiss-cpu | 1.15.1 | MIT | NPC별 벡터 인덱스 |
+| numpy | 2.5.4 | BSD-3-Clause AND 0BSD AND MIT AND Zlib AND CC0-1.0 | 벡터 연산 |
+| Ollama | 0.40.2 | MIT | 로컬 LLM·임베딩 서버 (별도 설치, 저장소에 포함하지 않음) |
+
+## 모델
+
+`ollama show <모델>`이 표시하는 라이선스로 확인했다. 가중치는 저장소에 넣지 않고 각자 `ollama pull`로 받는다.
+
+| 모델 | 태그 · 양자화 | 크기 | 라이선스 | 용도 |
+|---|---|---|---|---|
+| Qwen3-8B | `qwen3:8b` · Q4_K_M · 8.2B 파라미터 · 문맥 40,960 | 5.2 GB | Apache-2.0 | NPC 심문, 모순 판정, 추리 피드백, 평가 judge |
+| BAAI/bge-m3 | `bge-m3` · F16 · 567M 파라미터 · 1024차원 | 1.2 GB | MIT | NPC별 사실 검색 임베딩 |

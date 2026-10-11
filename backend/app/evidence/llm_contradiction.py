@@ -39,7 +39,8 @@ class ContradictionFinding(BaseModel):
     type: ContradictionType
     statement_turns: list[int] = Field(min_length=1, max_length=4)
     """모순에 관련된 진술의 턴 번호. 새 진술의 턴을 반드시 포함해야 저장한다."""
-    evidence_ids: list[str] = Field(default_factory=list, max_length=4)
+    evidence_ids: list[str] = Field(max_length=4)
+    """관련된 제시 증거 ID. 필수 필드로 두어 모델이 빠뜨리지 않게 한다 (없으면 빈 목록)."""
     quotes: list[str] = Field(min_length=2, max_length=4)
     """충돌하는 양쪽에서 글자 그대로 옮긴 짧은 구절. 코드가 원문에 실제로 있는지 확인한다."""
     confidence: float = Field(ge=0, le=1)
@@ -86,6 +87,27 @@ def build_judge_messages(
 
 def _compact(text: str) -> str:
     return "".join(text.split()).strip("\"'“”‘’.,…")
+
+
+def resolve_evidence(
+    finding: ContradictionFinding, new_turn: int, texts: dict[int, str], evidence: dict[str, str]
+) -> ContradictionFinding:
+    """진술에 없는 인용이 제시 증거의 원문과 글자 그대로 맞으면 그 증거 ID를 붙인다.
+
+    모델이 증거를 정확히 인용하고도 evidence_ids를 비워 두는 경우가 많다 (EXP-001).
+    """
+    statements = [_compact(texts[t]) for t in finding.statement_turns if t in texts]
+    statements.append(_compact(texts.get(new_turn, "")))
+    ids = list(finding.evidence_ids)
+    for quote in (_compact(q) for q in finding.quotes):
+        if not quote or any(quote in st for st in statements):
+            continue
+        for eid, text in evidence.items():
+            if quote in _compact(text) and eid not in ids:
+                ids.append(eid)
+    return (
+        finding if ids == finding.evidence_ids else finding.model_copy(update={"evidence_ids": ids})
+    )
 
 
 def accept(
@@ -169,6 +191,7 @@ async def judge_turn(
     }
     new: list[LlmContradictionRow] = []
     for f in result.value.findings:
+        f = resolve_evidence(f, turn_no, texts, shown)
         if not accept(f, turn_no, texts, shown):
             log.info("LLM 모순 판정 기각: %s", f.model_dump())
             continue

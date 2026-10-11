@@ -9,12 +9,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
-from evals.schema import check, load  # noqa: E402
-
 from app.agents.knowledge_scope import build_scope  # noqa: E402
 from app.cases.registry import get_case  # noqa: E402
 from app.core.session import GameState  # noqa: E402
 from app.deduction.scoring import DeductionSubmission, score_deduction  # noqa: E402
+from evals.schema import check, load  # noqa: E402
 
 BIBLE = get_case("museum-001").bible
 NPCS = [s.suspect_id for s in BIBLE.suspects]
