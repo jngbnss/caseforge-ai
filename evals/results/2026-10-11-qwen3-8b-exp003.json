@@ -1,0 +1,842 @@
+{
+ "meta": {
+  "date": "2026-10-11",
+  "backend": "ollama",
+  "model": "ollama:qwen3:8b",
+  "embedding": "ollama:bge-m3",
+  "case_id": "museum-001",
+  "case_sha256": "3a3c031398d785ad10eb556f8770c7c02f10c64b199072d764855e6e99f5ffeb",
+  "git_sha": "830b5e6",
+  "limit": 0,
+  "tag": "exp003"
+ },
+ "suites": {
+  "contradiction": {
+   "metrics": {
+    "n": 40,
+    "positives": 20,
+    "tp": 14,
+    "fp": 6,
+    "fn": 6,
+    "tn": 14,
+    "precision": 0.7,
+    "recall": 0.7,
+    "f1": 0.7,
+    "pair_recall": 0.7,
+    "pair_type_recall": 0.35,
+    "latency": {
+     "n": 40,
+     "mean_ms": 3458.8,
+     "p50_ms": 4414.4,
+     "p95_ms": 5582.1,
+     "ttft_p50_ms": null,
+     "ttft_p95_ms": null,
+     "mean_tokens": 963.8
+    },
+    "wall_s": 138.8
+   },
+   "cases": [
+    {
+     "id": "con-pos-01",
+     "positive": true,
+     "predicted_positive": false,
+     "expected": [
+      {
+       "type": "location",
+       "refs": [
+        "ev-01",
+        "t1"
+       ]
+      }
+     ],
+     "predicted": [],
+     "pair_hits": 0,
+     "type_hits": 0,
+     "ms": 4793.234199998551,
+     "tokens": 1185
+    },
+    {
+     "id": "con-pos-02",
+     "positive": true,
+     "predicted_positive": false,
+     "expected": [
+      {
+       "type": "location",
+       "refs": [
+        "ev-01",
+        "t1"
+       ]
+      }
+     ],
+     "predicted": [],
+     "pair_hits": 0,
+     "type_hits": 0,
+     "ms": 4197.979600001418,
+     "tokens": 1155
+    },
+    {
+     "id": "con-pos-03",
+     "positive": true,
+     "predicted_positive": false,
+     "expected": [
+      {
+       "type": "location",
+       "refs": [
+        "ev-01",
+        "t1"
+       ]
+      }
+     ],
+     "predicted": [],
+     "pair_hits": 0,
+     "type_hits": 0,
+     "ms": 4763.689399998839,
+     "tokens": 1227
+    },
+    {
+     "id": "con-pos-04",
+     "positive": true,
+     "predicted_positive": true,
+     "expected": [
+      {
+       "type": "location",
+       "refs": [
+        "ev-02",
+        "t1"
+       ]
+      }
+     ],
+     "predicted": [
+      {
+       "type": "time",
+       "refs": [
+        "ev-02",
+        "t1"
+       ],
+       "confidence": 0.95,
+       "explanation": "21시 순찰 뒤로 보안실에 있었는데, 21:08에 자판기 영수증이 발행되었다는 증거가 있어 시간에 모순이 발생합니다."
+      }
+     ],
+     "pair_hits": 1,
+     "type_hits": 0,
+     "ms": 4414.405200001056,
+     "tokens": 1180
+    },
+    {
+     "id": "con-pos-05",
+     "positive": true,
+     "predicted_positive": true,
+     "expected": [
+      {
+       "type": "location",
+       "refs": [
+        "ev-02",
+        "t1"
+       ]
+      }
+     ],
+     "predicted": [
+      {
+       "type": "location",
+       "refs": [
+        "ev-02",
+        "t1"
+       ],
+       "confidence": 0.95,
+       "explanation": "모니터 앞에 있었는데 자판기 영수증이 21:08에 발행되었다는 점이 맞지 않음"
+      }
+     ],
+     "pair_hits": 1,
+     "type_hits": 1,
+     "ms": 4405.014500000107,
+     "tokens": 1172
+    },
+    {
+     "id": "con-pos-06",
+     "positive": true,
+     "predicted_positive": false,
+     "expected": [
+      {
+       "type": "location",
+       "refs": [
+        "ev-02",
+        "t1"
+       ]
+      }
+     ],
+     "predicted": [],
+     "pair_hits": 0,
+     "type_hits": 0,
+     "ms": 3321.101400000771,
+     "tokens": 725
+    },
+    {
+     "id": "con-pos-07",
+     "positive": true,
+     "predicted_positive": true,
+     "expected": [
+      {
+       "type": "possession",
+       "refs": [
+        "ev-01",
+        "t1"
+       ]
+      }
+     ],
+     "predicted": [
+      {
+       "type": "location",
+       "refs": [
+        "ev-01",
+        "t1"
+       ],
+       "confidence": 0.95,
+       "explanation": "21:12 전시실 출입 시 카드가 주머니에 있었는데, 보안실에 있었던 것으로 주장하는 것이 서로 맞지 않는다."
+      }
+     ],
+     "pair_hits": 1,
+     "type_hits": 0,
+     "ms": 5507.430300000124,
+     "tokens": 1246
+    },
+    {
+     "id": "con-pos-08",
+     "positive": true,
+     "predicted_positive": true,
+     "expected": [
+      {
+       "type": "location",
+       "refs": [
+        "rec-03",
+        "t1"
+       ]
+      }
+     ],
+     "predicted": [
+      {
+       "type": "time",
+       "refs": [
+        "rec-03",
+        "t1"
+       ],
+       "confidence": 0.95,
+       "explanation": "21:10 휴게실에 있었는데, 저녁 내내 복원실에 있었던 것으로 말한 것에 모순이 있음"
+      }
+     ],
+     "pair_hits": 1,
+     "type_hits": 0,
+     "ms": 4241.168499998821,
+     "tokens": 1137
+    },
+    {
+     "id": "con-pos-09",
+     "positive": true,
+     "predicted_positive": true,
+     "expected": [
+      {
+       "type": "location",
+       "refs": [
+        "ev-04",
+        "t1"
+       ]
+      }
+     ],
+     "predicted": [
+      {
+       "type": "location",
+       "refs": [
+        "ev-04",
+        "t1"
+       ],
+       "confidence": 0.95,
+       "explanation": "복원실 밖으로 나가지 않았다는 진술과 진열장 받침에 남은 장갑 섬유가 모순된다."
+      }
+     ],
+     "pair_hits": 1,
+     "type_hits": 1,
+     "ms": 4931.388299999526,
+     "tokens": 1167
+    },
+    {
+     "id": "con-pos-10",
+     "positive": true,
+     "predicted_positive": true,
+     "expected": [
+      {
+       "type": "location",
+       "refs": [
+        "rec-03",
+        "t1"
+       ]
+      }
+     ],
+     "predicted": [
+      {
+       "type": "statement",
+       "refs": [
+        "rec-03",
+        "t1"
+       ],
+       "confidence": 0.95,
+       "explanation": "용의자가 휴게실에 가지 않았다고 주장하지만, 메모에 21:10 휴게실에 있었음을 기록하고 있음."
+      }
+     ],
+     "pair_hits": 1,
+     "type_hits": 0,
+     "ms": 4552.721599999131,
+     "tokens": 1168
+    },
+    {
+     "id": "con-pos-11",
+     "positive": true,
+     "predicted_positive": false,
+     "expected": [
+      {
+       "type": "possession",
+       "refs": [
+        "ev-03",
+        "t1"
+       ]
+      }
+     ],
+     "predicted": [],
+     "pair_hits": 0,
+     "type_hits": 0,
+     "ms": 3078.0265999983385,
+     "tokens": 717
+    },
+    {
+     "id": "con-pos-12",
+     "positive": true,
+     "predicted_positive": true,
+     "expected": [
+      {
+       "type": "statement",
+       "refs": [
+        "rec-02",
+        "t1"
+       ]
+      }
+     ],
+     "predicted": [
+      {
+       "type": "statement",
+       "refs": [
+        "rec-02",
+        "t1"
+       ],
+       "confidence": 0.95,
+       "explanation": "용의자가 빚이 없다고 주장하지만, 증거에 따르면 그는 대부업체에 대한 채무 독촉장이 있어 상환 기한이 도래하고 있음에도 불구하고 빚이 없다고 말함."
+      }
+     ],
+     "pair_hits": 1,
+     "type_hits": 1,
+     "ms": 4809.93380000109,
+     "tokens": 1181
+    },
+    {
+     "id": "con-pos-13",
+     "positive": true,
+     "predicted_positive": true,
+     "expected": [
+      {
+       "type": "statement",
+       "refs": [
+        "t1",
+        "t2"
+       ]
+      }
+     ],
+     "predicted": [
+      {
+       "type": "time",
+       "refs": [
+        "t1",
+        "t2"
+       ],
+       "confidence": 0.95,
+       "explanation": "용의자가 복원실에 있었고 휴게실에 갔다는 시간적 모순이 발생합니다."
+      }
+     ],
+     "pair_hits": 1,
+     "type_hits": 0,
+     "ms": 4440.180800000235,
+     "tokens": 1106
+    },
+    {
+     "id": "con-pos-14",
+     "positive": true,
+     "predicted_positive": true,
+     "expected": [
+      {
+       "type": "statement",
+       "refs": [
+        "t1",
+        "t2"
+       ]
+      }
+     ],
+     "predicted": [
+      {
+       "type": "time",
+       "refs": [
+        "t1",
+        "t2"
+       ],
+       "confidence": 0.95,
+       "explanation": "21시 이후에 보안실에만 있었고, 21시 7분쯤 흡연 구역에 나갔다는 진술은 시간에 모순된다."
+      }
+     ],
+     "pair_hits": 1,
+     "type_hits": 0,
+     "ms": 4482.056400000147,
+     "tokens": 1086
+    },
+    {
+     "id": "con-pos-15",
+     "positive": true,
+     "predicted_positive": true,
+     "expected": [
+      {
+       "type": "statement",
+       "refs": [
+        "t1",
+        "t2"
+       ]
+      }
+     ],
+     "predicted": [
+      {
+       "type": "time",
+       "refs": [
+        "t1",
+        "t2"
+       ],
+       "confidence": 0.95,
+       "explanation": "20:50부터 사무실에서 있었는데, 동시에 주차장 차 안에서 통화했다고 주장하는 것이 시간에 모순된다."
+      }
+     ],
+     "pair_hits": 1,
+     "type_hits": 0,
+     "ms": 4380.741099999796,
+     "tokens": 1072
+    },
+    {
+     "id": "con-pos-16",
+     "positive": true,
+     "predicted_positive": true,
+     "expected": [
+      {
+       "type": "statement",
+       "refs": [
+        "t1",
+        "t2"
+       ]
+      }
+     ],
+     "predicted": [
+      {
+       "type": "statement",
+       "refs": [
+        "t1",
+        "t2"
+       ],
+       "confidence": 0.95,
+       "explanation": "용의자가 카드를 갖고 있었고, 휴게실 사물함에 넣어 두고 나갔다는 진술은 서로 모순된다."
+      }
+     ],
+     "pair_hits": 1,
+     "type_hits": 1,
+     "ms": 4281.318299999839,
+     "tokens": 1078
+    },
+    {
+     "id": "con-pos-17",
+     "positive": true,
+     "predicted_positive": false,
+     "expected": [
+      {
+       "type": "statement",
+       "refs": [
+        "t1",
+        "t2"
+       ]
+      }
+     ],
+     "predicted": [],
+     "pair_hits": 0,
+     "type_hits": 0,
+     "ms": 291.4500000006228,
+     "tokens": 540
+    },
+    {
+     "id": "con-pos-18",
+     "positive": true,
+     "predicted_positive": true,
+     "expected": [
+      {
+       "type": "statement",
+       "refs": [
+        "t1",
+        "t2"
+       ]
+      }
+     ],
+     "predicted": [
+      {
+       "type": "statement",
+       "refs": [
+        "t1",
+        "t2"
+       ],
+       "confidence": 0.95,
+       "explanation": "폐관 뒤에 전시실에 가지 않았다는 진술과 폐관 직후 전시실을 둘러봤다는 진술이 서로 모순된다."
+      }
+     ],
+     "pair_hits": 1,
+     "type_hits": 1,
+     "ms": 4490.624699999898,
+     "tokens": 1102
+    },
+    {
+     "id": "con-pos-19",
+     "positive": true,
+     "predicted_positive": true,
+     "expected": [
+      {
+       "type": "statement",
+       "refs": [
+        "t1",
+        "t2"
+       ]
+      }
+     ],
+     "predicted": [
+      {
+       "type": "statement",
+       "refs": [
+        "t1",
+        "t2"
+       ],
+       "confidence": 0.95,
+       "explanation": "용의자가 21시에 순찰을 했다고 말했으나, 이후 다시 21시에 순찰을 하지 않았다고 주장함으로써 앞뒤 진술이 모순됨"
+      }
+     ],
+     "pair_hits": 1,
+     "type_hits": 1,
+     "ms": 4952.6198000003205,
+     "tokens": 1132
+    },
+    {
+     "id": "con-pos-20",
+     "positive": true,
+     "predicted_positive": true,
+     "expected": [
+      {
+       "type": "time",
+       "refs": [
+        "t1",
+        "t2"
+       ]
+      }
+     ],
+     "predicted": [
+      {
+       "type": "time",
+       "refs": [
+        "t1",
+        "t2"
+       ],
+       "confidence": 0.95,
+       "explanation": "21시 전에 퇴근했다고 말하면서도 21시 넘어서 작업했다고 주장함으로써 시간에 모순이 발생함"
+      }
+     ],
+     "pair_hits": 1,
+     "type_hits": 1,
+     "ms": 4107.950399999027,
+     "tokens": 1068
+    },
+    {
+     "id": "con-neg-01",
+     "positive": false,
+     "predicted_positive": false,
+     "expected": [],
+     "predicted": [],
+     "pair_hits": 0,
+     "type_hits": 0,
+     "ms": 288.33789999953297,
+     "tokens": 540
+    },
+    {
+     "id": "con-neg-02",
+     "positive": false,
+     "predicted_positive": true,
+     "expected": [],
+     "predicted": [
+      {
+       "type": "time",
+       "refs": [
+        "t1",
+        "t2"
+       ],
+       "confidence": 0.95,
+       "explanation": "어젯밤 21시쯤 복원실에서 작업했다고 말하면서도, 그날 늦게까지 복원실에 있었다고 주장함으로써 시간에 모순이 발생합니다."
+      }
+     ],
+     "pair_hits": 0,
+     "type_hits": 0,
+     "ms": 5280.853599999318,
+     "tokens": 1119
+    },
+    {
+     "id": "con-neg-03",
+     "positive": false,
+     "predicted_positive": false,
+     "expected": [],
+     "predicted": [],
+     "pair_hits": 0,
+     "type_hits": 0,
+     "ms": 298.56889999973646,
+     "tokens": 536
+    },
+    {
+     "id": "con-neg-04",
+     "positive": false,
+     "predicted_positive": false,
+     "expected": [],
+     "predicted": [],
+     "pair_hits": 0,
+     "type_hits": 0,
+     "ms": 240.69319999944128,
+     "tokens": 540
+    },
+    {
+     "id": "con-neg-05",
+     "positive": false,
+     "predicted_positive": false,
+     "expected": [],
+     "predicted": [],
+     "pair_hits": 0,
+     "type_hits": 0,
+     "ms": 249.57119999999122,
+     "tokens": 534
+    },
+    {
+     "id": "con-neg-06",
+     "positive": false,
+     "predicted_positive": true,
+     "expected": [],
+     "predicted": [
+      {
+       "type": "time",
+       "refs": [
+        "ev-02",
+        "t1"
+       ],
+       "confidence": 0.95,
+       "explanation": "21시 7분에 흡연 구역에 나갔다는 진술과 21:08에 자판기 영수증이 발행되었다는 증거가 시간적으로 모순된다."
+      }
+     ],
+     "pair_hits": 0,
+     "type_hits": 0,
+     "ms": 4950.744800000393,
+     "tokens": 1190
+    },
+    {
+     "id": "con-neg-07",
+     "positive": false,
+     "predicted_positive": false,
+     "expected": [],
+     "predicted": [],
+     "pair_hits": 0,
+     "type_hits": 0,
+     "ms": 5582.101800000601,
+     "tokens": 1223
+    },
+    {
+     "id": "con-neg-08",
+     "positive": false,
+     "predicted_positive": true,
+     "expected": [],
+     "predicted": [
+      {
+       "type": "possession",
+       "refs": [
+        "rec-03",
+        "t1"
+       ],
+       "confidence": 0.95,
+       "explanation": "용의자가 휴게실에 있었고 사물함 3번에 갔다는 내용이 서로 모순된다."
+      }
+     ],
+     "pair_hits": 0,
+     "type_hits": 0,
+     "ms": 4823.735599999054,
+     "tokens": 1141
+    },
+    {
+     "id": "con-neg-09",
+     "positive": false,
+     "predicted_positive": true,
+     "expected": [],
+     "predicted": [
+      {
+       "type": "location",
+       "refs": [
+        "ev-01",
+        "t1"
+       ],
+       "confidence": 0.95,
+       "explanation": "21:12 전시실 출입 시 카드를 휴게실 사물함에 넣었다고 주장하는 것이 시간과 장소에 모순된다."
+      }
+     ],
+     "pair_hits": 0,
+     "type_hits": 0,
+     "ms": 5274.666699999216,
+     "tokens": 1207
+    },
+    {
+     "id": "con-neg-10",
+     "positive": false,
+     "predicted_positive": false,
+     "expected": [],
+     "predicted": [],
+     "pair_hits": 0,
+     "type_hits": 0,
+     "ms": 346.80959999968763,
+     "tokens": 573
+    },
+    {
+     "id": "con-neg-11",
+     "positive": false,
+     "predicted_positive": false,
+     "expected": [],
+     "predicted": [],
+     "pair_hits": 0,
+     "type_hits": 0,
+     "ms": 311.27100000048813,
+     "tokens": 577
+    },
+    {
+     "id": "con-neg-12",
+     "positive": false,
+     "predicted_positive": false,
+     "expected": [],
+     "predicted": [],
+     "pair_hits": 0,
+     "type_hits": 0,
+     "ms": 257.69929999842134,
+     "tokens": 564
+    },
+    {
+     "id": "con-neg-13",
+     "positive": false,
+     "predicted_positive": false,
+     "expected": [],
+     "predicted": [],
+     "pair_hits": 0,
+     "type_hits": 0,
+     "ms": 4204.144299999825,
+     "tokens": 1136
+    },
+    {
+     "id": "con-neg-14",
+     "positive": false,
+     "predicted_positive": false,
+     "expected": [],
+     "predicted": [],
+     "pair_hits": 0,
+     "type_hits": 0,
+     "ms": 5565.77870000001,
+     "tokens": 1201
+    },
+    {
+     "id": "con-neg-15",
+     "positive": false,
+     "predicted_positive": false,
+     "expected": [],
+     "predicted": [],
+     "pair_hits": 0,
+     "type_hits": 0,
+     "ms": 6345.610800000941,
+     "tokens": 1236
+    },
+    {
+     "id": "con-neg-16",
+     "positive": false,
+     "predicted_positive": true,
+     "expected": [],
+     "predicted": [
+      {
+       "type": "time",
+       "refs": [
+        "t1",
+        "t2"
+       ],
+       "confidence": 0.95,
+       "explanation": "21시에 순찰을 마쳤다고 말했지만, 21시 7분에 흡연 구역에 나갔다고 주장해 시간이 모순된다."
+      }
+     ],
+     "pair_hits": 0,
+     "type_hits": 0,
+     "ms": 4612.595300000976,
+     "tokens": 1096
+    },
+    {
+     "id": "con-neg-17",
+     "positive": false,
+     "predicted_positive": false,
+     "expected": [],
+     "predicted": [],
+     "pair_hits": 0,
+     "type_hits": 0,
+     "ms": 294.62469999998575,
+     "tokens": 545
+    },
+    {
+     "id": "con-neg-18",
+     "positive": false,
+     "predicted_positive": true,
+     "expected": [],
+     "predicted": [
+      {
+       "type": "time",
+       "refs": [
+        "t1",
+        "t2"
+       ],
+       "confidence": 0.95,
+       "explanation": "20:30 전시실에 있었고 20:50 주차장에 있었기 때문에 시간이 겹치면서 모순된다."
+      }
+     ],
+     "pair_hits": 0,
+     "type_hits": 0,
+     "ms": 4449.390099998709,
+     "tokens": 1080
+    },
+    {
+     "id": "con-neg-19",
+     "positive": false,
+     "predicted_positive": false,
+     "expected": [],
+     "predicted": [],
+     "pair_hits": 0,
+     "type_hits": 0,
+     "ms": 292.2785999999178,
+     "tokens": 537
+    },
+    {
+     "id": "con-neg-20",
+     "positive": false,
+     "predicted_positive": false,
+     "expected": [],
+     "predicted": [],
+     "pair_hits": 0,
+     "type_hits": 0,
+     "ms": 241.34679999951913,
+     "tokens": 532
+    }
+   ]
+  }
+ }
+}

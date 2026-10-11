@@ -10,6 +10,7 @@ import asyncio
 import logging
 from typing import Any
 
+from app.core.config import settings
 from app.core.session import SessionStore
 from app.evidence.llm_contradiction import judge_turn
 
@@ -22,7 +23,8 @@ async def run_judgement(app_state: Any, session_id: str, npc_id: str, turn_no: i
         with app_state.sessionmaker() as db:
             session = SessionStore(db).get(session_id)
             llm = app_state.llm_for_case(session.bible.case_id)
-            return len(await judge_turn(llm, db, session, npc_id, turn_no))
+            verify = settings.llm_contradiction_verify
+            return len(await judge_turn(llm, db, session, npc_id, turn_no, verify=verify))
     except Exception:
         log.exception("LLM 모순 판정 실패 (session=%s npc=%s turn=%s)", session_id, npc_id, turn_no)
         return 0

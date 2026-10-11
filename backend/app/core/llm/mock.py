@@ -177,6 +177,14 @@ class MockLLM:
             return self.judge(messages)
         if title == "DeductionFeedback":
             return self.feedback(messages)
+        if title == "ContradictionCheck":
+            # 대본 판정은 이미 정해진 모순이므로 재확인에서 그대로 유지한다
+            return {
+                "claim_a": "",
+                "claim_b": "",
+                "same_person_time_place": True,
+                "contradiction": True,
+            }
         return self.respond(read_prompt(messages))
 
     async def complete(

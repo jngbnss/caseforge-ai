@@ -334,7 +334,7 @@ async def run_grounding(env: Env, cases: list) -> dict[str, Any]:
 # ---------------------------------------------------------------- 3. 모순
 
 
-async def run_contradiction(env: Env, cases: list) -> dict[str, Any]:
+async def run_contradiction(env: Env, cases: list, verify: bool = False) -> dict[str, Any]:
     rows = []
     for case in cases:
         with env.sessionmaker() as db:
@@ -364,7 +364,7 @@ async def run_contradiction(env: Env, cases: list) -> dict[str, Any]:
             db.commit()
             last = case.statements[-1].turn
             started = time.perf_counter()
-            found = await judge_turn(env.llm, db, session, case.npc_id, last)
+            found = await judge_turn(env.llm, db, session, case.npc_id, last, verify=verify)
             ms = (time.perf_counter() - started) * 1000
         calls = env.llm.take()
         predicted = [
@@ -524,7 +524,7 @@ async def main_async(args: argparse.Namespace) -> Path:
         elif suite == "evidence-grounding":
             result = await run_grounding(env, cases)
         elif suite == "contradiction":
-            result = await run_contradiction(env, cases)
+            result = await run_contradiction(env, cases, verify=args.judge_verify)
         else:
             result = await run_deduction(env, cases)
         result["metrics"]["wall_s"] = round(time.perf_counter() - started, 1)
@@ -558,6 +558,9 @@ def main() -> None:
         "--out", default="", help="결과 파일 경로 (기본: results/<날짜>-<모델>.json)"
     )
     parser.add_argument("--no-judge", action="store_true", help="누설 LLM judge를 끈다")
+    parser.add_argument(
+        "--judge-verify", action="store_true", help="모순 판정 재확인 단계를 켠다 (EXP-003)"
+    )
     asyncio.run(main_async(parser.parse_args()))
 
 

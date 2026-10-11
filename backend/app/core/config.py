@@ -19,6 +19,8 @@ class Settings(BaseSettings):
     embedding_on_cpu: bool = True
     llm_contradictions: bool = True
     """심문 응답 뒤에 LLM 모순 판정을 비동기로 돌린다 (source='llm')."""
+    llm_contradiction_verify: bool = False
+    """판정마다 모델이 한 번 더 확인한다 (EXP-003). 정밀도 0.63→0.70, 재현율 0.85→0.70이라 기본은 끔."""
     deduction_feedback: bool = True
     """추리 제출 뒤 자유 서술 LLM 피드백을 비동기로 만든다."""
     debug_api: bool = False

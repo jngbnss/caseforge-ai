@@ -124,19 +124,46 @@ def test_judge_keeps_only_grounded_findings_and_dedupes(judged_session) -> None:
         ]
     }
     llm = FakeLLM([reply, reply])
-    saved = asyncio.run(judge_turn(llm, db, session, "suspect-02", 2))
+    saved = asyncio.run(judge_turn(llm, db, session, "suspect-02", 2, verify=False))
     assert [(r.statement_turns, r.evidence_ids, r.type) for r in saved] == [
         ([1, 2], [], "statement"),
         ([2], ["ev-02"], "time"),
     ]
     assert all(r.confidence == 0.8 and r.model_id == "fake" for r in saved)
-    assert asyncio.run(judge_turn(llm, db, session, "suspect-02", 2)) == []  # 같은 판정은 1번만
+    again = asyncio.run(judge_turn(llm, db, session, "suspect-02", 2, verify=False))
+    assert again == []  # 같은 판정은 1번만
+
+
+def test_judge_drops_findings_the_check_can_explain(judged_session) -> None:
+    db, session = judged_session
+    reply = {
+        "findings": [
+            finding(statement_turns=[1, 2], type="statement", quotes=STMT_QUOTES).model_dump(),
+            finding(evidence_ids=["ev-02"]).model_dump(),
+        ]
+    }
+    base = {"claim_a": "계속 보안실", "claim_b": "21:08 흡연 구역", "same_person_time_place": True}
+    explained = {**base, "contradiction": False}
+    confirmed = {**base, "contradiction": True}
+    llm = FakeLLM([reply, explained, confirmed])
+    saved = asyncio.run(judge_turn(llm, db, session, "suspect-02", 2, verify=True))
+    assert [(r.statement_turns, r.evidence_ids) for r in saved] == [([2], ["ev-02"])]
+    check = "\n".join(m.content for m in llm.prompts[1])
+    assert "21시 순찰 뒤로는 계속 보안실에 있었습니다." in check
+    assert "fact-" not in check and "lie-" not in check
+
+
+def test_judge_drops_finding_when_check_output_is_invalid(judged_session) -> None:
+    db, session = judged_session
+    reply = {"findings": [finding(evidence_ids=["ev-02"]).model_dump()]}
+    llm = FakeLLM([reply, "not json", "still not json"])
+    assert asyncio.run(judge_turn(llm, db, session, "suspect-02", 2, verify=True)) == []
 
 
 def test_invalid_judge_output_is_retried_then_dropped(judged_session) -> None:
     db, session = judged_session
     llm = FakeLLM(["not json", '{"findings": [{"type": "weird"}]}'])
-    assert asyncio.run(judge_turn(llm, db, session, "suspect-02", 2)) == []
+    assert asyncio.run(judge_turn(llm, db, session, "suspect-02", 2, verify=True)) == []
     assert len(llm.prompts) == 2  # 1회 재요청 후 기본값(판정 없음)
 
 

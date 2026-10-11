@@ -18,6 +18,7 @@ from sqlalchemy.orm import Session as DbSession
 
 from app.core.db import DialogueRow, LlmContradictionRow
 from app.core.llm.markers import (
+    JUDGE_CHECK,
     JUDGE_EVIDENCE,
     JUDGE_NEW_STATEMENT,
     JUDGE_PREVIOUS,
@@ -51,6 +52,25 @@ class ContradictionJudgement(BaseModel):
     findings: list[ContradictionFinding] = Field(default_factory=list, max_length=4)
 
 
+class ContradictionCheck(BaseModel):
+    """판정 하나를 다시 확인한다 (EXP-003). 양쪽 주장을 먼저 글자 그대로 옮기게 해 성급한 판정을 거른다.
+
+    '둘 다 참인 상황을 먼저 써 보라'는 방식은 8B 모델이 '계속'·'한 번도'를 무시한 억지 상황을 만들어
+    모든 판정을 버렸다 (재현율 0). 그래서 주장을 옮긴 뒤 판정하게 한다.
+    """
+
+    claim_a: str = Field(max_length=300)
+    claim_b: str = Field(max_length=300)
+    same_person_time_place: bool
+    """두 내용이 같은 사람의 같은(겹치는) 시간대에 대한 것인가."""
+    contradiction: bool
+
+
+UNCONFIRMED = ContradictionCheck(
+    claim_a="", claim_b="", same_person_time_place=False, contradiction=False
+)
+
+
 JUDGE_SYSTEM = (
     "너는 추리 게임의 기록 담당관이다. 한 용의자의 새 진술이 그 사람의 이전 진술이나, "
     "탐정이 그 사람에게 보여 준 증거와 **둘 다 참일 수 없을 만큼** 충돌하는지 판정한다.\n"
@@ -67,6 +87,29 @@ JUDGE_SYSTEM = (
     'JSON 하나로만 답한다: {"findings": [{"type": str, "statement_turns": [int], '
     '"evidence_ids": [str], "quotes": [str], "confidence": 0~1, "explanation": str}]}'
 )
+
+
+CHECK_SYSTEM = (
+    "너는 추리 게임의 검토관이다. 다른 담당관이 아래 두 내용을 모순이라고 판정했다. "
+    "판정이 맞는지 다시 확인한다.\n"
+    "- claim_a, claim_b에 각 내용이 주장하는 것을 시각·장소·'계속/한 번도/내내' 같은 말까지 빠짐없이 옮긴다.\n"
+    "- same_person_time_place: 두 내용이 같은 사람의 같은 시각(또는 겹치는 시간대)에 대한 것이면 true. "
+    "증거가 다른 사람의 기록이거나 시간대가 겹치지 않으면 false.\n"
+    "- contradiction: 두 주장을 글자 그대로 받아들였을 때 둘 다 참일 수 없으면 true. "
+    "시각은 앞뒤를 정확히 비교한다 (21:07에 나가 21:08에 그 근처에 있는 것은 모순이 아니다).\n"
+    'JSON 하나로만 답한다: {"claim_a": str, "claim_b": str, '
+    '"same_person_time_place": bool, "contradiction": bool}'
+)
+
+
+def build_check_messages(
+    npc_name: str, finding: ContradictionFinding, texts: dict[int, str], evidence: dict[str, str]
+) -> list[Message]:
+    lines = [f"용의자: {npc_name}", JUDGE_CHECK]
+    lines += [f"- [진술 turn {t}] {texts[t]}" for t in sorted(set(finding.statement_turns))]
+    lines += [f"- [증거 {e}] {evidence[e]}" for e in finding.evidence_ids]
+    lines.append(f"판정 이유: {finding.explanation}")
+    return [Message("system", CHECK_SYSTEM), Message("user", "\n".join(lines))]
 
 
 def build_judge_messages(
@@ -139,8 +182,32 @@ def accept(
     return any(q in new_text for q in quotes) and any(q in o for q in quotes for o in others)
 
 
+async def confirm(
+    llm: LLMPort,
+    npc_name: str,
+    finding: ContradictionFinding,
+    texts: dict[int, str],
+    evidence: dict[str, str],
+) -> bool:
+    """코드 검사를 통과한 판정을 모델이 한 번 더 확인한다. 검증 실패면 판정을 버린다 (보조 판정이므로 보수적으로)."""
+    result = await generate_structured(
+        llm,
+        build_check_messages(npc_name, finding, texts, evidence),
+        ContradictionCheck,
+        fallback=UNCONFIRMED,
+        temperature=0.0,
+    )
+    return result.value.contradiction and result.value.same_person_time_place
+
+
 async def judge_turn(
-    llm: LLMPort, db: DbSession, session: GameSession, npc_id: str, turn_no: int
+    llm: LLMPort,
+    db: DbSession,
+    session: GameSession,
+    npc_id: str,
+    turn_no: int,
+    *,
+    verify: bool = False,
 ) -> list[LlmContradictionRow]:
     """새 진술 한 턴을 판정하고, 새로 찾은 모순만 저장해 돌려준다."""
     bible = session.bible
@@ -197,6 +264,9 @@ async def judge_turn(
             continue
         key = (tuple(sorted(set(f.statement_turns))), tuple(sorted(set(f.evidence_ids))))
         if key in existing:
+            continue
+        if verify and not await confirm(llm, suspect.name, f, texts, shown):
+            log.info("LLM 모순 판정 재확인에서 기각: %s", f.model_dump())
             continue
         existing.add(key)
         new.append(

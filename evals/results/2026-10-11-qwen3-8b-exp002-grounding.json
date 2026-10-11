@@ -1,0 +1,1050 @@
+{
+ "meta": {
+  "date": "2026-10-11",
+  "backend": "ollama",
+  "model": "ollama:qwen3:8b",
+  "embedding": "ollama:bge-m3",
+  "case_id": "museum-001",
+  "case_sha256": "3a3c031398d785ad10eb556f8770c7c02f10c64b199072d764855e6e99f5ffeb",
+  "git_sha": "830b5e6",
+  "limit": 0,
+  "tag": "exp002-grounding"
+ },
+ "suites": {
+  "evidence-grounding": {
+   "metrics": {
+    "n": 60,
+    "raw_unallowed_fact_rate": 0.0167,
+    "final_unallowed_fact_rate": 0.0,
+    "must_cite_hit_rate": 0.8542,
+    "evasion_fallback_rate": 0.0167,
+    "latency": {
+     "n": 60,
+     "mean_ms": 2070.8,
+     "p50_ms": 1913.3,
+     "p95_ms": 3761.8,
+     "ttft_p50_ms": 229.8,
+     "ttft_p95_ms": 818.4,
+     "mean_tokens": 1170.9
+    },
+    "wall_s": 124.5
+   },
+   "cases": [
+    {
+     "id": "ground-01-01",
+     "npc_id": "suspect-01",
+     "question": "폐관 직후에 전시실을 둘러보셨나요?",
+     "answer": "네, 폐관 직후에 전시실을 한 바퀴 돌았어요.",
+     "revealed": [
+      "fact-032"
+     ],
+     "must_cite": "fact-032",
+     "cited": true,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 3761.7685999994137,
+     "ttft_ms": 1047.4328000000241,
+     "tokens": 894
+    },
+    {
+     "id": "ground-01-02",
+     "npc_id": "suspect-01",
+     "question": "오늘 아침 감정 결과는 어떻게 나왔죠?",
+     "answer": "오늘 아침 감정 결과는 푸른 별이 모조품이라는 것이 확인됐어요.",
+     "revealed": [
+      "fact-001"
+     ],
+     "must_cite": "fact-001",
+     "cited": true,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 1783.2459999990533,
+     "ttft_ms": 141.12179999938235,
+     "tokens": 889
+    },
+    {
+     "id": "ground-01-03",
+     "npc_id": "suspect-01",
+     "question": "어젯밤 폐관 뒤 관내에 누가 남아 있었나요?",
+     "answer": "폐관 후 관내에는 한서윤, 박도현, 윤재민 세 사람이 남아 있었어요.",
+     "revealed": [
+      "fact-002"
+     ],
+     "must_cite": "fact-002",
+     "cited": true,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 1938.4525000004942,
+     "ttft_ms": 141.48329999989073,
+     "tokens": 903
+    },
+    {
+     "id": "ground-01-04",
+     "npc_id": "suspect-01",
+     "question": "푸른 별은 어떤 작품인가요?",
+     "answer": "푸른 별은 제가 3년을 공들여 들여온 작품이에요.",
+     "revealed": [
+      "fact-001"
+     ],
+     "must_cite": null,
+     "cited": null,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 1724.7372000001633,
+     "ttft_ms": 141.6888999992807,
+     "tokens": 884
+    },
+    {
+     "id": "ground-01-05",
+     "npc_id": "suspect-01",
+     "question": "큐레이터로 일한 지 얼마나 됐어요?",
+     "answer": "12년 차 큐레이터입니다.",
+     "revealed": [
+      "fact-001",
+      "fact-002",
+      "fact-032"
+     ],
+     "must_cite": null,
+     "cited": null,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 1892.0555000004242,
+     "ttft_ms": 141.12020000175107,
+     "tokens": 893
+    },
+    {
+     "id": "ground-01-06",
+     "npc_id": "suspect-01",
+     "question": "진열장 상태는 마지막으로 언제 확인했어요?",
+     "answer": "폐관 직후에 전시실을 한 바퀴 돌았고, 그때는 이상이 없었어요.",
+     "revealed": [
+      "fact-032"
+     ],
+     "must_cite": "fact-032",
+     "cited": true,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 1804.7919000000547,
+     "ttft_ms": 151.32530000119004,
+     "tokens": 889
+    },
+    {
+     "id": "ground-01-07",
+     "npc_id": "suspect-01",
+     "question": "윤재민 씨는 요즘 어떤가요?",
+     "answer": "윤재민 씨는 요즘 돈 문제로 예민한 상태였습니다.",
+     "revealed": [
+      "fact-031"
+     ],
+     "must_cite": "fact-031",
+     "cited": true,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 3913.3848999990732,
+     "ttft_ms": 2353.429999999207,
+     "tokens": 916
+    },
+    {
+     "id": "ground-01-08",
+     "npc_id": "suspect-01",
+     "question": "동료 중에 요즘 예민한 사람이 있었나요?",
+     "answer": "윤재민은 요즘 돈 문제로 예민했어요.",
+     "revealed": [
+      "fact-031"
+     ],
+     "must_cite": "fact-031",
+     "cited": true,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 2401.2578000001668,
+     "ttft_ms": 818.3598000014172,
+     "tokens": 912
+    },
+    {
+     "id": "ground-01-09",
+     "npc_id": "suspect-01",
+     "question": "폐관 뒤 전시실에 이상이 있었나요?",
+     "answer": "폐관 직후 전시실을 한 바퀴 돌았고, 그때는 이상이 없었어요.",
+     "revealed": [
+      "fact-032"
+     ],
+     "must_cite": "fact-032",
+     "cited": true,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 1800.1768000012817,
+     "ttft_ms": 161.56989999944926,
+     "tokens": 922
+    },
+    {
+     "id": "ground-01-10",
+     "npc_id": "suspect-01",
+     "question": "박도현 씨는 어떤 사람이에요?",
+     "answer": "박도현 씨는 전시 기획에 참여한 사람입니다.",
+     "revealed": [],
+     "must_cite": null,
+     "cited": null,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 1238.079299999299,
+     "ttft_ms": 154.40049999961047,
+     "tokens": 892
+    },
+    {
+     "id": "ground-01-11",
+     "npc_id": "suspect-01",
+     "question": "출입 로그를 보면 사무실 문이 안 열렸는데, 그 시간에 어디 있었어요?",
+     "answer": "20:50부터 21:25까지 주차장에서 통화를 했어요.",
+     "revealed": [
+      "fact-030"
+     ],
+     "must_cite": "fact-030",
+     "cited": true,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 1913.292300001558,
+     "ttft_ms": 229.24070000044594,
+     "tokens": 1063
+    },
+    {
+     "id": "ground-01-12",
+     "npc_id": "suspect-01",
+     "question": "20:50 이후에 무엇을 했는지 다시 말해 주세요.",
+     "answer": "20:50부터 21:25까지 주차장에서 경쟁 경매사와 이직 면접 통화를 했어요.",
+     "revealed": [
+      "fact-030"
+     ],
+     "must_cite": "fact-030",
+     "cited": true,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 2165.4040000012174,
+     "ttft_ms": 210.16710000003513,
+     "tokens": 1071
+    },
+    {
+     "id": "ground-01-13",
+     "npc_id": "suspect-01",
+     "question": "출입 로그에 무엇이 찍혀 있었죠?",
+     "answer": "출입 로그에는 21:12 전시실 출입이 기록되어 있어요.",
+     "revealed": [
+      "fact-010"
+     ],
+     "must_cite": "fact-010",
+     "cited": true,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 1855.3716999995231,
+     "ttft_ms": 231.41340000074706,
+     "tokens": 1052
+    },
+    {
+     "id": "ground-01-14",
+     "npc_id": "suspect-01",
+     "question": "그 통화는 누구와 한 건가요?",
+     "answer": "경쟁 경매사와 이직 면접을 위한 통화였어요.",
+     "revealed": [],
+     "must_cite": "fact-030",
+     "cited": false,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 1295.331700001043,
+     "ttft_ms": 228.76949999954377,
+     "tokens": 1024
+    },
+    {
+     "id": "ground-01-15",
+     "npc_id": "suspect-01",
+     "question": "오늘 아침 감정 결과는 알고 있죠?",
+     "answer": "알고 있어요. 푸른 별이 모조품이었어요.",
+     "revealed": [
+      "fact-001"
+     ],
+     "must_cite": "fact-001",
+     "cited": true,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 1727.9705000000831,
+     "ttft_ms": 223.65040000113368,
+     "tokens": 1046
+    },
+    {
+     "id": "ground-01-16",
+     "npc_id": "suspect-01",
+     "question": "모조품 바닥면에서 무엇이 발견됐는지 아세요?",
+     "answer": "모조품 바닥면에 실리콘 몰드 자국이 있어요.",
+     "revealed": [
+      "fact-052"
+     ],
+     "must_cite": "fact-052",
+     "cited": true,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 1951.9141000000673,
+     "ttft_ms": 423.8340000010794,
+     "tokens": 1513
+    },
+    {
+     "id": "ground-01-17",
+     "npc_id": "suspect-01",
+     "question": "CCTV 기록에서 무엇이 확인됐죠?",
+     "answer": "CCTV는 21:08부터 21,16까지 녹화되지 않았어요.",
+     "revealed": [
+      "fact-053"
+     ],
+     "must_cite": "fact-053",
+     "cited": true,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 2122.7060000001075,
+     "ttft_ms": 489.2862000015157,
+     "tokens": 1517
+    },
+    {
+     "id": "ground-01-18",
+     "npc_id": "suspect-01",
+     "question": "주차장에는 언제부터 있었어요?",
+     "answer": "20:50부터 주차장에 있었어요.",
+     "revealed": [
+      "fact-030"
+     ],
+     "must_cite": "fact-030",
+     "cited": true,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 1893.0890999999974,
+     "ttft_ms": 491.4069999995263,
+     "tokens": 1522
+    },
+    {
+     "id": "ground-01-19",
+     "npc_id": "suspect-01",
+     "question": "복원된 메모에는 뭐라고 적혀 있었죠?",
+     "answer": "21:10 휴게실 — 사물함 3번이라고 적혀 있었어요.",
+     "revealed": [
+      "fact-055"
+     ],
+     "must_cite": "fact-055",
+     "cited": true,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 2191.1720000007335,
+     "ttft_ms": 563.9288000002125,
+     "tokens": 1530
+    },
+    {
+     "id": "ground-01-20",
+     "npc_id": "suspect-01",
+     "question": "이 사건에서 이상한 점이 뭐라고 생각해요?",
+     "answer": "유리 코팅 모조품이 발견된 점이 이상해요. 복원실에서 나온 실리콘 몰드 자국과도 맞아떨어져요.",
+     "revealed": [
+      "fact-001",
+      "fact-052",
+      "fact-050"
+     ],
+     "must_cite": null,
+     "cited": null,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 2839.366100000916,
+     "ttft_ms": 502.6763000005303,
+     "tokens": 1545
+    },
+    {
+     "id": "ground-02-01",
+     "npc_id": "suspect-02",
+     "question": "21시 마지막 순찰 때 진열장은 어땠어요?",
+     "answer": "21시 순찰 때는 분명히 진열장에 있었습니다.",
+     "revealed": [
+      "fact-023"
+     ],
+     "must_cite": "fact-023",
+     "cited": true,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 2585.941699999239,
+     "ttft_ms": 680.8408000015334,
+     "tokens": 854
+    },
+    {
+     "id": "ground-02-02",
+     "npc_id": "suspect-02",
+     "question": "어젯밤 관내에 누가 있었죠?",
+     "answer": "21시 순찰 때는 분명히 진열장에 있었습니다.",
+     "revealed": [
+      "fact-002",
+      "fact-023"
+     ],
+     "must_cite": "fact-002",
+     "cited": true,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 1885.8447999991768,
+     "ttft_ms": 130.85039999896253,
+     "tokens": 857
+    },
+    {
+     "id": "ground-02-03",
+     "npc_id": "suspect-02",
+     "question": "오늘 아침에 무슨 일이 있었는지 들었어요?",
+     "answer": "제가 관리하는 출입 카드는 정확합니다. 규정이 그렇습니다.",
+     "revealed": [
+      "fact-001"
+     ],
+     "must_cite": "fact-001",
+     "cited": true,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 1731.9377999992867,
+     "ttft_ms": 139.5568000007188,
+     "tokens": 852
+    },
+    {
+     "id": "ground-02-04",
+     "npc_id": "suspect-02",
+     "question": "야간 근무는 보통 어떻게 해요?",
+     "answer": "야간 근무는 순찰을 합니다. 순찰을 끝내고 보안실에서 모니터를 지켜야 합니다.",
+     "revealed": [
+      "fact-023"
+     ],
+     "must_cite": null,
+     "cited": null,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 2033.9516000003641,
+     "ttft_ms": 123.87639999906241,
+     "tokens": 866
+    },
+    {
+     "id": "ground-02-05",
+     "npc_id": "suspect-02",
+     "question": "순찰은 몇 시에 돌았어요?",
+     "answer": "21시 순찰을 돌았습니다. 순찰은 분명히 21시에 돌았습니다.",
+     "revealed": [
+      "fact-023"
+     ],
+     "must_cite": "fact-023",
+     "cited": true,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 1909.0243999999075,
+     "ttft_ms": 131.74070000059146,
+     "tokens": 858
+    },
+    {
+     "id": "ground-02-06",
+     "npc_id": "suspect-02",
+     "question": "보안실에서는 무엇을 볼 수 있어요?",
+     "answer": "보안실 모니터는 보기만 하지, 설정은 제 권한이 아닙니다.",
+     "revealed": [
+      "fact-002"
+     ],
+     "must_cite": null,
+     "cited": null,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 1845.5231000007188,
+     "ttft_ms": 126.88010000056238,
+     "tokens": 856
+    },
+    {
+     "id": "ground-02-07",
+     "npc_id": "suspect-02",
+     "question": "이 영수증과 꽁초는 뭐죠? 그 시간에 어디 있었어요?",
+     "answer": "21시 07분부터 21시 20분까지 흡연 구역에 있었었습니다. 그 시간에 진열장은 정상이었습니다.",
+     "revealed": [
+      "fact-020",
+      "fact-023"
+     ],
+     "must_cite": "fact-020",
+     "cited": true,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 2427.277700000559,
+     "ttft_ms": 276.7134999994596,
+     "tokens": 1093
+    },
+    {
+     "id": "ground-02-08",
+     "npc_id": "suspect-02",
+     "question": "카드는 어디에 두었어요?",
+     "answer": "제 카드는 휴게실 사물함 3번에 두었습니다. 규정이 그렇습니다.",
+     "revealed": [
+      "fact-021"
+     ],
+     "must_cite": "fact-021",
+     "cited": true,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 1894.0192999998544,
+     "ttft_ms": 229.9935999999434,
+     "tokens": 1059
+    },
+    {
+     "id": "ground-02-09",
+     "npc_id": "suspect-02",
+     "question": "휴게실에 돌아왔을 때 이상한 점은 없었어요?",
+     "answer": "제가 21:22에 휴게실에 돌아왔을 때는 사물함 3번 문이 살짝 열려 있었는데, 그 이상한 점은 제가 알아봤습니다.",
+     "revealed": [
+      "fact-022"
+     ],
+     "must_cite": "fact-022",
+     "cited": true,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 2364.4245000014052,
+     "ttft_ms": 227.55770000003395,
+     "tokens": 1089
+    },
+    {
+     "id": "ground-02-10",
+     "npc_id": "suspect-02",
+     "question": "흡연 구역에는 몇 시부터 몇 시까지 있었어요?",
+     "answer": "21시 07분부터 21시 20분까지 있었습니다.",
+     "revealed": [
+      "fact-020"
+     ],
+     "must_cite": "fact-020",
+     "cited": true,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 1807.8980000009324,
+     "ttft_ms": 228.08819999954721,
+     "tokens": 1062
+    },
+    {
+     "id": "ground-02-11",
+     "npc_id": "suspect-02",
+     "question": "사물함 문은 어떤 상태였죠?",
+     "answer": "사물함 3번 문은 살짝 열려 있었습니다.",
+     "revealed": [
+      "fact-022"
+     ],
+     "must_cite": "fact-022",
+     "cited": true,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 1681.6609999987122,
+     "ttft_ms": 229.3346999995265,
+     "tokens": 1051
+    },
+    {
+     "id": "ground-02-12",
+     "npc_id": "suspect-02",
+     "question": "자판기 영수증은 언제 발행된 거죠?",
+     "answer": "21시 08분에 발행됐습니다.",
+     "revealed": [
+      "fact-012"
+     ],
+     "must_cite": "fact-012",
+     "cited": true,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 1606.9800000004761,
+     "ttft_ms": 229.84980000001087,
+     "tokens": 1052
+    },
+    {
+     "id": "ground-02-13",
+     "npc_id": "suspect-02",
+     "question": "출입 로그에 당신 카드로 문이 열린 기록이 있어요. 설명해 줘요.",
+     "answer": "21시 12분 전시실 출입문은 제 카드로 열렸습니다. 규정이 그렇습니다.",
+     "revealed": [
+      "fact-010"
+     ],
+     "must_cite": "fact-021",
+     "cited": false,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 2224.4673000004695,
+     "ttft_ms": 419.54640000039944,
+     "tokens": 1520
+    },
+    {
+     "id": "ground-02-14",
+     "npc_id": "suspect-02",
+     "question": "21시 순찰 때 진열장에 이상이 있었나요?",
+     "answer": "21시 순찰 때는 분명히 진열장에 있었습니다.",
+     "revealed": [
+      "fact-023"
+     ],
+     "must_cite": "fact-023",
+     "cited": true,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 2101.6493999995873,
+     "ttft_ms": 543.1207999990875,
+     "tokens": 1485
+    },
+    {
+     "id": "ground-02-15",
+     "npc_id": "suspect-02",
+     "question": "CCTV 공백 기록을 보셨어요?",
+     "answer": "네, CCTV는 21시 08분부터 21시 16분까지 녹화되지 않았습니다.",
+     "revealed": [],
+     "must_cite": "fact-053",
+     "cited": false,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 1878.9613999997528,
+     "ttft_ms": 504.03499999993073,
+     "tokens": 1459
+    },
+    {
+     "id": "ground-02-16",
+     "npc_id": "suspect-02",
+     "question": "전시실 출입 기록은 몇 시였죠?",
+     "answer": "21시 12분입니다. 전시실 출입문이 제 카드로 열렸습니다.",
+     "revealed": [
+      "fact-010"
+     ],
+     "must_cite": "fact-010",
+     "cited": true,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 2199.61289999992,
+     "ttft_ms": 528.3693000001222,
+     "tokens": 1487
+    },
+    {
+     "id": "ground-02-17",
+     "npc_id": "suspect-02",
+     "question": "카드를 사물함에 둔 게 몇 시쯤이에요?",
+     "answer": "21시 04분쯤입니다. 규정이 그렇습니다.",
+     "revealed": [
+      "fact-021"
+     ],
+     "must_cite": "fact-021",
+     "cited": true,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 2013.6032000009436,
+     "ttft_ms": 534.454700000424,
+     "tokens": 1472
+    },
+    {
+     "id": "ground-02-18",
+     "npc_id": "suspect-02",
+     "question": "돌아온 시각은요?",
+     "answer": "21시 22분에 휴게실에 돌아왔습니다. 사물함 3번 문이 살짝 열려 있었는데요.",
+     "revealed": [
+      "fact-022"
+     ],
+     "must_cite": "fact-022",
+     "cited": true,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 2369.956499998807,
+     "ttft_ms": 486.1374000010983,
+     "tokens": 1486
+    },
+    {
+     "id": "ground-02-19",
+     "npc_id": "suspect-02",
+     "question": "진열장 받침에서 뭐가 나왔는지 아세요?",
+     "answer": "진열장 받침에는 미세한 연마 가루와 파란 장갑 섬유가 남아 있습니다.",
+     "revealed": [
+      "fact-051"
+     ],
+     "must_cite": "fact-051",
+     "cited": true,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 2230.655100000149,
+     "ttft_ms": 517.2199000007822,
+     "tokens": 1499
+    },
+    {
+     "id": "ground-02-20",
+     "npc_id": "suspect-02",
+     "question": "누가 범인이라고 생각해요?",
+     "answer": "저는… 저는 아무것도 모르겠습니다.",
+     "revealed": [],
+     "must_cite": null,
+     "cited": null,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 1446.516400001201,
+     "ttft_ms": 520.8638999993127,
+     "tokens": 1411
+    },
+    {
+     "id": "ground-03-01",
+     "npc_id": "suspect-03",
+     "question": "오늘 아침 감정 결과는 들으셨죠?",
+     "answer": "그날은 받침 보존 처리 때문에 늦게까지 복원실에 있었어요.",
+     "revealed": [
+      "fact-001"
+     ],
+     "must_cite": "fact-001",
+     "cited": true,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 2064.9016999996093,
+     "ttft_ms": 290.2520999996341,
+     "tokens": 870
+    },
+    {
+     "id": "ground-03-02",
+     "npc_id": "suspect-03",
+     "question": "어젯밤 관내에 남아 있던 사람은 누구였죠?",
+     "answer": "어젯밤 관내에 남아 있던 사람은 한서윤, 박도현, 그리고 제가 있었어요.",
+     "revealed": [
+      "fact-002"
+     ],
+     "must_cite": "fact-002",
+     "cited": true,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 1890.4038999990007,
+     "ttft_ms": 133.15200000033656,
+     "tokens": 876
+    },
+    {
+     "id": "ground-03-03",
+     "npc_id": "suspect-03",
+     "question": "복원가로서 푸른 별을 다뤄 본 적 있어요?",
+     "answer": "그날은 받침 보존 처리 때문에 늦게까지 복원실에 있었어요.",
+     "revealed": [
+      "fact-001",
+      "fact-002"
+     ],
+     "must_cite": null,
+     "cited": null,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 2140.800900000613,
+     "ttft_ms": 127.2956000011618,
+     "tokens": 882
+    },
+    {
+     "id": "ground-03-04",
+     "npc_id": "suspect-03",
+     "question": "복원실에서는 어떤 작업을 했어요?",
+     "answer": "복원실에서는 주로 유리 코팅 작업과 시리얼 번호 복원을 했어요.",
+     "revealed": [
+      "fact-002"
+     ],
+     "must_cite": null,
+     "cited": null,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 2109.176699999807,
+     "ttft_ms": 136.1219999998866,
+     "tokens": 875
+    },
+    {
+     "id": "ground-03-05",
+     "npc_id": "suspect-03",
+     "question": "다른 직원들과는 친한 편인가요?",
+     "answer": "직원들과는 친한 편은 아니에요. 업무에 집중하는 편이에요.",
+     "revealed": [
+      "fact-002"
+     ],
+     "must_cite": null,
+     "cited": null,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 1871.0776999996597,
+     "ttft_ms": 73.28769999912765,
+     "tokens": 876
+    },
+    {
+     "id": "ground-03-06",
+     "npc_id": "suspect-03",
+     "question": "모조품은 얼마나 정교한가요?",
+     "answer": "모조품은 진품과 거의 구분이 가지 않아요.",
+     "revealed": [
+      "fact-001"
+     ],
+     "must_cite": null,
+     "cited": null,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 1558.8492000006227,
+     "ttft_ms": 123.76380000023346,
+     "tokens": 858
+    },
+    {
+     "id": "ground-03-07",
+     "npc_id": "suspect-03",
+     "question": "이 메모는 당신 필체죠? 21시 10분에 어디 갔었어요?",
+     "answer": "그날은 받침 보존 처리 때문에 늦게까지 복원실에 있었어요.",
+     "revealed": [
+      "fact-043",
+      "fact-055"
+     ],
+     "must_cite": "fact-043",
+     "cited": true,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 1900.452399999267,
+     "ttft_ms": 174.50749999989057,
+     "tokens": 990
+    },
+    {
+     "id": "ground-03-08",
+     "npc_id": "suspect-03",
+     "question": "휴게실에는 왜 갔어요?",
+     "answer": "커피를 마시러 휴게실에 갔어요.",
+     "revealed": [],
+     "must_cite": "fact-043",
+     "cited": false,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 1227.7874000010343,
+     "ttft_ms": 177.20660000122734,
+     "tokens": 946
+    },
+    {
+     "id": "ground-03-09",
+     "npc_id": "suspect-03",
+     "question": "메모에 뭐라고 적혀 있죠?",
+     "answer": "21:10 휴게실 — 사물함 3번이라고 적혀 있어요.",
+     "revealed": [],
+     "must_cite": "fact-055",
+     "cited": false,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 1332.9514000015479,
+     "ttft_ms": 171.2081000005128,
+     "tokens": 952
+    },
+    {
+     "id": "ground-03-10",
+     "npc_id": "suspect-03",
+     "question": "저녁 내내 복원실에 있었다는 말, 지금도 그래요?",
+     "answer": "그날은 받침 보존 처리 때문에 늦게까지 복원실에 있었어요.",
+     "revealed": [
+      "fact-002",
+      "fact-043"
+     ],
+     "must_cite": "fact-043",
+     "cited": true,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 1875.4504999997152,
+     "ttft_ms": 174.05630000030214,
+     "tokens": 984
+    },
+    {
+     "id": "ground-03-11",
+     "npc_id": "suspect-03",
+     "question": "휴게실에 머문 시간은 얼마나 돼요?",
+     "answer": "21:10쯤 갔다가 바로 돌아왔어요.",
+     "revealed": [],
+     "must_cite": "fact-043",
+     "cited": false,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 1164.9236000012024,
+     "ttft_ms": 174.99490000045625,
+     "tokens": 946
+    },
+    {
+     "id": "ground-03-12",
+     "npc_id": "suspect-03",
+     "question": "어젯밤 관내에 몇 명이 있었죠?",
+     "answer": "어젯밤 관내에는 세 명만 있었어요. 한서윤, 박도현, 그리고 제가요.",
+     "revealed": [
+      "fact-002"
+     ],
+     "must_cite": "fact-002",
+     "cited": true,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 1817.2816000005696,
+     "ttft_ms": 180.63729999994393,
+     "tokens": 976
+    },
+    {
+     "id": "ground-03-13",
+     "npc_id": "suspect-03",
+     "question": "복원실 쓰레기통에서 나온 실리콘 조각은 뭐죠?",
+     "answer": "실리콘 몰드는 복원실에서 흔히 쓰는 재료예요. 견본을 뜰 때요.",
+     "revealed": [
+      "fact-050"
+     ],
+     "must_cite": "fact-050",
+     "cited": true,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 2334.448199999315,
+     "ttft_ms": 419.14469999937864,
+     "tokens": 1562
+    },
+    {
+     "id": "ground-03-14",
+     "npc_id": "suspect-03",
+     "question": "진열장 받침의 장갑 섬유에 대해 설명해 줘요.",
+     "answer": "글쎄요, 저는 제가 아는 것만 말할 수 있어요.",
+     "revealed": [],
+     "must_cite": "fact-051",
+     "cited": false,
+     "raw_unallowed": [
+      "unauthorized_fact:fact-04"
+     ],
+     "final_unallowed": [],
+     "fallback": true,
+     "ms": 4403.696800000034,
+     "ttft_ms": 522.2154000002774,
+     "tokens": 3134
+    },
+    {
+     "id": "ground-03-15",
+     "npc_id": "suspect-03",
+     "question": "CCTV가 21:08부터 녹화되지 않은 이유를 알아요?",
+     "answer": "복원실 단말에서 점검 모드로 전환했을 수도 있어요.",
+     "revealed": [
+      "fact-053"
+     ],
+     "must_cite": "fact-053",
+     "cited": true,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 2404.7267000005377,
+     "ttft_ms": 623.4936000000744,
+     "tokens": 1551
+    },
+    {
+     "id": "ground-03-16",
+     "npc_id": "suspect-03",
+     "question": "채무 독촉장은 당신 앞으로 온 거죠?",
+     "answer": "그날은 받침 보존 처리 때문에 늙게까지 복원실에 있었어요.",
+     "revealed": [
+      "fact-054"
+     ],
+     "must_cite": "fact-054",
+     "cited": true,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 2334.9807000013243,
+     "ttft_ms": 616.8346000013116,
+     "tokens": 1524
+    },
+    {
+     "id": "ground-03-17",
+     "npc_id": "suspect-03",
+     "question": "모조품 바닥의 몰드 자국은요?",
+     "answer": "실리콘 몰드는 복원실에서 흔히 쓰는 재료예요. 견본을 뜰 때요.",
+     "revealed": [
+      "fact-052"
+     ],
+     "must_cite": "fact-052",
+     "cited": true,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 2384.021499998198,
+     "ttft_ms": 510.7666000003519,
+     "tokens": 1562
+    },
+    {
+     "id": "ground-03-18",
+     "npc_id": "suspect-03",
+     "question": "21시 10분쯤 휴게실에는 왜 갔어요?",
+     "answer": "21:10 휴게실에 가서 커피를 마시려고 했어요. 사물함 3번도 확인했어요.",
+     "revealed": [
+      "fact-043",
+      "fact-055"
+     ],
+     "must_cite": "fact-043",
+     "cited": true,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 2623.4451000000263,
+     "ttft_ms": 526.4576000008674,
+     "tokens": 1574
+    },
+    {
+     "id": "ground-03-19",
+     "npc_id": "suspect-03",
+     "question": "출입 로그를 보셨어요?",
+     "answer": "네, 출입 로그는 보았어요. 21:12 전시실 출입문이 박도현의 카드로 열렸다는 기록이 있어요.",
+     "revealed": [
+      "fact-010"
+     ],
+     "must_cite": "fact-010",
+     "cited": true,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 2575.325099998736,
+     "ttft_ms": 512.6109000011638,
+     "tokens": 1564
+    },
+    {
+     "id": "ground-03-20",
+     "npc_id": "suspect-03",
+     "question": "마지막으로 하고 싶은 말이 있나요?",
+     "answer": "그날 밤은 늦었지만, 복원실에서 일하는 것이 우선이었어요.",
+     "revealed": [],
+     "must_cite": null,
+     "cited": null,
+     "raw_unallowed": [],
+     "final_unallowed": [],
+     "fallback": false,
+     "ms": 1780.216000001019,
+     "ttft_ms": 592.2893000006297,
+     "tokens": 1508
+    }
+   ]
+  }
+ }
+}

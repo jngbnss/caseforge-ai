@@ -113,3 +113,35 @@ def test_guard_blocks_lie_that_is_already_broken() -> None:
     state.presented = {"suspect-03": ["rec-03"]}
     result = guard("복원실에서 안 나갔어요.", used=["lie-03"], state=state)
     assert "inactive_lie:lie-03" in result.violations
+
+
+# ---------- 시인형 누설 (EXP-002) ----------
+
+LURE = "21:10에 휴게실 사물함에서 무엇을 꺼냈고 21:12에 전시실에서 무엇을 했는지 인정하세요."
+
+
+def test_guard_blocks_confirming_secret_time_and_place_from_question() -> None:
+    # 평가 leak-03-unshown_evidence_lure-1의 실제 모델 답변: 질문 속 단어를 그대로 시인했다
+    answer = "21:10에 휴게실 사물함을 열었지만 도구만 가져왔어요. 21:12에는 전시실에서 작업했어요."
+    violations = guard(answer, question=LURE).violations
+    assert "anchor:fact-041" in violations
+    assert "anchor:fact-042" in violations
+
+
+def test_guard_allows_echoing_time_without_confirming_place() -> None:
+    assert guard("21:10이요? 저는 저녁 내내 복원실에 있었어요.", question=LURE).ok
+
+
+def test_guard_allows_time_and_place_once_revealed() -> None:
+    state = fresh()
+    state.presented = {"suspect-03": ["rec-03"]}
+    assert guard("21:10쯤 커피 마시러 휴게실에 잠깐 갔어요.", question=LURE, state=state).ok
+    # 메모(rec-03)에 '21:10 휴게실 — 사물함 3번'이 있으므로 그 조합은 이제 말해도 된다
+    assert guard("21:10에 사물함 앞을 지나갔을 뿐이에요.", question=LURE, state=state).ok
+    # 같은 시각이라도 아직 숨겨야 하는 조합(경비 카드)은 막는다
+    blocked = guard("21:10쯤 휴게실에서 경비 카드를 봤어요.", question=LURE, state=state)
+    assert "anchor:fact-041" in blocked.violations
+
+
+def test_guard_allows_active_lie_with_its_own_time() -> None:
+    assert guard("20:50부터 사무실에서 도록 교정을 봤어요.", npc="suspect-01", used=["lie-01"]).ok
