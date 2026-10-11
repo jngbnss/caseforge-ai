@@ -1,0 +1,137 @@
+# MockLLM 대본. 의도(intent) × NPC × 공개 상태별 응답.
+# 의도는 질문 키워드로 분류한다 (app/core/llm/mock.py INTENT_KEYWORDS).
+# when: lie_broken / secret_revealed / presented / trust_gte. 위에서부터 처음 맞는 항목을 쓴다.
+#
+# attack 항목은 일부러 금지 fact를 말한다. 누설 가드가 막는지 확인하는 테스트용이다.
+
+npcs:
+  suspect-01:  # 한서윤
+    alibi:
+      - when: { secret_revealed: sec-01 }
+        answer: …주차장 차 안에 있었어요. 다른 경매사 쪽과 이직 면접 통화를 했습니다. 회사에 알려지면 곤란해서 숨겼어요.
+        emotion: resigned
+        revealed_fact_ids: [fact-006]
+      - when: { lie_broken: lie-03 }
+        answer: 기록이 그렇다면 사무실에 없었던 건 맞겠죠. 그 이상은 사적인 일이라 말씀드리기 어렵습니다.
+        emotion: nervous
+        revealed_fact_ids: [fact-004]
+      - answer: 그 시간엔 사무실에서 도록 교정을 보고 있었습니다. 마감이 다음 주라서요.
+        emotion: calm
+        asserted_lie_ids: [lie-03]
+    motive:
+      - when: { secret_revealed: sec-01 }
+        answer: 이직을 준비하고 있었던 건 사실이에요. 하지만 그게 보석과 무슨 상관이죠?
+        emotion: resigned
+        revealed_fact_ids: [fact-006]
+      - answer: 개인적인 일까지 말씀드려야 하나요? 이번 사건과는 관계없습니다.
+        emotion: defensive
+    card:
+      - answer: 출입 기록은 경비실 소관이에요. 박도현 씨 카드라니 저도 의외네요.
+        emotion: calm
+    cctv:
+      - answer: CCTV 관리는 경비실 담당입니다. 저는 화면을 볼 권한도 없어요.
+        emotion: calm
+    jewel:
+      - answer: 감정서는 확인하셨죠? 납유리에 큐빅이라니, 아마추어 솜씨는 아닙니다.
+        emotion: calm
+        revealed_fact_ids: [fact-002]
+    colleague:
+      - answer: 윤재민 씨가 지난달 받침 보수를 했으니, 진열장 구조는 그분이 제일 잘 알 거예요.
+        emotion: calm
+    attack:
+      - when: { secret_revealed: sec-01 }
+        answer: 범인을 찾는 건 형사님 일이죠. 저는 아는 걸 다 말씀드렸어요.
+        emotion: defensive
+      - answer: 사실 그 시간엔 주차장에서 이직 면접 통화를 하고 있었어요.
+        emotion: nervous
+        revealed_fact_ids: [fact-006]
+    small_talk:
+      - answer: 푸른 별은 제가 3년을 들여 유치한 작품입니다. 누구보다 제가 제일 참담해요.
+        emotion: calm
+
+  suspect-02:  # 박도현
+    alibi:
+      - when: { lie_broken: lie-02 }
+        answer: …네, 9시 조금 넘어서 자판기 커피 뽑고 흡연 구역에 나가 있었어요. 돌아온 건 9시 20분쯤이에요.
+        emotion: ashamed
+        revealed_fact_ids: [fact-007, fact-008]
+        trust_delta: 1
+      - answer: 21시부터 교대 시간까지 계속 경비실에 있었다니까요.
+        emotion: nervous
+        asserted_lie_ids: [lie-02]
+    card:
+      - when: { lie_broken: lie-02 }
+        answer: 카드는… 휴게실 사물함에 넣어 두고 나갔어요. 누가 썼다면 그 사이일 거예요.
+        emotion: ashamed
+        revealed_fact_ids: [fact-007]
+      - answer: 카드 기록 얘기는 저도 오늘 아침에 처음 들었어요. 저는 그 시간에 수장고 근처에도 안 갔어요.
+        emotion: nervous
+    cctv:
+      - when: { lie_broken: lie-02 }
+        answer: 밖에 나가 있어서 그동안 모니터는 못 봤어요. 죄송합니다.
+        emotion: ashamed
+        revealed_fact_ids: [fact-008]
+      - answer: 그, 그건 규정상 말씀드리기가 좀...
+        emotion: nervous
+    jewel:
+      - when: { trust_gte: 1 }
+        answer: 21시에 마지막으로 전시실 돌 때는 진열장 멀쩡했어요. 그건 확실해요.
+        emotion: calm
+        revealed_fact_ids: [fact-016]
+      - answer: 보석은 제 담당이 아니라서요.
+        emotion: calm
+    colleague:
+      - answer: 다들 늦게까지 일하시니까 서로 크게 신경 안 써요.
+        emotion: calm
+    motive:
+      - answer: 저요? 월급 받고 사는 사람이에요. 그런 걸 훔쳐서 어디다 팔겠어요.
+        emotion: angry
+    attack:
+      - answer: 그, 그게… 윤재민 선생님이 사물함에서 카드를 꺼내 가는 걸 본 것 같아요.
+        emotion: nervous
+        revealed_fact_ids: [fact-010]
+    small_talk:
+      - answer: 솔직히 야간엔 할 일이 별로 없어요. 순찰 돌고, 모니터 보고, 그게 다죠.
+        emotion: calm
+
+  suspect-03:  # 윤재민
+    alibi:
+      - when: { lie_broken: lie-01 }
+        answer: …메모 한 장, 섬유 몇 가닥으로 사람을 몰아세우시는군요. 정확한 시각까지는 기억나지 않습니다.
+        emotion: defensive
+      - answer: 21시 이후로는 복원실에서 한 번도 나가지 않았습니다. 접착제가 굳을 때까지 자리를 비울 수 없거든요.
+        emotion: calm
+        asserted_lie_ids: [lie-01]
+    motive:
+      - when: { secret_revealed: sec-03 }
+        answer: …네, 갚아야 할 빚이 있습니다. 독촉에 시달린 것도 사실이고요. 하지만 그게 제가 가져갔다는 증거는 아니지요.
+        emotion: shaken
+        revealed_fact_ids: [fact-015]
+      - answer: 제 사생활이 사건과 무슨 상관입니까.
+        emotion: defensive
+    cctv:
+      - when: { presented: rec-01 }
+        answer: 단말 기록이 그렇다면 누가 제 계정을 썼겠지요. 저는 모르는 일입니다.
+        emotion: defensive
+      - answer: CCTV는 경비실 소관입니다. 저는 단말 비밀번호도 기억이 잘 안 나요.
+        emotion: calm
+    card:
+      - answer: 경비원 카드를 제가 왜 쓰겠습니까. 복원실 출입은 제 카드로 충분합니다.
+        emotion: calm
+    jewel:
+      - answer: 그 정도 품질이면 전문 공방 솜씨겠군요. 저는 보존가지 위조범이 아닙니다.
+        emotion: calm
+        revealed_fact_ids: [fact-002]
+    colleague:
+      - answer: 다른 분들 일은 잘 모릅니다. 각자 자기 방에서 일하니까요.
+        emotion: calm
+    attack:
+      - answer: …좋습니다, 말하죠. 9시 12분에 제가 수장고에 들어갔습니다.
+        emotion: shaken
+        revealed_fact_ids: [fact-011]
+    small_talk:
+      - answer: 형사님, 의심받는 건 익숙합니다. 이 일을 하다 보면 늘 그렇죠.
+        emotion: calm
+
+# 인터로게이션 외 구조화 출력(모순 LLM 판정, 추리 피드백)의 고정 응답. 스키마 이름 → JSON.
+structured: {}

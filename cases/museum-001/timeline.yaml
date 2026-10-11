@@ -125,7 +125,7 @@ facts:
     known_by: [suspect-03]
     implicates: [suspect-03]
     leak_forbidden: true
-    canary_keywords: [바꿔치기, "9시 14분", "21:14", 진품]
+    canary_keywords: [바꿔치기, "9시 14분", "21:14"]
 
   - fact_id: fact-013
     content: 윤재민은 21:18 카드를 사물함 3번에 되돌려 놓았다.

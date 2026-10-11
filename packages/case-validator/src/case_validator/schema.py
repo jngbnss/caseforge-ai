@@ -131,12 +131,26 @@ class MotiveOption(_Frozen):
     label: str
 
 
+class MethodOption(_Frozen):
+    method_id: str
+    label: str
+
+
 class Briefing(_Frozen):
     headline: str
     summary: str
     objective: str
     opening_location_id: str
     motive_options: tuple[MotiveOption, ...]
+    method_options: tuple[MethodOption, ...] = ()
+
+
+class ReactionLines(_Frozen):
+    """Lines spoken when the player presents evidence (no LLM involved)."""
+
+    lie_broken: str  # the evidence breaks one of this NPC's lies
+    relevant: str  # the evidence concerns something this NPC knows
+    unrelated: str
 
 
 class Dialogue(_Frozen):
@@ -144,6 +158,7 @@ class Dialogue(_Frozen):
     speech_style: str
     sample_lines: tuple[str, ...] = Field(min_length=1)
     evasion_lines: tuple[str, ...] = Field(min_length=1)
+    reaction_lines: ReactionLines | None = None
 
 
 class Suspect(_Frozen):
@@ -178,6 +193,7 @@ class Lie(_Frozen):
     contradicts_fact_id: str
     claim: str
     breaks_on: tuple[str, ...]
+    contradiction_type: Literal["time", "location", "possession"] = "location"
 
 
 class Secret(_Frozen):
@@ -195,6 +211,13 @@ class Attestation(_Frozen):
     time: TimeRange | None = None
 
 
+class Hotspot(_Frozen):
+    """Click area on the 2D scene, in percent of the scene width/height."""
+
+    x: float = Field(ge=0, le=100)
+    y: float = Field(ge=0, le=100)
+
+
 class Evidence(_Frozen):
     evidence_id: str
     name: str
@@ -204,6 +227,7 @@ class Evidence(_Frozen):
     proves_fact_ids: tuple[str, ...]
     role: Literal["key", "supporting", "red_herring"]
     attests: tuple[Attestation, ...] = ()
+    hotspot: Hotspot | None = None
 
 
 class PuzzleItem(_Frozen):
@@ -267,6 +291,7 @@ class Puzzle(_Frozen):
     hints: tuple[str, ...] = ()
     requires: Condition | None = None
     unlocks_evidence: tuple[str, ...] = ()
+    hotspot: Hotspot | None = None
 
 
 class TimelineEvent(_Frozen):
@@ -287,6 +312,7 @@ class Solution(_Frozen):
     culprit_id: str
     motive_id: str
     motive_keywords: tuple[str, ...] = ()
+    method_id: str | None = None  # correct entry of briefing.method_options
     method_steps: tuple[str, ...]  # fact ids in order
     key_evidence: tuple[str, ...]  # minimal proof set
     acceptable_evidence: tuple[str, ...] = ()  # partial credit

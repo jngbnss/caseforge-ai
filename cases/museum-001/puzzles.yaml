@@ -32,6 +32,7 @@ puzzles:
       - 점검 모드가 켜지면 그 뒤 장면은 남지 않는다.
     requires: null
     unlocks_evidence: [rec-01]
+    hotspot: { x: 72, y: 38 }
 
   - puzzle_id: pz-02
     title: 복원실 금고
@@ -71,6 +72,7 @@ puzzles:
       - 다이아몬드가 "깎인" 해는 언제인가?
     requires: { evidence_collected: ev-03 }
     unlocks_evidence: [rec-02]
+    hotspot: { x: 78, y: 40 }
 
   - puzzle_id: pz-03
     title: 찢어진 메모
@@ -78,25 +80,26 @@ puzzles:
     location_id: restoration-room
     input_type: arrangement
     items:
-      - { item_id: mp-1, label: "21:10" }
-      - { item_id: mp-2, label: "휴게실" }
-      - { item_id: mp-3, label: "—" }
-      - { item_id: mp-4, label: "사물함 3번" }
+      - { item_id: mp-a, label: "휴게실" }
+      - { item_id: mp-b, label: "사물함 3번" }
+      - { item_id: mp-c, label: "21:10" }
+      - { item_id: mp-d, label: "—" }
     constraints:
       - kind: immediately_before
-        first: mp-1
-        then: mp-2
-        clue: mp-1의 오른쪽 찢긴 선이 mp-2의 왼쪽 선과 맞는다.
+        first: mp-c
+        then: mp-a
+        clue: mp-c의 오른쪽 찢긴 선이 mp-a의 왼쪽 선과 맞는다.
       - kind: immediately_before
-        first: mp-2
-        then: mp-3
-        clue: mp-2 끝의 잉크 번짐이 mp-3로 이어진다.
+        first: mp-a
+        then: mp-d
+        clue: mp-a 끝의 잉크 번짐이 mp-d로 이어진다.
       - kind: immediately_before
-        first: mp-3
-        then: mp-4
-        clue: mp-3의 오른쪽 모서리가 mp-4의 왼쪽 모서리와 맞물린다.
-    answer: [mp-1, mp-2, mp-3, mp-4]
+        first: mp-d
+        then: mp-b
+        clue: mp-d의 오른쪽 모서리가 mp-b의 왼쪽 모서리와 맞물린다.
+    answer: [mp-c, mp-a, mp-d, mp-b]
     hints:
       - 찢긴 가장자리의 모양을 비교해 보라.
     requires: { evidence_collected: ev-03 }
     unlocks_evidence: [rec-03]
+    hotspot: { x: 38, y: 82 }

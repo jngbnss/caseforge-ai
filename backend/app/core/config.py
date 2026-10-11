@@ -4,7 +4,8 @@ from typing import Literal
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-REPO_ROOT = Path(__file__).resolve().parents[3]
+BACKEND_ROOT = Path(__file__).resolve().parents[2]
+REPO_ROOT = BACKEND_ROOT.parent
 
 
 class Settings(BaseSettings):
@@ -14,10 +15,17 @@ class Settings(BaseSettings):
 
     cases_dir: Path = REPO_ROOT / "cases"
     default_case_id: str = "museum-001"
+    database_url: str = f"sqlite:///{BACKEND_ROOT / 'caseforge.sqlite3'}"
+
     llm_backend: Literal["mock", "ollama", "llamacpp"] = "mock"
-    llm_model: str = "qwen3:8b-q4_K_M"
+    llm_model: str = "qwen3:8b"
+    llm_timeout_s: float = 120.0
     ollama_base_url: str = "http://localhost:11434"
+    mock_script_path: Path = BACKEND_ROOT / "tests" / "fixtures" / "mock_npc.yaml"
+
     embedding_backend: Literal["mock", "bge"] = "mock"
+    embedding_model: str = "bge-m3"
+
     cors_origins: list[str] = ["http://localhost:5173"]
 
 

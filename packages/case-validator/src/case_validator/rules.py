@@ -37,6 +37,7 @@ def check_v01_references(bible: CaseBible, report: ValidationReport) -> None:
         "puzzle": [x.puzzle_id for x in bible.puzzles],
         "event": [x.event_id for x in bible.timeline],
         "motive": [x.motive_id for x in bible.briefing.motive_options],
+        "method": [x.method_id for x in bible.briefing.method_options],
     }
     for kind, values in ids.items():
         for value, count in Counter(values).items():
@@ -113,6 +114,7 @@ def check_v01_references(bible: CaseBible, report: ValidationReport) -> None:
     sol = bible.solution
     need("suspect", sol.culprit_id, "solution")
     need("motive", sol.motive_id, "solution")
+    need("method", sol.method_id, "solution")
     need("location", sol.crime.location_id, "solution.crime")
     for fid in sol.method_steps:
         need("fact", fid, "solution.method_steps")

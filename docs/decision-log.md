@@ -28,3 +28,9 @@
 | D-022 | 2026-10-11 | 루트 **uv 가상 워크스페이스**(backend, case-validator), CI 외부 액션은 **커밋 SHA 고정** | 패키지별 독립 venv, 태그 고정 | 루트에서 `uv run case-validator` 실행, 잠금 파일 하나. SHA 고정이 태그 이동 공격에 안전 | 적용 |
 | D-023 | 2026-10-11 | 프론트 버전: **Vite 8, TypeScript 6, Tailwind v4**(`@tailwindcss/vite`, CSS `@theme` 설정) | Tailwind v3 + `tailwind.config.js` | 2026-10 기준 create-vite 기본 템플릿과 최신 안정판 | 적용 |
 | D-024 | 2026-10-11 | 백엔드 테스트 HTTP 클라이언트 **httpx2** | httpx | Starlette TestClient가 httpx 사용을 deprecated 경고로 알림 | 적용 |
+| D-025 | 2026-10-11 | 스키마 추가: `Briefing.method_options`, `Solution.method_id`, `Lie.contradiction_type`, `Evidence/Puzzle.hotspot`, `Dialogue.reaction_lines` | 수법을 자유 서술로만 받기, 화면 좌표를 프론트에 하드코딩 | 수법 채점을 구조 비교로 하려면 선택지가 필요. 좌표·반응 대사는 사건 데이터이므로 Bible에 둔다 (정답 정보 아님) | 적용 |
+| D-026 | 2026-10-11 | 증거 제시 반응은 **규칙 + 대본 대사**(LLM 미사용), 신뢰도는 거짓말을 무너뜨리는 증거 제시 +1, 심문 1턴 `trust_delta`는 −1..+1로 클램프 (초기값 1, 상한 5) | 제시 반응도 LLM 생성 | 비밀 공개 조건(`trust_gte`)이 플레이어 문장으로 조작되지 않게 한다 | 적용 |
+| D-027 | 2026-10-11 | 누설 가드 카나리 예외: 스코프 안 fact의 카나리, 그 NPC에게 제시한 증거 문구에 있는 단어는 허용 | 모든 금지 카나리 일괄 차단 | 플레이어가 보여 준 메모의 "사물함"을 되읽는 것은 누설이 아니다. 과차단은 회피 대사 남발로 이어진다 | 적용 |
+| D-028 | 2026-10-11 | 퍼즐 조각은 세션마다 섞어서 내려주고 정답 순서와 같으면 회전한다. 메모 조각 ID를 `mp-a..d`로 바꿈 | 정렬된 ID | ID나 순서로 정답이 새지 않게 한다 | 적용 |
+| D-029 | 2026-10-11 | `openapi-typescript`의 `typescript ^5` peer를 npm `overrides`로 TS 6에 연결, CI에서 생성물 최신 여부를 `git diff`로 검사 | TS 5로 내리기 | 생성기는 타입 출력에만 TS API를 쓰고, 생성 결과는 TS 6 `tsc`로 검증된다 | 적용 |
+| D-030 | 2026-10-11 | Mock 대본 경로는 프롬프트대로 `backend/tests/fixtures/mock_npc.yaml`이며 `MOCK_SCRIPT_PATH`로 바꿀 수 있다 | `app/` 아래 | Mock 모드는 CI·E2E·오프라인 데모 전용 | 적용 |

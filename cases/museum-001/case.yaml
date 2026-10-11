@@ -18,6 +18,15 @@ briefing:
       label: 박물관에 대한 개인적 원한
     - motive_id: motive-insurance
       label: 보험금을 노린 내부 공모
+  method_options:
+    - method_id: method-card-theft-swap
+      label: CCTV 녹화를 끊고, 남의 출입 카드를 몰래 써서 미리 만든 모조품과 바꿔치기했다
+    - method_id: method-own-card
+      label: 자기 출입 카드로 수장고에 들어가 진품을 들고 나왔다
+    - method_id: method-appraisal-swap
+      label: 개장 전 감정 도중 감정사 몰래 모조품과 바꿔치기했다
+    - method_id: method-pre-transfer
+      label: 전시 전에 이미 진품을 외부로 빼돌리고 모조품을 전시했다
 
 # 장소 간 최소 이동 시간(분). 무방향이며 T03과 U01(기회) 계산에 쓰인다.
 locations:

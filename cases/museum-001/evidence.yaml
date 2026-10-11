@@ -9,6 +9,7 @@ evidence:
     discoverable: { always: true }
     proves_fact_ids: [fact-003, fact-004]
     role: red_herring
+    hotspot: { x: 30, y: 45 }
     attests:
       - { event_id: evt-12, location_id: storage, time: "21:12" }
 
@@ -19,6 +20,7 @@ evidence:
     discoverable: { always: true }
     proves_fact_ids: [fact-007, fact-008]
     role: supporting
+    hotspot: { x: 50, y: 70 }
     attests:
       - { event_id: evt-06, location_id: staff-lounge, time: "21:07" }
       - { event_id: evt-07, location_id: smoking-area }
@@ -30,6 +32,7 @@ evidence:
     discoverable: { always: true }
     proves_fact_ids: [fact-014]
     role: key
+    hotspot: { x: 25, y: 75 }
 
   - evidence_id: ev-04
     name: 연마 가루와 장갑 섬유
@@ -38,6 +41,7 @@ evidence:
     discoverable: { always: true }
     proves_fact_ids: [fact-012]
     role: key
+    hotspot: { x: 45, y: 62 }
     attests:
       - { event_id: evt-13, location_id: exhibition-hall }
 
@@ -48,6 +52,7 @@ evidence:
     discoverable: { always: true }
     proves_fact_ids: [fact-002]
     role: supporting
+    hotspot: { x: 58, y: 42 }
 
   - evidence_id: rec-01
     name: CCTV 녹화 공백 기록

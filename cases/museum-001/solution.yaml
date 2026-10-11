@@ -4,6 +4,7 @@ solution:
   culprit_id: suspect-03
   motive_id: motive-gambling-debt
   motive_keywords: [도박, 빚, 채무, 수집가]
+  method_id: method-card-theft-swap
   # 수법: 몰드로 모조품 제작 → CCTV 공백 → 경비 카드 도용 → 수장고 출입 → 바꿔치기 → 카드 반납
   method_steps: [fact-014, fact-009, fact-010, fact-011, fact-012, fact-013]
   key_evidence: [ev-03, ev-04, rec-01, rec-03]

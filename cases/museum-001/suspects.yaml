@@ -29,18 +29,21 @@ lies:
     contradicts_fact_id: fact-010
     claim: 21시 이후로는 복원실에서 한 번도 나가지 않았다.
     breaks_on: [rec-03, ev-04]
+    contradiction_type: location
 
   - lie_id: lie-02
     npc_id: suspect-02
     contradicts_fact_id: fact-008
     claim: 21시부터 교대 시간까지 계속 경비실에 있었다.
     breaks_on: [ev-02]
+    contradiction_type: time
 
   - lie_id: lie-03
     npc_id: suspect-01
     contradicts_fact_id: fact-004
     claim: 그 시간엔 사무실에서 도록 교정을 보고 있었다.
     breaks_on: [ev-01]
+    contradiction_type: location
 
 secrets:
   - secret_id: sec-01
