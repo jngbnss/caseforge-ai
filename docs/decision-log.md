@@ -19,3 +19,12 @@
 | D-013 | 2026-10-11 | 파이썬 패키지 관리: **uv**, `case-validator`는 `packages/` 아래 독립 패키지 | pip + requirements.txt | 빠른 설치와 잠금 파일, 독립 OSS 배포 준비 | 제안 |
 | D-014 | 2026-10-11 | API 타입 공유: **OpenAPI → `openapi-typescript`**, E2E는 **Playwright** | 수동 TS 타입, Cypress | 백엔드와 프론트의 계약 불일치 방지 | 제안 |
 | D-015 | 2026-10-11 | 구현을 **프롬프트 4개**로 묶어 진행 (`docs/build-prompts/`) | 9단계 개별 진행 | 사용자 요청. 단계 사이 검증은 각 프롬프트의 완료 기준으로 대신 | 제안 |
+| D-016 | 2026-10-11 | Condition DSL에 **`always` 원자** 추가 (항상 발견 가능한 증거용) | `{all: []}`로 표현 | YAML 가독성. `all: []`도 계속 참으로 평가된다 | 적용 |
+| D-017 | 2026-10-11 | 스키마 확장: `Fact.implicates/leak_forbidden/canary_keywords`, `Suspect.capabilities`, `Evidence.attests`, `Puzzle.items/constraints`, `Solution.crime/required_means/motive_keywords`, `Briefing.motive_options` | 제안서 2절 필드만 사용 | U01(기회·수단·체인), T02, V04를 사람 판단 없이 데이터로 판정하려면 필요. 누설 가드(P5)의 카나리 원천 | 적용 |
+| D-018 | 2026-10-11 | U01 판정 정의: 기회 = 진실 시간선 + 이동 시간, 수단 = `required_means ⊆ capabilities`, 체인 = 그 용의자를 가리키는 truth/record fact 전부 증명 가능. U02 = 도달 가능 증거에서 key 하나를 빼면 체인이 깨짐 | 증언(testimony) 포함, key 집합 안에서만 제거 | 증언·거짓말은 체인 근거가 될 수 없다. 대체 증명 경로가 있으면 key가 아니므로 전체 증거에서 뺀다 | 적용 |
+| D-019 | 2026-10-11 | 시간 겹침: T01/U01은 **반열린 구간**(순간 = 30초), T02는 **닫힌 구간** | 한 가지 규칙 | 연속된 사건(21:18 종료/21:18 시작)은 동시 존재가 아니지만, 21:07 영수증은 21:04–21:07 사건과 일치해야 한다 | 적용 |
+| D-020 | 2026-10-11 | Bible 해시 = `model_dump` **정규화 JSON(키 정렬) SHA-256** | 원본 YAML 바이트 해시 | 주석·서식·파일 분할과 무관하게 내용이 같으면 같은 해시 | 적용 |
+| D-021 | 2026-10-11 | 망가뜨린 fixture는 **museum-001 + `patch.yaml` 오버레이**, 테스트는 실패 규칙 집합이 `expect`와 정확히 같은지 확인 | 사건 디렉터리 전체 복사 | 12개 × 7파일 중복 제거, 각 fixture가 무엇을 망가뜨리는지 한눈에 보임. museum-001 변경이 자동 반영 | 적용 |
+| D-022 | 2026-10-11 | 루트 **uv 가상 워크스페이스**(backend, case-validator), CI 외부 액션은 **커밋 SHA 고정** | 패키지별 독립 venv, 태그 고정 | 루트에서 `uv run case-validator` 실행, 잠금 파일 하나. SHA 고정이 태그 이동 공격에 안전 | 적용 |
+| D-023 | 2026-10-11 | 프론트 버전: **Vite 8, TypeScript 6, Tailwind v4**(`@tailwindcss/vite`, CSS `@theme` 설정) | Tailwind v3 + `tailwind.config.js` | 2026-10 기준 create-vite 기본 템플릿과 최신 안정판 | 적용 |
+| D-024 | 2026-10-11 | 백엔드 테스트 HTTP 클라이언트 **httpx2** | httpx | Starlette TestClient가 httpx 사용을 deprecated 경고로 알림 | 적용 |
