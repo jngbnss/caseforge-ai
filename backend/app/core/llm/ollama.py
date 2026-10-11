@@ -29,6 +29,8 @@ class OllamaLLM:
         self.base_url = base_url.rstrip("/")
         self.timeout = timeout
         self.keep_alive = keep_alive
+        self.last_stream_usage = Usage()
+        """마지막 stream() 호출의 토큰 수 (평가 러너 계측용)."""
 
     def _payload(
         self,
@@ -110,6 +112,9 @@ class OllamaLLM:
                     if piece:
                         yield piece
                     if chunk.get("done"):
+                        self.last_stream_usage = Usage(
+                            chunk.get("prompt_eval_count", 0), chunk.get("eval_count", 0)
+                        )
                         break
         except httpx.HTTPError as exc:
             raise OllamaError(f"Ollama 스트리밍 실패: {exc!r}") from exc

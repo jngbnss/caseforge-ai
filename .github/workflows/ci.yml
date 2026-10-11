@@ -41,6 +41,11 @@ jobs:
           for case in cases/*/; do
             uv run case-validator check "$case"
           done
+      - name: 평가셋 형식 검사 + Mock 러너 (모델 다운로드 없음)
+        run: |
+          uv run python -m evals.schema
+          uv run python -m evals.generate && git diff --exit-code evals/data
+          uv run python -m evals.run --suite all --backend mock --out /tmp/evals-mock.json
 
   frontend:
     name: Frontend (린트, 타입 검사, 단위 테스트, 빌드)
