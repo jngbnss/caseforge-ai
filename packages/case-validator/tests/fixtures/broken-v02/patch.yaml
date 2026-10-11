@@ -1,0 +1,4 @@
+description: 핵심 증거 ev-04 가 어떤 조건에서도 발견되지 않는다.
+expect: [V02, U01]   # 증거 체인이 끊기므로 범인을 특정할 수 없다
+patches:
+  - { file: evidence.yaml, path: evidence/ev-04/discoverable, value: { any: [] } }

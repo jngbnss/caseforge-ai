@@ -1,0 +1,5 @@
+description: 금고 단서에서 "깎인 해는 빼고"가 사라져 정답이 여러 개다 (0752, 0784, 5284).
+expect: [V04]
+patches:
+  - { file: puzzles.yaml, path: puzzles/pz-02/constraints/2/values, value: [] }
+  - { file: puzzles.yaml, path: puzzles/pz-02/constraints/3/values, value: [] }

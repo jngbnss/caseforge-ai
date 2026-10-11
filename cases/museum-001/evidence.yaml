@@ -1,0 +1,76 @@
+# 물리적 증거 ev-01~ev-05 와 퍼즐 보상 기록 rec-01~rec-03.
+# attests: 증거가 말해 주는 사건의 장소/시각 (T02 가 timeline 과 대조한다).
+
+evidence:
+  - evidence_id: ev-01
+    name: 출입 통제 로그
+    description: 경비실 서버의 카드 출입 기록. 21:12 박도현 카드로 수장고 문이 열렸다.
+    location_id: security-office
+    discoverable: { always: true }
+    proves_fact_ids: [fact-003, fact-004]
+    role: red_herring
+    attests:
+      - { event_id: evt-12, location_id: storage, time: "21:12" }
+
+  - evidence_id: ev-02
+    name: 담배꽁초와 자판기 영수증
+    description: 흡연 구역의 갓 버린 꽁초 세 개, 박도현의 주머니에서 나온 휴게실 자판기 영수증(21:07).
+    location_id: smoking-area
+    discoverable: { always: true }
+    proves_fact_ids: [fact-007, fact-008]
+    role: supporting
+    attests:
+      - { event_id: evt-06, location_id: staff-lounge, time: "21:07" }
+      - { event_id: evt-07, location_id: smoking-area }
+
+  - evidence_id: ev-03
+    name: 실리콘 몰드 조각
+    description: 복원실 쓰레기통 바닥에서 나온 실리콘 조각. 안쪽에 보석 커팅면 자국이 찍혀 있다.
+    location_id: restoration-room
+    discoverable: { always: true }
+    proves_fact_ids: [fact-014]
+    role: key
+
+  - evidence_id: ev-04
+    name: 연마 가루와 장갑 섬유
+    description: 진열장 받침에 남은 연마 가루와 복원용 파란 니트릴 장갑 섬유.
+    location_id: exhibition-hall
+    discoverable: { always: true }
+    proves_fact_ids: [fact-012]
+    role: key
+    attests:
+      - { event_id: evt-13, location_id: exhibition-hall }
+
+  - evidence_id: ev-05
+    name: 모조품과 분광 감정서
+    description: 진열장 속 모조 다이아몬드와 오늘 아침 작성된 분광 감정서.
+    location_id: exhibition-hall
+    discoverable: { always: true }
+    proves_fact_ids: [fact-002]
+    role: supporting
+
+  - evidence_id: rec-01
+    name: CCTV 녹화 공백 기록
+    description: 21:08~21:16 녹화가 비어 있고, 공백 직전 화면에 복원실 단말 로그인 창(윤재민 계정)이 잡혔다.
+    location_id: security-office
+    discoverable: { puzzle_solved: pz-01 }
+    proves_fact_ids: [fact-009]
+    role: key
+    attests:
+      - { event_id: evt-10, location_id: restoration-room, time: "21:08" }
+
+  - evidence_id: rec-02
+    name: 채무 독촉장
+    description: 복원실 금고 속 사채업체 독촉장 묶음과 "물건만 넘기면 정리해 주겠다"는 수집가의 쪽지.
+    location_id: restoration-room
+    discoverable: { puzzle_solved: pz-02 }
+    proves_fact_ids: [fact-015]
+    role: supporting
+
+  - evidence_id: rec-03
+    name: 복원된 메모
+    description: 윤재민 필체로 "21:10 휴게실 — 사물함 3번"이라고 적힌 메모.
+    location_id: restoration-room
+    discoverable: { puzzle_solved: pz-03 }
+    proves_fact_ids: [fact-010]
+    role: key

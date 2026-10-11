@@ -1,0 +1,4 @@
+description: 증명에 필요 없는 ev-05 가 핵심 증거에 들어 있다 (최소 증명 집합 아님).
+expect: [U02]
+patches:
+  - { file: solution.yaml, path: solution/key_evidence, value: [ev-03, ev-04, rec-01, rec-03, ev-05] }

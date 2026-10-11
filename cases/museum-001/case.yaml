@@ -1,0 +1,67 @@
+case_id: museum-001
+title: 사라진 푸른 다이아몬드
+
+briefing:
+  headline: 한빛시립박물관의 "푸른 별"이 모조품으로 바뀌었다
+  summary: >-
+    개장 전 정기 감정에서 전시 중이던 다이아몬드 "푸른 별"이 정교한 모조품으로 확인됐다.
+    전날 밤 20:30 폐관 후 관내에 남아 있던 사람은 수석 큐레이터 한서윤, 야간 경비원 박도현,
+    보존 복원가 윤재민 세 명뿐이다.
+  objective: 현장과 기록을 조사하고 세 사람을 심문해 범인, 동기, 수법을 증거와 함께 밝혀라.
+  opening_location_id: exhibition-hall
+  motive_options:
+    - motive_id: motive-gambling-debt
+      label: 도박 빚을 갚기 위해
+    - motive_id: motive-job-offer
+      label: 경쟁 경매사로 이직하며 가져가려고
+    - motive_id: motive-revenge
+      label: 박물관에 대한 개인적 원한
+    - motive_id: motive-insurance
+      label: 보험금을 노린 내부 공모
+
+# 장소 간 최소 이동 시간(분). 무방향이며 T03과 U01(기회) 계산에 쓰인다.
+locations:
+  - location_id: exhibition-hall
+    name: 2층 전시실
+    description: 푸른 별 진열장이 있는 메인 전시실.
+    adjacent:
+      - { to: storage, minutes: 1 }
+      - { to: security-office, minutes: 2 }
+      - { to: curator-office, minutes: 2 }
+  - location_id: storage
+    name: 수장고
+    description: 카드키로만 출입할 수 있는 소장품 보관실. 전시실과 직통 통로가 있다.
+    adjacent:
+      - { to: staff-lounge, minutes: 2 }
+  - location_id: restoration-room
+    name: 복원실
+    description: 보존 복원 작업실. CCTV 관리 단말이 함께 있다.
+    adjacent:
+      - { to: staff-lounge, minutes: 2 }
+  - location_id: staff-lounge
+    name: 직원 휴게실
+    description: 직원 사물함과 자판기가 있는 휴게실.
+    adjacent:
+      - { to: security-office, minutes: 1 }
+      - { to: smoking-area, minutes: 2 }
+      - { to: curator-office, minutes: 2 }
+  - location_id: security-office
+    name: 경비실
+    description: 출입 로그 서버와 CCTV 모니터가 있다.
+    adjacent:
+      - { to: smoking-area, minutes: 2 }
+      - { to: parking-lot, minutes: 3 }
+  - location_id: smoking-area
+    name: 야외 흡연 구역
+    description: 직원 출입구 옆 흡연 구역.
+    adjacent:
+      - { to: parking-lot, minutes: 2 }
+  - location_id: parking-lot
+    name: 직원 주차장
+    description: 건물 뒤편 직원 전용 주차장.
+    adjacent:
+      - { to: curator-office, minutes: 2 }
+  - location_id: curator-office
+    name: 큐레이터 사무실
+    description: 한서윤의 사무실. 직원 계단으로 주차장과 바로 이어진다.
+    adjacent: []

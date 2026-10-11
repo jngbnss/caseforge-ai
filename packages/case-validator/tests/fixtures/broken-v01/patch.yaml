@@ -1,0 +1,4 @@
+description: 증거가 존재하지 않는 장소를 가리킨다.
+expect: [V01]
+patches:
+  - { file: evidence.yaml, path: evidence/ev-03/location_id, value: nowhere }

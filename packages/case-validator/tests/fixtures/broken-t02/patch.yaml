@@ -1,0 +1,4 @@
+description: 자판기 영수증 시각이 시간선(21:04-21:07)과 맞지 않는다.
+expect: [T02]
+patches:
+  - { file: evidence.yaml, path: evidence/ev-02/attests/0/time, value: "21:30" }

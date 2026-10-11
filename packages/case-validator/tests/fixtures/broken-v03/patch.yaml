@@ -1,0 +1,5 @@
+description: pz-01 과 pz-03 이 서로를 선행조건으로 요구한다.
+expect: [V03, V02, U01]   # 두 퍼즐의 보상(rec-01, rec-03)이 핵심 증거다
+patches:
+  - { file: puzzles.yaml, path: puzzles/pz-01/requires, value: { puzzle_solved: pz-03 } }
+  - { file: puzzles.yaml, path: puzzles/pz-03/requires, value: { puzzle_solved: pz-01 } }

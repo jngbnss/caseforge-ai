@@ -1,0 +1,4 @@
+description: 복원실-휴게실 이동이 5분인데 윤재민은 2분 만에 이동한다.
+expect: [T03]
+patches:
+  - { file: case.yaml, path: locations/restoration-room/adjacent/0/minutes, value: 5 }

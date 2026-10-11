@@ -1,0 +1,5 @@
+description: 퍼즐 보상 기록이 처음부터 공개되어 퍼즐 없이 범인이 특정된다.
+expect: [V05]
+patches:
+  - { file: evidence.yaml, path: evidence/rec-01/discoverable, value: { always: true } }
+  - { file: evidence.yaml, path: evidence/rec-03/discoverable, value: { always: true } }

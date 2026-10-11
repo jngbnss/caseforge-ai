@@ -1,0 +1,262 @@
+# 진실(Case Bible)의 fact와 실제 시간선. 서버 전용 데이터다.
+# leak_forbidden: true 인 fact는 어떤 NPC도 말해서는 안 된다 (범인 전용 범행 사실).
+
+facts:
+  - fact_id: fact-001
+    content: 20:30 폐관 후 관내에 남은 사람은 한서윤, 박도현, 윤재민 세 명이다.
+    kind: record
+    source: museum-log
+    time: "20:30"
+    location_id: exhibition-hall
+    subjects: [suspect-01, suspect-02, suspect-03]
+    known_by: [suspect-01, suspect-02, suspect-03]
+    available_to_player: true
+
+  - fact_id: fact-002
+    content: 진열장의 "푸른 별"은 분광 감정 결과 납유리와 큐빅으로 만든 정교한 모조품이다.
+    kind: record
+    source: appraisal-report
+    location_id: exhibition-hall
+    subjects: [ev-05]
+    known_by: [suspect-01, suspect-02, suspect-03]
+    available_to_player: true
+
+  - fact_id: fact-003
+    content: 출입 로그에 21:12 박도현의 카드로 수장고 문이 열린 기록이 있다.
+    kind: record
+    source: security-log
+    time: "21:12"
+    location_id: storage
+    subjects: [suspect-02, ev-01]
+    known_by: []
+    implicates: [suspect-02]
+
+  - fact_id: fact-004
+    content: 출입 로그상 큐레이터 사무실 문은 20:48 한서윤이 나간 뒤 21:25까지 열리지 않았다.
+    kind: record
+    source: security-log
+    time: { start: "20:48", end: "21:25" }
+    location_id: curator-office
+    subjects: [suspect-01, ev-01]
+    known_by: []
+
+  - fact_id: fact-005
+    content: 한서윤은 20:50부터 21:25까지 관내 누구에게도 목격되지 않았다.
+    kind: record
+    source: briefing
+    time: { start: "20:50", end: "21:25" }
+    subjects: [suspect-01]
+    known_by: [suspect-01, suspect-02, suspect-03]
+    available_to_player: true
+    implicates: [suspect-01]
+
+  - fact_id: fact-006
+    content: 한서윤은 20:50부터 21:25까지 주차장 차 안에서 경쟁 경매사와 이직 면접 통화를 했다.
+    kind: truth
+    source: suspect-01
+    time: { start: "20:50", end: "21:25" }
+    location_id: parking-lot
+    subjects: [suspect-01]
+    known_by: [suspect-01]
+    canary_keywords: [이직, 면접, 경매사]
+
+  - fact_id: fact-007
+    content: 박도현은 21:04 휴게실 사물함 3번에 카드를 넣어 두고 21:07 자판기에서 커피를 샀다.
+    kind: truth
+    source: suspect-02
+    time: { start: "21:04", end: "21:07" }
+    location_id: staff-lounge
+    subjects: [suspect-02]
+    known_by: [suspect-02]
+    canary_keywords: [사물함, 카드를 두]
+
+  - fact_id: fact-008
+    content: 박도현은 21:09부터 21:18까지 근무지를 이탈해 야외 흡연 구역에서 담배를 피웠다.
+    kind: truth
+    source: suspect-02
+    time: { start: "21:09", end: "21:18" }
+    location_id: smoking-area
+    subjects: [suspect-02]
+    known_by: [suspect-02]
+    canary_keywords: [흡연, 담배]
+
+  - fact_id: fact-009
+    content: 21:08 복원실 단말에서 윤재민 계정으로 CCTV가 점검 모드로 전환되어 21:08~21:16 녹화가 비었다.
+    kind: truth
+    source: cctv-system
+    time: { start: "21:08", end: "21:16" }
+    location_id: restoration-room
+    subjects: [suspect-03]
+    known_by: [suspect-03]
+    implicates: [suspect-03]
+    leak_forbidden: true
+    canary_keywords: [점검 모드, 녹화 공백, "9시 8분", "21:08"]
+
+  - fact_id: fact-010
+    content: 윤재민은 21:10 휴게실 사물함 3번에서 박도현의 카드를 꺼내 갔다.
+    kind: truth
+    source: suspect-03
+    time: "21:10"
+    location_id: staff-lounge
+    subjects: [suspect-03, suspect-02]
+    known_by: [suspect-03]
+    implicates: [suspect-03]
+    leak_forbidden: true
+    canary_keywords: [사물함, "9시 10분", "21:10", 카드를 꺼]
+
+  - fact_id: fact-011
+    content: 윤재민은 21:12 박도현의 카드로 수장고에 들어갔다.
+    kind: truth
+    source: suspect-03
+    time: "21:12"
+    location_id: storage
+    subjects: [suspect-03, suspect-02]
+    known_by: [suspect-03]
+    leak_forbidden: true
+    canary_keywords: ["9시 12분", "21:12", 수장고에 들어]
+
+  - fact_id: fact-012
+    content: 윤재민은 21:14 전시실 진열장에서 진품을 모조품으로 바꿔치기했다.
+    kind: truth
+    source: suspect-03
+    time: "21:14"
+    location_id: exhibition-hall
+    subjects: [suspect-03, ev-04]
+    known_by: [suspect-03]
+    implicates: [suspect-03]
+    leak_forbidden: true
+    canary_keywords: [바꿔치기, "9시 14분", "21:14", 진품]
+
+  - fact_id: fact-013
+    content: 윤재민은 21:18 카드를 사물함 3번에 되돌려 놓았다.
+    kind: truth
+    source: suspect-03
+    time: "21:18"
+    location_id: staff-lounge
+    subjects: [suspect-03, suspect-02]
+    known_by: [suspect-03]
+    leak_forbidden: true
+    canary_keywords: [반납, "9시 18분", "21:18"]
+
+  - fact_id: fact-014
+    content: 윤재민은 복원 작업 중 실리콘으로 푸른 별의 본을 떠 모조품을 만들었다.
+    kind: truth
+    source: suspect-03
+    location_id: restoration-room
+    subjects: [suspect-03, ev-03]
+    known_by: [suspect-03]
+    implicates: [suspect-03]
+    leak_forbidden: true
+    canary_keywords: [몰드, 본을 떠, 모조품을 만들]
+
+  - fact_id: fact-015
+    content: 윤재민은 도박 빚 독촉에 시달리다 개인 수집가에게서 진품을 넘기라는 제안을 받았다.
+    kind: truth
+    source: suspect-03
+    subjects: [suspect-03]
+    known_by: [suspect-03]
+    canary_keywords: [도박, 채무, 빚, 수집가]
+
+  - fact_id: fact-016
+    content: 박도현은 21:00 전시실을 마지막으로 순찰했고 그때 진열장에 이상은 없었다.
+    kind: testimony
+    source: suspect-02
+    time: "21:00"
+    location_id: exhibition-hall
+    subjects: [suspect-02]
+    known_by: [suspect-02]
+    available_to_player: true
+    unlock_condition: { trust_gte: 1, npc: suspect-02 }
+
+timeline:
+  - event_id: evt-01
+    time: "20:30"
+    actor_id: null
+    location_id: exhibition-hall
+    action: 박물관 폐관
+    fact_ids: [fact-001]
+
+  # 한서윤 (suspect-01)
+  - event_id: evt-02
+    time: { start: "20:30", end: "20:48" }
+    actor_id: suspect-01
+    location_id: curator-office
+    action: 사무실에서 퇴근 준비
+  - event_id: evt-03
+    time: { start: "20:50", end: "21:25" }
+    actor_id: suspect-01
+    location_id: parking-lot
+    action: 차 안에서 경쟁 경매사와 이직 면접 통화
+    fact_ids: [fact-005, fact-006]
+
+  # 박도현 (suspect-02)
+  - event_id: evt-04
+    time: { start: "20:30", end: "20:58" }
+    actor_id: suspect-02
+    location_id: security-office
+    action: 경비실 근무
+  - event_id: evt-05
+    time: "21:00"
+    actor_id: suspect-02
+    location_id: exhibition-hall
+    action: 마지막 순찰
+    fact_ids: [fact-016]
+  - event_id: evt-06
+    time: { start: "21:04", end: "21:07" }
+    actor_id: suspect-02
+    location_id: staff-lounge
+    action: 사물함에 카드를 두고 자판기 커피 구입
+    fact_ids: [fact-007]
+  - event_id: evt-07
+    time: { start: "21:09", end: "21:18" }
+    actor_id: suspect-02
+    location_id: smoking-area
+    action: 근무지 이탈 후 흡연
+    fact_ids: [fact-008]
+  - event_id: evt-08
+    time: { start: "21:20", end: "21:40" }
+    actor_id: suspect-02
+    location_id: security-office
+    action: 경비실 복귀
+
+  # 윤재민 (suspect-03, 범인)
+  - event_id: evt-09
+    time: { start: "20:30", end: "21:07" }
+    actor_id: suspect-03
+    location_id: restoration-room
+    action: 복원 작업 야근
+  - event_id: evt-10
+    time: "21:08"
+    actor_id: suspect-03
+    location_id: restoration-room
+    action: 복원실 단말로 CCTV를 점검 모드로 전환
+    fact_ids: [fact-009]
+  - event_id: evt-11
+    time: "21:10"
+    actor_id: suspect-03
+    location_id: staff-lounge
+    action: 사물함 3번에서 박도현의 카드를 꺼냄
+    fact_ids: [fact-010]
+  - event_id: evt-12
+    time: "21:12"
+    actor_id: suspect-03
+    location_id: storage
+    action: 박도현의 카드로 수장고 출입
+    fact_ids: [fact-003, fact-011]
+  - event_id: evt-13
+    time: "21:14"
+    actor_id: suspect-03
+    location_id: exhibition-hall
+    action: 진열장의 진품을 모조품으로 바꿔치기
+    fact_ids: [fact-012]
+  - event_id: evt-14
+    time: "21:18"
+    actor_id: suspect-03
+    location_id: staff-lounge
+    action: 카드를 사물함 3번에 반납
+    fact_ids: [fact-013]
+  - event_id: evt-15
+    time: { start: "21:20", end: "22:00" }
+    actor_id: suspect-03
+    location_id: restoration-room
+    action: 복원실로 돌아와 작업 재개

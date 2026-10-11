@@ -1,0 +1,4 @@
+description: 박도현의 거짓말을 무너뜨릴 증거가 없다.
+expect: [V06]
+patches:
+  - { file: suspects.yaml, path: lies/lie-02/breaks_on, value: [] }

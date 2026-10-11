@@ -1,0 +1,102 @@
+# answer 는 서버 전용이다. 클라이언트로 보내지 않는다.
+# constraints 는 플레이어가 볼 수 있는 단서를 규칙으로 옮긴 것이며, V04 는 이 제약만으로
+# 입력 공간을 전수 탐색해 답이 정확히 하나이고 answer 와 같은지 확인한다.
+
+puzzles:
+  - puzzle_id: pz-01
+    title: 뒤섞인 CCTV 프레임
+    prompt: 경비실 모니터에 남은 정지 화면 4장의 시간 순서를 맞춰라.
+    location_id: security-office
+    input_type: sequence
+    items:
+      - { item_id: fr-a, label: "전시실 진열장 앞을 손전등을 든 박도현이 지나간다. 화면 시계는 번져 있다." }
+      - { item_id: fr-b, label: "복원실 복도. 화면 하단에 '점검 모드 진입' 배너가 떠 있다." }
+      - { item_id: fr-c, label: "전시실 조명이 절반쯤 꺼지는 중이다." }
+      - { item_id: fr-d, label: "휴게실 앞 복도를 박도현이 종이컵 커피를 들고 지나간다." }
+    constraints:
+      - kind: before
+        first: fr-c
+        then: fr-a
+        clue: fr-c는 폐관 소등 장면이고, fr-a는 이미 야간 조명 상태다.
+      - kind: before
+        first: fr-a
+        then: fr-d
+        clue: fr-a의 박도현은 빈손이고, fr-d에서는 커피를 들고 있다.
+      - kind: before
+        first: fr-d
+        then: fr-b
+        clue: 점검 모드 배너 이후로는 녹화가 끊긴다.
+    answer: [fr-c, fr-a, fr-d, fr-b]
+    hints:
+      - 조명 상태로 폐관 직후 장면을 먼저 찾아라.
+      - 점검 모드가 켜지면 그 뒤 장면은 남지 않는다.
+    requires: null
+    unlocks_evidence: [rec-01]
+
+  - puzzle_id: pz-02
+    title: 복원실 금고
+    prompt: >-
+      복원실 금고에 네 자리 암호가 걸려 있다. 금고 옆 메모에는 "돌이 태어난 해부터 우리에게 온 해까지,
+      두 자리씩. 깎인 해는 빼고."라고 적혀 있다. 전시 카드에는 1907(채굴), 1952(세공), 1984(박물관 기증)가 있다.
+    location_id: restoration-room
+    input_type: code
+    code_length: 4
+    constraints:
+      - kind: segment_in
+        start: 0
+        length: 2
+        values: ["07", "52", "84"]
+        clue: 암호는 전시 카드 연도의 끝 두 자리로 이루어진다.
+      - kind: segment_in
+        start: 2
+        length: 2
+        values: ["07", "52", "84"]
+        clue: 암호는 전시 카드 연도의 끝 두 자리로 이루어진다.
+      - kind: segment_not_in
+        start: 0
+        length: 2
+        values: ["52"]
+        clue: 깎인 해(세공 1952)는 뺀다.
+      - kind: segment_not_in
+        start: 2
+        length: 2
+        values: ["52"]
+        clue: 깎인 해(세공 1952)는 뺀다.
+      - kind: segments_ascending
+        length: 2
+        clue: 태어난 해부터 온 해까지, 오래된 연도가 앞이다.
+    answer: "0784"
+    hints:
+      - 전시 카드의 연도 세 개 중 두 개만 쓴다.
+      - 다이아몬드가 "깎인" 해는 언제인가?
+    requires: { evidence_collected: ev-03 }
+    unlocks_evidence: [rec-02]
+
+  - puzzle_id: pz-03
+    title: 찢어진 메모
+    prompt: 복원실 쓰레기통에서 나온 메모 조각 4개를 찢긴 자리에 맞춰 이어 붙여라.
+    location_id: restoration-room
+    input_type: arrangement
+    items:
+      - { item_id: mp-1, label: "21:10" }
+      - { item_id: mp-2, label: "휴게실" }
+      - { item_id: mp-3, label: "—" }
+      - { item_id: mp-4, label: "사물함 3번" }
+    constraints:
+      - kind: immediately_before
+        first: mp-1
+        then: mp-2
+        clue: mp-1의 오른쪽 찢긴 선이 mp-2의 왼쪽 선과 맞는다.
+      - kind: immediately_before
+        first: mp-2
+        then: mp-3
+        clue: mp-2 끝의 잉크 번짐이 mp-3로 이어진다.
+      - kind: immediately_before
+        first: mp-3
+        then: mp-4
+        clue: mp-3의 오른쪽 모서리가 mp-4의 왼쪽 모서리와 맞물린다.
+    answer: [mp-1, mp-2, mp-3, mp-4]
+    hints:
+      - 찢긴 가장자리의 모양을 비교해 보라.
+    requires: { evidence_collected: ev-03 }
+    unlocks_evidence: [rec-03]

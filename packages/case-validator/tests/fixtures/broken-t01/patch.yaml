@@ -1,0 +1,4 @@
+description: 박도현이 21:10 흡연 구역과 전시실에 동시에 있다.
+expect: [T01]
+patches:
+  - { file: timeline.yaml, path: timeline/evt-05/time, value: "21:10" }

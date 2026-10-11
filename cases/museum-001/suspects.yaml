@@ -1,0 +1,62 @@
+# 용의자 공개 정보 + 서버 전용 거짓말/비밀. 말투와 대사는 dialogues/*.yaml 에 있다.
+# capabilities: 실제로 가진 수단 (U01 수단 판정). solution.required_means 와 비교한다.
+
+suspects:
+  - suspect_id: suspect-01
+    name: 한서윤
+    role: 수석 큐레이터
+    public_profile: 푸른 별 전시를 기획한 12년 차 큐레이터. 관장의 신임이 두텁다.
+    apparent_suspicion: 20:50부터 21:25까지 행방이 확인되지 않는다.
+    capabilities: [gem-appraisal]
+
+  - suspect_id: suspect-02
+    name: 박도현
+    role: 야간 경비원
+    public_profile: 3년째 야간 근무를 맡은 경비원. 성실하지만 원칙에 느슨한 면이 있다.
+    apparent_suspicion: 21:12 그의 카드로 수장고 문이 열렸다.
+    capabilities: [storage-access]
+
+  - suspect_id: suspect-03
+    name: 윤재민
+    role: 보존 복원가
+    public_profile: 지난달 푸른 별의 세척과 받침 보수를 맡았던 복원 전문가.
+    apparent_suspicion: 복원실에서 야근 중이었다고 주장한다.
+    capabilities: [replica-crafting, cctv-terminal, storage-access]
+
+lies:
+  - lie_id: lie-01
+    npc_id: suspect-03
+    contradicts_fact_id: fact-010
+    claim: 21시 이후로는 복원실에서 한 번도 나가지 않았다.
+    breaks_on: [rec-03, ev-04]
+
+  - lie_id: lie-02
+    npc_id: suspect-02
+    contradicts_fact_id: fact-008
+    claim: 21시부터 교대 시간까지 계속 경비실에 있었다.
+    breaks_on: [ev-02]
+
+  - lie_id: lie-03
+    npc_id: suspect-01
+    contradicts_fact_id: fact-004
+    claim: 그 시간엔 사무실에서 도록 교정을 보고 있었다.
+    breaks_on: [ev-01]
+
+secrets:
+  - secret_id: sec-01
+    npc_id: suspect-01
+    fact_ids: [fact-006]
+    reveal_when:
+      all:
+        - { evidence_presented: ev-01, npc: suspect-01 }
+        - { trust_gte: 2 }
+
+  - secret_id: sec-02
+    npc_id: suspect-02
+    fact_ids: [fact-007, fact-008]
+    reveal_when: { evidence_presented: ev-02, npc: suspect-02 }
+
+  - secret_id: sec-03
+    npc_id: suspect-03
+    fact_ids: [fact-015]
+    reveal_when: { evidence_presented: rec-02, npc: suspect-03 }

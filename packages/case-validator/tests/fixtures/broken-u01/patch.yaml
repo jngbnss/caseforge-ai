@@ -1,0 +1,6 @@
+description: 박도현도 범행 시간에 전시실에 있었고 모조품 제작 수단까지 있다 → 범행 가능한 용의자가 두 명.
+expect: [U01]
+patches:
+  - { file: suspects.yaml, path: suspects/suspect-02/capabilities, value: [storage-access, replica-crafting] }
+  - { file: timeline.yaml, path: timeline/evt-05/time, value: "21:13" }
+  - { file: timeline.yaml, path: timeline/evt-07/time, value: { start: "21:17", end: "21:18" } }

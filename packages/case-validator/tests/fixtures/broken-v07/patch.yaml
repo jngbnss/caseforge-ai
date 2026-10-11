@@ -1,0 +1,4 @@
+description: 한서윤의 비밀이 신뢰도 상한(5)을 넘는 조건을 요구한다.
+expect: [V07]
+patches:
+  - { file: suspects.yaml, path: secrets/sec-01/reveal_when, value: { trust_gte: 9 } }
