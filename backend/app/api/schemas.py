@@ -6,6 +6,8 @@
 
 from __future__ import annotations
 
+from typing import Literal
+
 from pydantic import BaseModel, Field
 
 
@@ -217,6 +219,21 @@ class DebriefEvidenceView(BaseModel):
     collected: bool
 
 
+class EvidenceLinkView(BaseModel):
+    claim: str
+    evidence_id: str
+    evidence_name: str
+
+
+class NarrativeFeedbackView(BaseModel):
+    """자유 서술 LLM 피드백. 점수와 무관하다."""
+
+    status: Literal["pending", "ready", "unavailable", "skipped", "off"]
+    unsupported_claims: list[str] = Field(default_factory=list)
+    logical_leaps: list[str] = Field(default_factory=list)
+    evidence_links: list[EvidenceLinkView] = Field(default_factory=list)
+
+
 class DebriefView(BaseModel):
     culprit: SuspectView
     motive: str
@@ -227,3 +244,5 @@ class DebriefView(BaseModel):
     missed_key: list[DebriefEvidenceView]
     wrong_links: list[DebriefEvidenceView]
     result: DeductionResultView
+    narrative: str = ""
+    feedback: NarrativeFeedbackView

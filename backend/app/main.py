@@ -55,6 +55,7 @@ def create_app(
     embedder: EmbeddingPort | None = None,
     debug_api: bool | None = None,
     llm_contradictions: bool | None = None,
+    deduction_feedback: bool | None = None,
 ) -> FastAPI:
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
@@ -72,6 +73,9 @@ def create_app(
     app.state.debug_api = settings.debug_api if debug_api is None else debug_api
     app.state.llm_contradictions = (
         settings.llm_contradictions if llm_contradictions is None else llm_contradictions
+    )
+    app.state.deduction_feedback = (
+        settings.deduction_feedback if deduction_feedback is None else deduction_feedback
     )
     app.state.judge_tasks = set()
 

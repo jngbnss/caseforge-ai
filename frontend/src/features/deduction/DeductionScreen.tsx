@@ -1,29 +1,93 @@
-import { Button, EvidenceTag, Eyebrow, Panel } from '../../components/ui'
-import type { DebriefView } from '../../services/api'
-import { useGame } from '../../store/game'
-import { DeductionForm } from './DeductionForm'
+import { Button, EvidenceTag, Eyebrow, Panel } from "../../components/ui";
+import type { DebriefView } from "../../services/api";
+import { useGame } from "../../store/game";
+import { DeductionForm } from "./DeductionForm";
 
 const SCORE_LABEL: Record<string, [string, number]> = {
-  culprit: ['범인', 40],
-  motive: ['동기', 20],
-  method: ['수법', 20],
-  evidence: ['증거 연결', 20],
+  culprit: ["범인", 40],
+  motive: ["동기", 20],
+  method: ["수법", 20],
+  evidence: ["증거 연결", 20],
+};
+
+function NarrativeFeedback({ debrief }: { debrief: DebriefView }) {
+  const fb = debrief.feedback;
+  if (fb.status === "skipped" || fb.status === "off") return null;
+  const links = fb.evidence_links ?? [];
+  const unsupported = fb.unsupported_claims ?? [];
+  const leaps = fb.logical_leaps ?? [];
+  const groups: [string, string, string[]][] = [
+    ["근거 없는 주장", "text-bad", unsupported],
+    ["논리 비약", "text-tag", leaps],
+  ];
+  return (
+    <div data-testid="narrative-feedback" data-status={fb.status}>
+      <Panel className="flex flex-col gap-3">
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
+          <h2 className="font-bold">추리 보고서 검토</h2>
+          <span className="text-xs text-muted">
+            AI 피드백 · 점수에는 반영되지 않는다
+          </span>
+        </div>
+        {fb.status === "pending" && (
+          <p className="text-sm text-muted">보고서를 읽는 중…</p>
+        )}
+        {fb.status === "unavailable" && (
+          <p className="text-sm text-muted">
+            이번에는 피드백을 만들지 못했다. 점수와 해설은 그대로다.
+          </p>
+        )}
+        {fb.status === "ready" && (
+          <>
+            {links.length > 0 && (
+              <div className="flex flex-col gap-1 text-sm">
+                <p className="font-medium text-ok">증거로 잘 뒷받침한 부분</p>
+                {links.map((l) => (
+                  <p key={l.claim}>
+                    “{l.claim}” ↔ <EvidenceTag id={l.evidence_id} />{" "}
+                    {l.evidence_name}
+                  </p>
+                ))}
+              </div>
+            )}
+            {groups.map(([label, tone, items]) =>
+              items.length ? (
+                <div key={label} className="flex flex-col gap-1 text-sm">
+                  <p className={`font-medium ${tone}`}>{label}</p>
+                  {items.map((q) => (
+                    <p key={q}>“{q}”</p>
+                  ))}
+                </div>
+              ) : null,
+            )}
+            {!links.length && !unsupported.length && !leaps.length && (
+              <p className="text-sm text-muted">짚을 만한 점이 없다.</p>
+            )}
+          </>
+        )}
+      </Panel>
+    </div>
+  );
 }
 
 function Debrief({ debrief }: { debrief: DebriefView }) {
-  const { start } = useGame()
-  const r = debrief.result
+  const { start } = useGame();
+  const r = debrief.result;
   const verdict = r.correct_culprit
     ? r.total >= 90
-      ? '사건 해결'
-      : '범인은 맞혔지만 추리가 부족하다'
-    : '범인을 놓쳤다'
+      ? "사건 해결"
+      : "범인은 맞혔지만 추리가 부족하다"
+    : "범인을 놓쳤다";
   return (
     <div className="flex flex-col gap-5">
       <Panel className="flex flex-col gap-4">
         <Eyebrow>사건 해설</Eyebrow>
         <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h2 className={`text-2xl font-bold ${r.correct_culprit ? 'text-ok' : 'text-bad'}`}>{verdict}</h2>
+          <h2
+            className={`text-2xl font-bold ${r.correct_culprit ? "text-ok" : "text-bad"}`}
+          >
+            {verdict}
+          </h2>
           <p className="font-mono text-3xl font-semibold">
             {r.total}
             <span className="text-base text-muted"> / 100</span>
@@ -31,29 +95,40 @@ function Debrief({ debrief }: { debrief: DebriefView }) {
         </div>
         <div className="flex flex-col gap-2">
           {Object.entries(r.scores).map(([k, v]) => {
-            const [label, max] = SCORE_LABEL[k] ?? [k, 20]
+            const [label, max] = SCORE_LABEL[k] ?? [k, 20];
             return (
-              <div key={k} className="grid grid-cols-[88px_1fr_56px] items-center gap-3 text-sm">
+              <div
+                key={k}
+                className="grid grid-cols-[88px_1fr_56px] items-center gap-3 text-sm"
+              >
                 <span>{label}</span>
                 <span className="h-2 overflow-hidden rounded-full bg-soft">
-                  <span className="block h-full bg-accent" style={{ width: `${(v / max) * 100}%` }} />
+                  <span
+                    className="block h-full bg-accent"
+                    style={{ width: `${(v / max) * 100}%` }}
+                  />
                 </span>
                 <span className="text-right font-mono">
                   {v}/{max}
                 </span>
               </div>
-            )
+            );
           })}
         </div>
         {r.unsupported_guess && (
-          <p className="text-sm text-bad">범인을 맞혔지만 증거를 연결하지 않았다. 근거 없는 추측으로 본다.</p>
+          <p className="text-sm text-bad">
+            범인을 맞혔지만 증거를 연결하지 않았다. 근거 없는 추측으로 본다.
+          </p>
         )}
       </Panel>
+
+      <NarrativeFeedback debrief={debrief} />
 
       <Panel className="flex flex-col gap-3">
         <h2 className="font-bold">진상</h2>
         <p>
-          범인은 <b>{debrief.culprit.name}</b>({debrief.culprit.role})이다. 동기는 {debrief.motive}.
+          범인은 <b>{debrief.culprit.name}</b>({debrief.culprit.role})이다.
+          동기는 {debrief.motive}.
         </p>
         <p className="text-sm text-muted">수법: {debrief.method}</p>
         <ol className="flex list-decimal flex-col gap-1 pl-5 text-sm">
@@ -67,15 +142,23 @@ function Debrief({ debrief }: { debrief: DebriefView }) {
         <Panel className="flex flex-col gap-3">
           <h2 className="font-bold">핵심 증거</h2>
           {debrief.key_evidence.map((e) => (
-            <p key={e.evidence_id} className="flex items-baseline gap-2 text-sm">
-              <span className={e.collected ? 'text-ok' : 'text-bad'}>{e.collected ? '✓' : '✗'}</span>
+            <p
+              key={e.evidence_id}
+              className="flex items-baseline gap-2 text-sm"
+            >
+              <span className={e.collected ? "text-ok" : "text-bad"}>
+                {e.collected ? "✓" : "✗"}
+              </span>
               <EvidenceTag id={e.evidence_id} />
               {e.name}
               <span className="text-muted">· {e.spot}</span>
             </p>
           ))}
           {debrief.missed_key.length > 0 && (
-            <p className="text-sm text-bad">놓친 단서 {debrief.missed_key.length}개: {debrief.missed_key.map((e) => e.name).join(', ')}</p>
+            <p className="text-sm text-bad">
+              놓친 단서 {debrief.missed_key.length}개:{" "}
+              {debrief.missed_key.map((e) => e.name).join(", ")}
+            </p>
           )}
           {debrief.wrong_links.length > 0 && (
             <div className="flex flex-col gap-1 border-t border-line pt-3 text-sm">
@@ -83,7 +166,12 @@ function Debrief({ debrief }: { debrief: DebriefView }) {
               {debrief.wrong_links.map((e) => (
                 <p key={e.evidence_id}>
                   <EvidenceTag id={e.evidence_id} /> {e.name}
-                  {e.role === 'red_herring' && <span className="text-muted"> · 수사를 엉뚱한 쪽으로 이끄는 함정 증거</span>}
+                  {e.role === "red_herring" && (
+                    <span className="text-muted">
+                      {" "}
+                      · 수사를 엉뚱한 쪽으로 이끄는 함정 증거
+                    </span>
+                  )}
                 </p>
               ))}
             </div>
@@ -96,12 +184,17 @@ function Debrief({ debrief }: { debrief: DebriefView }) {
             <table className="w-full text-sm">
               <tbody>
                 {debrief.timeline.map((t, i) => (
-                  <tr key={i} className={`border-t border-line ${t.is_crime ? 'text-bad' : ''}`}>
+                  <tr
+                    key={i}
+                    className={`border-t border-line ${t.is_crime ? "text-bad" : ""}`}
+                  >
                     <td className="py-1.5 pr-3 font-mono whitespace-nowrap tabular-nums">
                       {t.start}–{t.end}
                     </td>
                     <td className="py-1.5 pr-3 whitespace-nowrap">{t.actor}</td>
-                    <td className="py-1.5 pr-3 whitespace-nowrap text-muted">{t.location}</td>
+                    <td className="py-1.5 pr-3 whitespace-nowrap text-muted">
+                      {t.location}
+                    </td>
                     <td className="py-1.5">{t.action}</td>
                   </tr>
                 ))}
@@ -115,18 +208,19 @@ function Debrief({ debrief }: { debrief: DebriefView }) {
         <Button onClick={() => void start(true)}>새 수사 시작</Button>
       </div>
     </div>
-  )
+  );
 }
 
 export function DeductionScreen() {
-  const { session, debrief, deduce, busy } = useGame()
-  if (!session) return null
-  if (session.deduction && debrief) return <Debrief debrief={debrief} />
+  const { session, debrief, deduce, busy } = useGame();
+  if (!session) return null;
+  if (session.deduction && debrief) return <Debrief debrief={debrief} />;
   return (
     <Panel className="flex flex-col gap-4">
       <Eyebrow>최종 추리</Eyebrow>
       <p className="max-w-[68ch] text-sm text-muted">
-        추리는 한 번만 제출할 수 있다. 범인, 동기, 수법을 고르고 그것을 증명하는 증거를 연결한다.
+        추리는 한 번만 제출할 수 있다. 범인, 동기, 수법을 고르고 그것을 증명하는
+        증거를 연결한다.
       </p>
       <DeductionForm
         suspects={session.suspects}
@@ -137,5 +231,5 @@ export function DeductionScreen() {
         onSubmit={(s) => void deduce(s)}
       />
     </Panel>
-  )
+  );
 }

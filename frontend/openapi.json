@@ -926,6 +926,14 @@
           },
           "result": {
             "$ref": "#/components/schemas/DeductionResultView"
+          },
+          "narrative": {
+            "type": "string",
+            "title": "Narrative",
+            "default": ""
+          },
+          "feedback": {
+            "$ref": "#/components/schemas/NarrativeFeedbackView"
           }
         },
         "type": "object",
@@ -938,7 +946,8 @@
           "key_evidence",
           "missed_key",
           "wrong_links",
-          "result"
+          "result",
+          "feedback"
         ],
         "title": "DebriefView"
       },
@@ -1050,6 +1059,29 @@
         ],
         "title": "DeductionSubmission"
       },
+      "EvidenceLinkView": {
+        "properties": {
+          "claim": {
+            "type": "string",
+            "title": "Claim"
+          },
+          "evidence_id": {
+            "type": "string",
+            "title": "Evidence Id"
+          },
+          "evidence_name": {
+            "type": "string",
+            "title": "Evidence Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "claim",
+          "evidence_id",
+          "evidence_name"
+        ],
+        "title": "EvidenceLinkView"
+      },
       "EvidenceView": {
         "properties": {
           "evidence_id": {
@@ -1138,6 +1170,48 @@
           "remaining"
         ],
         "title": "HintResponse"
+      },
+      "NarrativeFeedbackView": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "ready",
+              "unavailable",
+              "skipped",
+              "off"
+            ],
+            "title": "Status"
+          },
+          "unsupported_claims": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Unsupported Claims"
+          },
+          "logical_leaps": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Logical Leaps"
+          },
+          "evidence_links": {
+            "items": {
+              "$ref": "#/components/schemas/EvidenceLinkView"
+            },
+            "type": "array",
+            "title": "Evidence Links"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "title": "NarrativeFeedbackView",
+        "description": "자유 서술 LLM 피드백. 점수와 무관하다."
       },
       "NpcStateView": {
         "properties": {

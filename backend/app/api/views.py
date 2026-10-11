@@ -169,4 +169,27 @@ def debrief_view(session: GameSession, record: DeductionRecord) -> v.DebriefView
         missed_key=[ev(e) for e in sol.key_evidence if e not in collected],
         wrong_links=[ev(e) for e in record.flags.get("wrong_links", [])],  # type: ignore[union-attr]
         result=deduction_result(record),
+        narrative=record.narrative,
+        feedback=feedback_view(bible, record),
+    )
+
+
+def feedback_view(bible, record: DeductionRecord) -> v.NarrativeFeedbackView:
+    fb = record.feedback
+    if fb is None:
+        status = "skipped" if not record.narrative.strip() else "off"
+        return v.NarrativeFeedbackView(status=status)
+    names = {e.evidence_id: e.name for e in bible.evidence}
+    return v.NarrativeFeedbackView(
+        status=fb.status,  # type: ignore[arg-type]
+        unsupported_claims=fb.unsupported_claims,
+        logical_leaps=fb.logical_leaps,
+        evidence_links=[
+            v.EvidenceLinkView(
+                claim=link["claim"],
+                evidence_id=link["evidence_id"],
+                evidence_name=names.get(link["evidence_id"], link["evidence_id"]),
+            )
+            for link in fb.evidence_links
+        ],
     )

@@ -153,3 +153,9 @@ judge:
       type: statement
       confidence: 0.9
       explanation: 저녁 내내 복원실에서 나가지 않았다던 앞선 진술과 21:10에 휴게실에 갔다는 진술이 서로 맞지 않는다.
+
+# 추리 서술 피드백(LLM) 대본. 제출한 증거 이름이 들어간 문장은 근거 연결,
+# leap_words가 있으면 논리 비약, grounded_words도 없는 나머지는 근거 없는 주장으로 본다.
+feedback:
+  leap_words: [틀림없, 분명히, 확실히, 당연히]
+  grounded_words: [기록, 영수증, 메모, 로그, 증거]

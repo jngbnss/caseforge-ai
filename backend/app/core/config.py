@@ -19,6 +19,8 @@ class Settings(BaseSettings):
     embedding_on_cpu: bool = True
     llm_contradictions: bool = True
     """심문 응답 뒤에 LLM 모순 판정을 비동기로 돌린다 (source='llm')."""
+    deduction_feedback: bool = True
+    """추리 제출 뒤 자유 서술 LLM 피드백을 비동기로 만든다."""
     debug_api: bool = False
     """True면 심문 응답에 근거·가드 결과를 넣는다. 비밀 키워드가 보이므로 개발 환경에서만 켠다."""
 

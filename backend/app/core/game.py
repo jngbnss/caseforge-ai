@@ -15,6 +15,7 @@ from app.core.embedding.ports import EmbeddingPort
 from app.core.llm.ports import LLMPort
 from app.core.session import (
     CaseChangedError,
+    DeductionFeedbackRecord,
     GameSession,
     SessionNotFoundError,
     SessionStore,
@@ -231,7 +232,9 @@ class GameService:
             )
         )
 
-    def deduce(self, session: GameSession, sub: DeductionSubmission):
+    def deduce(
+        self, session: GameSession, sub: DeductionSubmission, *, with_feedback: bool = False
+    ):
         self._require_open(session)
         bible = session.bible
         if bible.suspect(sub.culprit_id) is None:
@@ -244,6 +247,8 @@ class GameService:
         if missing:
             raise GameError(f"수집하지 않은 증거는 제출할 수 없다: {', '.join(missing)}")
         session.state.deduction = score_deduction(bible, sub)
+        if with_feedback and sub.narrative.strip():
+            session.state.deduction.feedback = DeductionFeedbackRecord(status="pending")
         self.store.save(session)
         return session.state.deduction
 

@@ -33,6 +33,8 @@ export interface DevEntry {
 }
 
 const SESSION_KEY = 'caseforge.session'
+const FEEDBACK_POLLS = 60
+const FEEDBACK_POLL_MS = 2000
 
 /** 진행 중인 start 호출. StrictMode의 이중 실행 등으로 세션이 두 번 만들어지지 않게 한다. */
 let starting: Promise<void> | null = null
@@ -272,6 +274,14 @@ export const useGame = create<GameStore>((set, get) => {
       const debrief = await run('해설', (id) => api.debrief(id))
       await get().refresh()
       if (debrief) set({ debrief })
+      // 서술 피드백은 서버가 제출 뒤 따로 만든다. 준비될 때까지 잠깐씩 다시 받아 온다.
+      for (let i = 0; i < FEEDBACK_POLLS && get().debrief?.feedback.status === 'pending'; i++) {
+        await new Promise((r) => setTimeout(r, FEEDBACK_POLL_MS))
+        const id = get().session?.session_id
+        if (!id) return
+        const next = await api.debrief(id).catch(() => null)
+        if (next) set({ debrief: next })
+      }
     },
   }
 })

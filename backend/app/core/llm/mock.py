@@ -151,9 +151,32 @@ class MockLLM:
             )
         return {"findings": findings}
 
+    def feedback(self, messages: list[Message]) -> dict[str, Any]:
+        """추리 피드백 대본: 문장 단위로 나눠 제출 증거 이름이 있으면 연결, 단정 표현이면 비약,
+        나머지 중 근거 표현이 없는 문장은 근거 없는 주장으로 본다."""
+        user = next((m.content for m in reversed(messages) if m.role == "user"), "")
+        evidence = re.findall(r"- \[((?:ev|rec)-\d+)\] ([^:]+):", _section(user, "## 제출한 증거"))
+        narrative = _section(user, "## 탐정의 보고서")
+        rules = self.script.get("feedback", {})
+        out: dict[str, Any] = {"unsupported_claims": [], "logical_leaps": [], "evidence_links": []}
+        for sentence in re.split(r"(?<=[.!?。])\s+|\n", narrative):
+            sentence = sentence.strip()
+            if not sentence:
+                continue
+            linked = [eid for eid, name in evidence if name.strip() in sentence]
+            if linked:
+                out["evidence_links"].append({"claim": sentence, "evidence_id": linked[0]})
+            elif any(w in sentence for w in rules.get("leap_words", [])):
+                out["logical_leaps"].append(sentence)
+            elif not any(w in sentence for w in rules.get("grounded_words", [])):
+                out["unsupported_claims"].append(sentence)
+        return out
+
     def structured(self, title: str, messages: list[Message]) -> dict[str, Any]:
         if title == "ContradictionJudgement":
             return self.judge(messages)
+        if title == "DeductionFeedback":
+            return self.feedback(messages)
         return self.respond(read_prompt(messages))
 
     async def complete(

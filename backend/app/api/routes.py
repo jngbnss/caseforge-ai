@@ -8,6 +8,7 @@ from pydantic import ValidationError
 from app.api import schemas as v
 from app.api import views
 from app.core.game import AskOutcome, GameError, GameService
+from app.deduction.feedback import run_feedback
 from app.deduction.scoring import DeductionSubmission
 from app.evidence.judge_runner import run_judgement, schedule_judgement
 
@@ -219,9 +220,17 @@ def contradiction_views(svc: GameService, session, answer_by_turn) -> list[v.Con
 
 @router.post("/{session_id}/deduction", response_model=v.DeductionResultView)
 def deduce(
-    session_id: str, body: DeductionSubmission, svc: GameService = Service
+    session_id: str,
+    body: DeductionSubmission,
+    request: Request,
+    background: BackgroundTasks,
+    svc: GameService = Service,
 ) -> v.DeductionResultView:
-    return views.deduction_result(svc.deduce(svc.load(session_id), body))
+    session = svc.load(session_id)
+    record = svc.deduce(session, body, with_feedback=request.app.state.deduction_feedback)
+    if record.feedback is not None and record.feedback.status == "pending":
+        background.add_task(run_feedback, request.app.state, session_id)
+    return views.deduction_result(record)
 
 
 @router.get("/{session_id}/debrief", response_model=v.DebriefView)

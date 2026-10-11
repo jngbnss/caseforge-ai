@@ -329,6 +329,12 @@ export interface components {
             /** Wrong Links */
             wrong_links: components["schemas"]["DebriefEvidenceView"][];
             result: components["schemas"]["DeductionResultView"];
+            /**
+             * Narrative
+             * @default
+             */
+            narrative: string;
+            feedback: components["schemas"]["NarrativeFeedbackView"];
         };
         /** DeductionOptionsView */
         DeductionOptionsView: {
@@ -370,6 +376,15 @@ export interface components {
              */
             narrative: string;
         };
+        /** EvidenceLinkView */
+        EvidenceLinkView: {
+            /** Claim */
+            claim: string;
+            /** Evidence Id */
+            evidence_id: string;
+            /** Evidence Name */
+            evidence_name: string;
+        };
         /** EvidenceView */
         EvidenceView: {
             /** Evidence Id */
@@ -403,6 +418,23 @@ export interface components {
             hints_used: number;
             /** Remaining */
             remaining: number;
+        };
+        /**
+         * NarrativeFeedbackView
+         * @description 자유 서술 LLM 피드백. 점수와 무관하다.
+         */
+        NarrativeFeedbackView: {
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "pending" | "ready" | "unavailable" | "skipped" | "off";
+            /** Unsupported Claims */
+            unsupported_claims?: string[];
+            /** Logical Leaps */
+            logical_leaps?: string[];
+            /** Evidence Links */
+            evidence_links?: components["schemas"]["EvidenceLinkView"][];
         };
         /** NpcStateView */
         NpcStateView: {

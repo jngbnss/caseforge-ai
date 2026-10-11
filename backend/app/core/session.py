@@ -16,6 +16,18 @@ from case_validator.conditions import MAX_TRUST
 DEFAULT_EMOTION = "calm"
 
 
+class DeductionFeedbackRecord(BaseModel):
+    """추리 서술 LLM 피드백. pending → ready | unavailable | skipped(서술 없음)."""
+
+    status: str = "pending"
+    unsupported_claims: list[str] = Field(default_factory=list)
+    logical_leaps: list[str] = Field(default_factory=list)
+    evidence_links: list[dict[str, str]] = Field(default_factory=list)
+    model_id: str = ""
+    dropped: int = 0
+    """원문 인용이 아니거나 제출하지 않은 증거를 가리켜 버린 항목 수."""
+
+
 class DeductionRecord(BaseModel):
     culprit_id: str
     motive_id: str
@@ -25,6 +37,7 @@ class DeductionRecord(BaseModel):
     scores: dict[str, int]
     total: int
     flags: dict[str, bool | list[str]]
+    feedback: DeductionFeedbackRecord | None = None
 
 
 class GameState(BaseModel):
