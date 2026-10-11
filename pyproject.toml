@@ -1,0 +1,10 @@
+# uv workspace root (virtual). `uv sync` at the repo root installs every member.
+[tool.uv.workspace]
+members = ["backend", "packages/case-validator"]
+
+[dependency-groups]
+dev = ["caseforge-backend", "case-validator"]
+
+[tool.uv.sources]
+caseforge-backend = { workspace = true }
+case-validator = { workspace = true }
