@@ -1,9 +1,11 @@
 @import "tailwindcss";
 
-/* 수사 파일철: 회청색 종이, 기록 잉크 블루, 증거 태그 앰버 */
+/* 탐정 사무소: 나무 책상 위의 사건 파일철, 크림색 종이, 도장 붉은색, 증거 태그 앰버, 코르크 보드 */
 @theme {
   --font-sans: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  --font-title: "Nanum Myeongjo", "Batang", serif;
+  --font-hand: "Nanum Pen Script", "Comic Sans MS", cursive;
 
   --color-paper: var(--paper);
   --color-sheet: var(--sheet);
@@ -17,52 +19,162 @@
   --color-soft: var(--soft);
   --color-ok: var(--ok);
   --color-bad: var(--bad);
+  --color-desk: var(--desk);
+  --color-desk-ink: var(--desk-ink);
 }
 
 :root {
-  --paper: #eef1f4;
-  --sheet: #ffffff;
-  --ink: #1b2430;
-  --muted: #5b6878;
-  --line: #d3dae2;
-  --accent: #2f5d8a;
-  --accent-ink: #ffffff;
-  --tag: #a8700a;
-  --tag-soft: #f7ecd4;
-  --soft: #e3e9f0;
-  --ok: #2e7d4f;
-  --bad: #b23b3b;
+  --desk: #3a2a1e;
+  --desk-2: #33251a;
+  --desk-ink: #f3e7d0;
+  --paper: #efe5cf; /* 파일철 */
+  --sheet: #fbf6ea; /* 그 위의 종이 */
+  --ink: #2a2018;
+  --muted: #6b5a47;
+  --line: #d8c9aa;
+  --accent: #7a2e22; /* 도장 */
+  --accent-ink: #fff8ee;
+  --tag: #9a6408;
+  --tag-soft: #f5e3bb;
+  --soft: #eadcc0;
+  --ok: #2e6e45;
+  --bad: #b0302a;
+  --cork: #b8875a;
+  --cork-dot: #a2724a;
+  --photo: #e9eef1;
+  --portrait-bg: #d9cbb0;
   color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --paper: #12171e;
-    --sheet: #1a212b;
-    --ink: #e3e8ee;
-    --muted: #9aa7b6;
-    --line: #2c3643;
-    --accent: #7fb0e0;
-    --accent-ink: #0f1620;
-    --tag: #e2ad4a;
-    --tag-soft: #3a2f19;
-    --soft: #232c38;
-    --ok: #6cc28f;
-    --bad: #e57d7d;
+  :root:not([data-theme="light"]) {
+    --desk: #17110c;
+    --desk-2: #120d09;
+    --desk-ink: #efe2c9;
+    --paper: #2a2119;
+    --sheet: #33291f;
+    --ink: #f0e6d3;
+    --muted: #bba88d;
+    --line: #4a3c2d;
+    --accent: #e0806c;
+    --accent-ink: #1d140e;
+    --tag: #e7b45a;
+    --tag-soft: #4a3a1c;
+    --soft: #3d3125;
+    --ok: #7cc79a;
+    --bad: #ef7d72;
+    --cork: #6e5034;
+    --cork-dot: #5f4429;
+    --photo: #c9d2d8;
+    --portrait-bg: #5a4a38;
     color-scheme: dark;
   }
 }
 
 body {
-  background: var(--paper);
+  background-color: var(--desk);
+  /* 나무결 */
+  background-image:
+    repeating-linear-gradient(92deg, transparent 0 38px, rgb(0 0 0 / 0.07) 38px 40px, transparent 40px 90px),
+    repeating-linear-gradient(88deg, var(--desk) 0 6px, var(--desk-2) 6px 7px);
   color: var(--ink);
   font-family: var(--font-sans);
   margin: 0;
 }
 
+.font-title {
+  font-family: var(--font-title);
+}
+
+.font-hand {
+  font-family: var(--font-hand);
+}
+
+/* 파일철 본문 */
+.folder {
+  background: var(--paper);
+  box-shadow:
+    0 1px 0 rgb(255 255 255 / 0.25) inset,
+    0 18px 40px rgb(0 0 0 / 0.35);
+}
+
+.paper-sheet {
+  background: var(--sheet);
+  color: var(--ink);
+}
+
+/* 코르크 보드 */
+.cork {
+  background-color: var(--cork);
+  background-image:
+    radial-gradient(var(--cork-dot) 1px, transparent 1.4px),
+    radial-gradient(var(--cork-dot) 1px, transparent 1.4px);
+  background-position:
+    0 0,
+    7px 9px;
+  background-size: 14px 18px;
+  box-shadow: inset 0 0 0 10px #6b4a2e, inset 0 0 24px rgb(0 0 0 / 0.35);
+}
+
+/* 압정 */
+.pin::before {
+  content: "";
+  position: absolute;
+  top: -7px;
+  left: 50%;
+  width: 14px;
+  height: 14px;
+  margin-left: -7px;
+  border-radius: 9999px;
+  background: radial-gradient(circle at 35% 35%, #ff8a80, #c62828 60%, #7f1a1a);
+  box-shadow: 0 2px 2px rgb(0 0 0 / 0.35);
+}
+
+/* 도장 */
+.stamp {
+  border: 3px solid var(--bad);
+  color: var(--bad);
+  font-family: var(--font-title);
+  letter-spacing: 0.15em;
+  transform: rotate(-8deg);
+  opacity: 0.8;
+}
+
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
+}
+
+@keyframes pop-in {
+  from {
+    transform: translateY(6px) scale(0.98);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+.pop-in {
+  animation: pop-in 0.25s ease-out;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-3px);
+  }
+  75% {
+    transform: translateX(3px);
+  }
+}
+
+.shake {
+  animation: shake 0.35s ease-in-out 2;
 }
 
 @media (prefers-reduced-motion: reduce) {

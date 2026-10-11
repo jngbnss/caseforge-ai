@@ -1,5 +1,6 @@
 import { type PointerEvent, useEffect, useMemo, useRef, useState } from 'react'
 
+import { EvidenceIcon, Portrait } from '../../components/art'
 import { Button, Empty, EvidenceTag, Eyebrow, Panel } from '../../components/ui'
 import { useGame } from '../../store/game'
 import {
@@ -24,10 +25,13 @@ interface Card {
 }
 
 const KIND_STYLE: Record<Card['kind'], string> = {
-  person: 'border-accent',
-  evidence: 'border-tag',
-  statement: 'border-line',
+  person: 'border-[#2f4a68]',
+  evidence: 'border-[#9a6408]',
+  statement: 'border-[#d8b84a]',
 }
+
+/** 카드를 조금씩 기울여 손으로 붙인 느낌을 낸다. */
+const TILTS = [-2, 1.5, -1, 2, -1.5, 1]
 
 const TYPE_LABEL: Record<string, string> = {
   location: '장소',
@@ -42,36 +46,45 @@ function Timeline({ items }: { items: { id: string; label: string; time: string 
   const end = minutes('22:00')
   const pct = (t: string) => ((minutes(t) - start) / (end - start)) * 100
   const ticks = ['20:30', '21:00', '21:30', '22:00']
+  // 5분 안에 몰린 점은 위로 쌓는다
+  const stack = (i: number) =>
+    items.slice(0, i).filter((x) => Math.abs(minutes(x.time) - minutes(items[i].time)) < 5).length
   return (
     <div className="flex flex-col gap-2">
       <h2 className="font-bold">시간선</h2>
       {items.length === 0 && <Empty>시각이 기록된 증거를 찾으면 여기에 표시된다.</Empty>}
-      <div className="relative mx-2 mt-6 mb-10 h-1 rounded bg-line" aria-hidden={items.length === 0}>
+      <div className="relative mx-2 mt-14 mb-8 h-1 rounded bg-line" aria-hidden>
         {ticks.map((t) => (
           <span
             key={t}
-            className="absolute -top-6 -translate-x-1/2 font-mono text-xs text-muted"
+            className="absolute top-3 -translate-x-1/2 font-mono text-xs text-muted"
             style={{ left: `${pct(t)}%` }}
           >
             {t}
           </span>
         ))}
         {items.map((it, i) => (
-          <div
+          <span
             key={it.id}
-            className="absolute -translate-x-1/2"
-            style={{ left: `${pct(it.time)}%`, top: -5 }}
+            className="absolute flex h-5 w-5 -translate-x-1/2 items-center justify-center rounded-full border-2 border-sheet bg-tag font-mono text-[10px] font-bold text-sheet"
+            style={{ left: `${pct(it.time)}%`, top: -8 - stack(i) * 22 }}
           >
-            <span className="block h-3.5 w-3.5 rounded-full border-2 border-sheet bg-tag" />
-            <span
-              className="absolute left-1/2 mt-1 w-max max-w-40 -translate-x-1/2 text-center text-xs"
-              style={{ top: 14 + (i % 2) * 18 }}
-            >
-              <span className="font-mono text-tag">{it.time}</span> {it.label}
-            </span>
-          </div>
+            {i + 1}
+          </span>
         ))}
       </div>
+      {/* 같은 시각에 몰려도 겹치지 않게 이름은 번호와 함께 목록으로 */}
+      <ol className="flex flex-col gap-1 text-sm">
+        {items.map((it, i) => (
+          <li key={it.id} className="flex items-baseline gap-2">
+            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-tag font-mono text-[10px] font-bold text-sheet">
+              {i + 1}
+            </span>
+            <span className="font-mono text-tag">{it.time}</span>
+            <span>{it.label}</span>
+          </li>
+        ))}
+      </ol>
     </div>
   )
 }
@@ -203,13 +216,13 @@ export function BoardScreen() {
           ? linking
             ? '이어 붙일 두 번째 카드를 누른다. 이미 이어진 두 카드를 누르면 연결이 풀린다.'
             : '연결할 첫 번째 카드를 누른다.'
-          : '카드를 끌어서 옮긴다. 인물은 파란 테, 증거는 노란 테, 저장한 진술은 회색 테다.'}
+          : '카드를 끌어서 옮기고, "카드 연결하기"로 빨간 실을 이어 보자. 노란 쪽지는 심문에서 저장한 진술이다.'}
       </p>
 
-      <div className="overflow-x-auto rounded-lg border border-line bg-soft">
+      <div className="cork overflow-x-auto rounded-lg">
         <div
           ref={area}
-          className="relative min-w-[760px]"
+          className="relative min-w-[820px]"
           style={{ height }}
           onPointerMove={onPointerMove}
           onPointerUp={() => (drag.current = null)}
@@ -219,16 +232,18 @@ export function BoardScreen() {
               const p = center(a)
               const q = center(b)
               if (!p || !q) return null
+              // 압정에서 압정으로, 살짝 처지는 빨간 실
+              const y1 = p.y - CARD_H / 2
+              const y2 = q.y - CARD_H / 2
+              const sag = Math.min(60, Math.hypot(q.x - p.x, y2 - y1) / 5)
               return (
-                <line
+                <path
                   key={`${a}-${b}`}
-                  x1={p.x}
-                  y1={p.y}
-                  x2={q.x}
-                  y2={q.y}
-                  stroke="var(--bad)"
-                  strokeWidth={2}
-                  strokeDasharray="5 4"
+                  d={`M${p.x} ${y1} Q${(p.x + q.x) / 2} ${(y1 + y2) / 2 + sag} ${q.x} ${y2}`}
+                  stroke="#c62828"
+                  strokeWidth={2.5}
+                  fill="none"
+                  style={{ filter: 'drop-shadow(0 2px 1px rgb(0 0 0 / 0.35))' }}
                 />
               )
             })}
@@ -244,16 +259,34 @@ export function BoardScreen() {
                 onPointerDown={(e) => onPointerDown(e, c)}
                 onClick={() => onCardClick(c)}
                 onKeyDown={(e) => e.key === 'Enter' && onCardClick(c)}
-                className={`absolute flex touch-none flex-col gap-1 overflow-hidden rounded-md border-2 bg-sheet p-2 shadow-sm select-none ${
-                  KIND_STYLE[c.kind]
-                } ${linkMode ? 'cursor-pointer' : 'cursor-grab'} ${linking === c.id ? 'ring-2 ring-bad' : ''}`}
-                style={{ left: p.x, top: p.y, width: CARD_W, height: CARD_H }}
+                className={`pin absolute flex touch-none gap-2 rounded-sm border-t-4 p-2 shadow-[0_4px_8px_rgb(0_0_0/0.35)] select-none ${
+                  c.kind === 'statement' ? 'bg-[#fff4b8] text-[#2a2018]' : 'bg-[#fbf6ea] text-[#2a2018]'
+                } ${KIND_STYLE[c.kind]} ${linkMode ? 'cursor-pointer' : 'cursor-grab'} ${linking === c.id ? 'ring-4 ring-bad' : ''}`}
+                style={{
+                  left: p.x,
+                  top: p.y,
+                  width: CARD_W,
+                  height: CARD_H,
+                  transform: `rotate(${TILTS[cards.indexOf(c) % TILTS.length]}deg)`,
+                }}
               >
-                <p className="flex items-baseline gap-1 text-sm font-bold">
-                  {c.kind === 'evidence' && <EvidenceTag id={c.id} />}
-                  <span className="truncate">{c.title}</span>
-                </p>
-                <p className="line-clamp-2 text-xs leading-snug text-muted">{c.body}</p>
+                {c.kind === 'person' && (
+                  <Portrait role={c.body} index={c.index} emotion={session.npcs.find((n) => n.npc_id === c.id)?.emotion} size={60} />
+                )}
+                {c.kind === 'evidence' && (
+                  <span className="flex h-[60px] w-[60px] shrink-0 items-center justify-center bg-[var(--photo)]">
+                    <EvidenceIcon name={c.title} size={48} />
+                  </span>
+                )}
+                <span className="flex min-w-0 flex-col gap-0.5">
+                  <span className="flex items-baseline gap-1 text-sm font-bold">
+                    {c.kind === 'evidence' && <EvidenceTag id={c.id} />}
+                    <span className="truncate">{c.title}</span>
+                  </span>
+                  <span className={`line-clamp-3 text-xs leading-snug text-[#6b5a47] ${c.kind === 'statement' ? 'font-hand text-base leading-4' : ''}`}>
+                    {c.body}
+                  </span>
+                </span>
               </div>
             )
           })}

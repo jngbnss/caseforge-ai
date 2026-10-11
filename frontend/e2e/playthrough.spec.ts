@@ -20,7 +20,15 @@ test('브리핑부터 사건 해설까지 클릭으로 완주한다', async ({ p
 
   // 1. 브리핑
   await page.goto('/')
+  // 처음 한 번 뜨는 수사 안내: 끝까지 넘겨 본다
+  const tutorial = page.getByRole('dialog')
+  await expect(tutorial).toBeVisible()
+  await page.screenshot({ path: `${SHOTS}/0-tutorial.png` })
+  for (let i = 0; i < 4; i++) await tutorial.getByRole('button', { name: '다음' }).click()
+  await tutorial.getByRole('button', { name: '수사 시작' }).click()
+  await expect(tutorial).toBeHidden()
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('사라진 푸른 다이아몬드')
+  await expect(page.getByTestId('objective')).toContainText('첫 증거')
   await expect(page.getByText('수석 큐레이터')).toBeVisible()
   await page.screenshot({ path: `${SHOTS}/1-briefing.png`, fullPage: true })
 
@@ -58,8 +66,8 @@ test('브리핑부터 사건 해설까지 클릭으로 완주한다', async ({ p
   await page.getByRole('button', { name: '어젯밤 21시 이후에 어디 있었어요?' }).click()
   await expect(npcBubbles.nth(0)).toContainText('보안실')
   await expect(log.getByText('증거와 모순')).toBeVisible()
-  await page.getByLabel('증거 제시').selectOption('ev-02')
-  await page.getByRole('button', { name: '보여 주기' }).click()
+  await page.getByRole('button', { name: '꽁초와 자판기 영수증 보여 주기' }).click()
+  await expect(page.getByRole('button', { name: '꽁초와 자판기 영수증 보여 주기 (보여 줌)' })).toBeDisabled()
   await expect(log.getByText(/표정이 굳는다/)).toBeVisible()
   await page.getByRole('button', { name: '어젯밤 21시 이후에 어디 있었어요?' }).click()
   await expect(npcBubbles.nth(1)).toContainText('담배')

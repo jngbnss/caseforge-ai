@@ -48,3 +48,14 @@
 |---|---|---|---|---|
 | Qwen3-8B | `qwen3:8b` · Q4_K_M · 8.2B 파라미터 · 문맥 40,960 | 5.2 GB | Apache-2.0 | NPC 심문, 모순 판정, 추리 피드백, 평가 judge |
 | BAAI/bge-m3 | `bge-m3` · F16 · 567M 파라미터 · 1024차원 | 1.2 GB | MIT | NPC별 사실 검색 임베딩 |
+
+## 글꼴 · 그림
+
+글꼴은 Google Fonts에서 불러오며 저장소에 넣지 않는다. 화면 그림(용의자 초상화, 증거 아이콘, 평면도 가구, 코르크 보드)은
+`frontend/src/components/art.tsx`·`SceneScreen.tsx`에서 SVG·CSS로 직접 그려 외부 이미지가 없다.
+
+| 글꼴 | 라이선스 | 용도 |
+|---|---|---|
+| IBM Plex Sans KR · IBM Plex Mono | SIL OFL 1.1 | 본문 · 고정폭 |
+| Nanum Myeongjo | SIL OFL 1.1 | 제목 |
+| Nanum Pen Script | SIL OFL 1.1 | 손글씨 (쪽지 · 메모) |

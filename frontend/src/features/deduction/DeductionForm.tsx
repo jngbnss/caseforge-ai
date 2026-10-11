@@ -1,5 +1,6 @@
 import { useState } from 'react'
 
+import { Portrait } from '../../components/art'
 import { Button, Empty, EvidenceTag } from '../../components/ui'
 import type { DeductionSubmission, EvidenceView, SuspectView } from '../../services/api'
 
@@ -49,7 +50,7 @@ export function DeductionForm({ suspects, motives, methods, evidence, disabled, 
       <fieldset className="flex flex-col gap-2">
         <legend className="mb-2 font-bold">범인</legend>
         <div className="grid gap-2 sm:grid-cols-3">
-          {suspects.map((s) => (
+          {suspects.map((s, i) => (
             <label
               key={s.suspect_id}
               className={`flex cursor-pointer items-center gap-3 rounded-lg border p-3 ${
@@ -64,6 +65,7 @@ export function DeductionForm({ suspects, motives, methods, evidence, disabled, 
                 onChange={() => setCulprit(s.suspect_id)}
                 className="accent-[var(--bad)]"
               />
+              <Portrait role={s.role} index={i} size={52} />
               <span>
                 <span className="block font-bold">{s.name}</span>
                 <span className="text-xs text-muted">{s.role}</span>

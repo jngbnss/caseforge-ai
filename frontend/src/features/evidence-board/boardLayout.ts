@@ -1,7 +1,7 @@
 /** 수사 보드의 카드 배치와 연결선. 플레이어 개인 메모라 브라우저에만 저장한다. */
 
-export const CARD_W = 172
-export const CARD_H = 76
+export const CARD_W = 180
+export const CARD_H = 92
 
 export interface Point {
   x: number
@@ -35,7 +35,7 @@ export function saveLayout(sessionId: string, layout: BoardLayout) {
 
 /** 카드 종류별로 줄을 나눠 기본 위치를 정한다. */
 export function defaultPosition(row: number, index: number): Point {
-  return { x: 16 + index * (CARD_W + 16), y: 16 + row * (CARD_H + 40) }
+  return { x: 24 + index * (CARD_W + 20), y: 28 + row * (CARD_H + 36) }
 }
 
 export function sameLink(a: [string, string], b: [string, string]) {

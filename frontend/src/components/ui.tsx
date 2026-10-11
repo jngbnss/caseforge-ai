@@ -34,7 +34,7 @@ export function Eyebrow({ children }: { children: ReactNode }) {
 
 export function Panel({ children, className = '' }: { children: ReactNode; className?: string }) {
   return (
-    <section className={`rounded-lg border border-line bg-sheet p-5 ${className}`}>{children}</section>
+    <section className={`rounded-lg border border-line bg-sheet p-5 shadow-[0_2px_6px_rgb(0_0_0/0.08)] ${className}`}>{children}</section>
   )
 }
 
