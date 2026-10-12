@@ -1,2 +1,69 @@
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CaseForge AI</title><style>body{margin:0;background:#f4f1ea;color:#25323b;font-family:system-ui,sans-serif}.wrap{max-width:860px;margin:auto;padding:10vh 28px}small{letter-spacing:.16em;color:#8b4d52}h1{font-size:clamp(48px,9vw,92px);line-height:.95;margin:18px 0}p{font-size:20px;line-height:1.7;max-width:720px}.card{margin-top:40px;padding:24px;border:1px solid #ccd2d4;border-radius:18px;background:#fff}a{color:#8b4d52;font-weight:700}</style></head><body><main class="wrap"><small>SSAFY AI × OSS · PROJECT P2</small><h1>CaseForge AI</h1><p>고정된 사건 진실 위에서 용의자를 자유 심문하고, 증거를 모아 모순 없이 범인을 추리하는 AI 수사 프로젝트입니다.</p><section class="card"><strong>현재 단계</strong><p>설계와 결정 기록을 정리한 상태입니다. 브라우저 플레이 데모는 아직 구현 전이며, 사건 검증기와 누설 방지 구조부터 개발할 예정입니다.</p><a href="https://github.com/jngbnss/caseforge-ai">GitHub에서 설계 문서 보기 →</a></section></main></body></html>
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>CaseForge AI — 플레이 데모</title>
+  <meta name="description" content="고정된 사건 진실 위에서 용의자를 자유 심문하고, 증거로 거짓말을 무너뜨려 범인을 추리하는 AI 수사 게임의 브라우저 데모.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Crect width=%2264%22 height=%2264%22 rx=%2214%22 fill=%22%238b4d52%22/%3E%3Cpath d=%22M32 12l14 16-14 24-14-24z%22 fill=%22%23cfe3ff%22/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="top">
+    <div class="top-row">
+      <div class="brand">
+        <span class="kicker">CaseForge AI · 플레이 데모</span>
+        <h1>사라진 푸른 다이아몬드 <small>museum-001</small></h1>
+      </div>
+      <div class="top-actions">
+        <button class="ghost" id="btn-validator" type="button" title="사건 검증기 결과">✔ 검증기</button>
+        <button class="ghost" id="btn-dev" type="button" aria-pressed="false" title="엔진 내부 보기">⚙ 엔진 로그</button>
+        <a class="ghost" href="https://github.com/jngbnss/caseforge-ai" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+    </div>
+    <div class="progress" id="progress"></div>
+    <nav class="tabs" id="tabs" aria-label="수사 단계">
+      <button data-tab="briefing" type="button">브리핑</button>
+      <button data-tab="scene" type="button">현장 조사</button>
+      <button data-tab="puzzles" type="button">퍼즐</button>
+      <button data-tab="interrogation" type="button">심문</button>
+      <button data-tab="board" type="button">수사 보드</button>
+      <button data-tab="accuse" type="button">최종 추리</button>
+    </nav>
+  </header>
 
+  <details class="honest" id="honest">
+    <summary><strong>로컬 규칙 엔진 데모</strong> — 대화는 LLM이 아니라 브라우저 안의 규칙 엔진이 만듭니다. <span class="more">자세히</span></summary>
+    <p>용의자의 답은 키워드·의도 매칭과 사건별 대본으로 고릅니다. 실제 설계에서 LLM이 들어갈 자리를 대신하며,
+    지식 스코프·누설 가드·모순 탐지·추리 채점·사건 검증기는 설계 문서와 같은 규칙으로 동작합니다.
+    API 키나 네트워크 호출은 없습니다. 정적 데모라 정답 데이터가 페이지에 포함되어 있습니다 (실제 설계에서는 서버만 보관).
+    상단 <b>⚙ 엔진 로그</b>를 켜면 의도 분류·revealed_fact_ids·가드 판정이 보입니다.</p>
+  </details>
+
+  <main id="app" class="app"></main>
+
+  <aside class="devpanel" id="devpanel" hidden aria-label="엔진 로그">
+    <div class="devhead"><strong>엔진 로그</strong><button class="ghost" id="dev-close" type="button">닫기</button></div>
+    <div id="devbody"></div>
+  </aside>
+
+  <div class="modal" id="modal" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-head"><h2 id="modal-title"></h2><button class="ghost" id="modal-close" type="button">닫기</button></div>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+
+  <footer class="foot">
+    CaseForge AI · SSAFY AI × OSS 프로젝트 P2 ·
+    <a href="https://github.com/jngbnss/caseforge-ai" target="_blank" rel="noopener">github.com/jngbnss/caseforge-ai</a>
+  </footer>
+
+  <script src="case-museum-001.js"></script>
+  <script src="dialogues-museum-001.js"></script>
+  <script src="engine.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
